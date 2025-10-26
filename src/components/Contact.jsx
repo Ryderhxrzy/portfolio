@@ -324,7 +324,7 @@ const Contact = ({ personalInfo }) => {
             <div className="form-footer">
               <p>
                 <i className="fas fa-lock"></i>
-                Your information is secure and will only be used to contact you about your project.
+                Your info is secure and will only be used to contact you about your projects.
               </p>
             </div>
           </form>
