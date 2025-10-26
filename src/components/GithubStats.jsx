@@ -6,7 +6,7 @@ const GitHubStats = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const username = "Ryderhxrzy"; // REPLACE WITH YOUR GITHUB USERNAME
+  const username = "Ryderhxrzy"; // Your GitHub username
 
   useEffect(() => {
     const fetchGitHubData = async () => {
@@ -19,13 +19,11 @@ const GitHubStats = () => {
         const userResponse = await fetch(`https://api.github.com/users/${username}`);
         if (!userResponse.ok) throw new Error('GitHub user not found');
         const userData = await userResponse.json();
-        console.log('User data:', userData);
 
         // Fetch repositories
         const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`);
         if (!reposResponse.ok) throw new Error('Failed to fetch repositories');
         const reposData = await reposResponse.json();
-        console.log('Repos data:', reposData);
 
         // Calculate stats from repositories
         const totalStars = reposData.reduce((acc, repo) => acc + repo.stargazers_count, 0);
@@ -72,6 +70,9 @@ const GitHubStats = () => {
           recentActivity = ['Fetching recent activity...'];
         }
 
+        // Calculate achievements based on GitHub data
+        const achievements = calculateAchievements(userData, reposData, totalStars, totalForks);
+
         // Prepare final stats
         const statsData = {
           userData: userData,
@@ -83,7 +84,8 @@ const GitHubStats = () => {
           contributions: Math.round(userData.public_repos * 20 + totalStars * 3), // Estimated
           languages: topLanguages.length > 0 ? topLanguages : ['JavaScript', 'HTML', 'CSS'],
           recentActivity: recentActivity.length > 0 ? recentActivity : ['No recent activity'],
-          joinedDate: new Date(userData.created_at).getFullYear()
+          joinedDate: new Date(userData.created_at).getFullYear(),
+          achievements: achievements
         };
 
         console.log('Final stats:', statsData);
@@ -94,7 +96,7 @@ const GitHubStats = () => {
         console.error('Error fetching GitHub data:', err);
         setError(`Failed to load GitHub statistics: ${err.message}. Please check if the username is correct.`);
         
-        // Fallback to mock data
+        // Fallback to mock data with achievements
         setStats({
           userData: {
             avatar_url: `https://github.com/${username}.png`,
@@ -110,7 +112,8 @@ const GitHubStats = () => {
           contributions: 0,
           languages: ['JavaScript', 'HTML', 'CSS'],
           recentActivity: ['No activity data available'],
-          joinedDate: new Date().getFullYear()
+          joinedDate: new Date().getFullYear(),
+          achievements: getDefaultAchievements()
         });
       } finally {
         setLoading(false);
@@ -119,6 +122,153 @@ const GitHubStats = () => {
 
     fetchGitHubData();
   }, [username]);
+
+  // Function to calculate achievements based on GitHub data
+  const calculateAchievements = (userData, reposData, totalStars, totalForks) => {
+    const accountAge = new Date().getFullYear() - new Date(userData.created_at).getFullYear();
+    const hasPinnedRepos = reposData.some(repo => repo.topics && repo.topics.length > 0);
+    const hasReadme = reposData.some(repo => repo.has_wiki || repo.description);
+    const hasMultipleLanguages = new Set(reposData.map(repo => repo.language).filter(Boolean)).size > 3;
+
+    return [
+      {
+        id: 1,
+        name: "Open Source Contributor",
+        description: "Has public repositories",
+        icon: "fas fa-code-branch",
+        unlocked: userData.public_repos > 0,
+        progress: userData.public_repos,
+        target: 1,
+        category: "repositories"
+      },
+      {
+        id: 2,
+        name: "Star Collector",
+        description: "Received stars on repositories",
+        icon: "fas fa-star",
+        unlocked: totalStars > 0,
+        progress: totalStars,
+        target: 1,
+        category: "stars"
+      },
+      {
+        id: 3,
+        name: "Community Builder",
+        description: "Gained followers on GitHub",
+        icon: "fas fa-users",
+        unlocked: userData.followers > 0,
+        progress: userData.followers,
+        target: 1,
+        category: "social"
+      },
+      {
+        id: 4,
+        name: "Fork Master",
+        description: "Repositories forked by others",
+        icon: "fas fa-share-alt",
+        unlocked: totalForks > 0,
+        progress: totalForks,
+        target: 1,
+        category: "collaboration"
+      },
+      {
+        id: 5,
+        name: "GitHub Veteran",
+        description: "Active on GitHub for a while",
+        icon: "fas fa-calendar-alt",
+        unlocked: accountAge >= 1,
+        progress: accountAge,
+        target: 1,
+        category: "commitment"
+      },
+      {
+        id: 6,
+        name: "Polyglot Programmer",
+        description: "Uses multiple programming languages",
+        icon: "fas fa-language",
+        unlocked: hasMultipleLanguages,
+        progress: hasMultipleLanguages ? 1 : 0,
+        target: 1,
+        category: "skills"
+      },
+      {
+        id: 7,
+        name: "Documentation Pro",
+        description: "Maintains good project documentation",
+        icon: "fas fa-book",
+        unlocked: hasReadme,
+        progress: hasReadme ? 1 : 0,
+        target: 1,
+        category: "quality"
+      },
+      {
+        id: 8,
+        name: "Project Organizer",
+        description: "Uses GitHub topics and organization",
+        icon: "fas fa-tags",
+        unlocked: hasPinnedRepos,
+        progress: hasPinnedRepos ? 1 : 0,
+        target: 1,
+        category: "organization"
+      },
+      {
+        id: 9,
+        name: "Repository Explorer",
+        description: "Has forked repositories",
+        icon: "fas fa-code-fork",
+        unlocked: userData.public_repos > 5,
+        progress: Math.min(userData.public_repos, 10),
+        target: 5,
+        category: "exploration"
+      },
+      {
+        id: 10,
+        name: "Code Collaborator",
+        description: "Active in community projects",
+        icon: "fas fa-handshake",
+        unlocked: totalForks > 2,
+        progress: Math.min(totalForks, 5),
+        target: 2,
+        category: "collaboration"
+      }
+    ];
+  };
+
+  // Default achievements for fallback
+  const getDefaultAchievements = () => {
+    return [
+      {
+        id: 1,
+        name: "Open Source Contributor",
+        description: "Has public repositories",
+        icon: "fas fa-code-branch",
+        unlocked: false,
+        progress: 0,
+        target: 1,
+        category: "repositories"
+      },
+      {
+        id: 2,
+        name: "Star Collector",
+        description: "Received stars on repositories",
+        icon: "fas fa-star",
+        unlocked: false,
+        progress: 0,
+        target: 1,
+        category: "stars"
+      },
+      {
+        id: 3,
+        name: "Community Builder",
+        description: "Gained followers on GitHub",
+        icon: "fas fa-users",
+        unlocked: false,
+        progress: 0,
+        target: 1,
+        category: "social"
+      }
+    ];
+  };
 
   if (loading) {
     return (
@@ -221,6 +371,49 @@ const GitHubStats = () => {
           </div>
         </div>
 
+        {/* GitHub Achievements Section */}
+        <div className="achievements-section">
+          <h2>GitHub Achievements</h2>
+          <p className="section-subtitle">Milestones and accomplishments on GitHub</p>
+          
+          <div className="achievements-grid">
+            {stats?.achievements?.map(achievement => (
+              <div 
+                key={achievement.id} 
+                className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`}
+              >
+                <div className="achievement-icon">
+                  <i className={achievement.icon}></i>
+                </div>
+                <div className="achievement-content">
+                  <h4>{achievement.name}</h4>
+                  <p>{achievement.description}</p>
+                  <div className="achievement-progress">
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill"
+                        style={{ 
+                          width: `${(achievement.progress / achievement.target) * 100}%` 
+                        }}
+                      ></div>
+                    </div>
+                    <span className="progress-text">
+                      {achievement.progress}/{achievement.target}
+                    </span>
+                  </div>
+                </div>
+                <div className="achievement-status">
+                  {achievement.unlocked ? (
+                    <i className="fas fa-check-circle unlocked"></i>
+                  ) : (
+                    <i className="fas fa-lock locked"></i>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Languages Section */}
         <div className="languages-section">
           <h2>Top Programming Languages</h2>
@@ -266,6 +459,28 @@ const GitHubStats = () => {
                 <span>{activity}</span>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* GitHub Tips */}
+        <div className="github-tips">
+          <h3>💡 How to Earn More Achievements</h3>
+          <div className="tips-grid">
+            <div className="tip-card">
+              <i className="fas fa-code"></i>
+              <h4>Create More Repositories</h4>
+              <p>Build and share your projects to increase your repository count</p>
+            </div>
+            <div className="tip-card">
+              <i className="fas fa-star"></i>
+              <h4>Write Quality Code</h4>
+              <p>Create useful projects that others will star and use</p>
+            </div>
+            <div className="tip-card">
+              <i className="fas fa-users"></i>
+              <h4>Engage with Community</h4>
+              <p>Follow developers and contribute to open source projects</p>
+            </div>
           </div>
         </div>
       </div>
