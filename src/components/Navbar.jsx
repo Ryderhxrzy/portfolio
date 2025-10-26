@@ -58,7 +58,6 @@ const Navbar = ({ personalInfo }) => {
             className={`nav-link ${location.pathname === '/reviews' ? 'active' : ''}`}
             onClick={closeMenu}
           >
-            <i className="fas fa-star"></i>
             Reviews
           </Link>
           <Link 
