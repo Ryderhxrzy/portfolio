@@ -17,8 +17,11 @@ const Home = ({ projects, personalInfo }) => {
         <div className="container">
           <div className="hero-content fade-in-up">
             <h1>Hi, I'm <span className="highlight">{personalInfo.name}</span></h1>
+            <p className="hero-aka">AKA <span className="aka-name">{personalInfo.aka}</span></p>
             <p className="hero-subtitle">{personalInfo.title}</p>
             <p className="hero-description">
+              Freelance Developer since 2023 | 4th Year Computer Science Student
+              <br />
               I create beautiful, functional web applications that solve real-world problems 
               and deliver exceptional user experiences.
             </p>
@@ -60,6 +63,22 @@ const Home = ({ projects, personalInfo }) => {
           <div className="about-content">
             <div className="about-text">
               <p>{personalInfo.about}</p>
+              <div className="education-info">
+                <div className="education-item">
+                  <i className="fas fa-graduation-cap"></i>
+                  <div>
+                    <h4>4th Year Computer Science Student</h4>
+                    <p>Currently pursuing Bachelor's degree in Computer Science</p>
+                  </div>
+                </div>
+                <div className="education-item">
+                  <i className="fas fa-briefcase"></i>
+                  <div>
+                    <h4>Freelance Developer</h4>
+                    <p>Providing development services since 2023</p>
+                  </div>
+                </div>
+              </div>
               <div className="about-details">
                 <div className="detail-item">
                   <i className="fas fa-envelope"></i>
@@ -76,7 +95,7 @@ const Home = ({ projects, personalInfo }) => {
               </div>
             </div>
             <div className="skills">
-              <h3>Technologies I Work With</h3>
+              <h3>Technologies & Skills</h3>
               <div className="skills-list">
                 {personalInfo.skills.map((skill, index) => (
                   <span key={index} className="skill-tag">
