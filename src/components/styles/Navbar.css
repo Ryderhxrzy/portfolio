@@ -24,19 +24,26 @@
   height: 70px;
 }
 
+/* CRITICAL: Logo styles */
 .nav-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
+  display: flex !important;
+  align-items: center !important;
   text-decoration: none;
-  color: var(--primary-color);
-  transition: color 0.3s ease;
-  cursor: pointer;
+  height: 50px; /* Give it some height */
+  min-width: 150px; /* Ensure it has width */
+  background: transparent; /* Make sure background is transparent */
 }
 
-.nav-logo:hover {
-  color: var(--primary-dark);
+.logo-image {
+  height: 55px !important;
+  width: auto !important;
+  max-width: 150px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
+/* Rest of your existing CSS */
 .nav-menu {
   display: flex;
   gap: 2rem;
@@ -136,5 +143,13 @@
 
   .nav-toggle {
     display: flex;
+  }
+
+  .nav-logo {
+    min-width: 120px; /* Smaller on mobile */
+  }
+  
+  .logo-image {
+    height: 35px !important;
   }
 }

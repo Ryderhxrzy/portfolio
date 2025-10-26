@@ -28,7 +28,12 @@ const Navbar = ({ personalInfo }) => {
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
         <Link to="/" className="nav-logo" onClick={closeMenu}>
-          {personalInfo.name.split(' ')[0]}
+          {/* Test with placeholder first */}
+          <img 
+            src="./logo.png"
+            alt={`${personalInfo.name} Logo`}
+            className="logo-image"
+          />
         </Link>
         
         <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
