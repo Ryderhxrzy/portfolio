@@ -461,28 +461,6 @@ const GitHubStats = () => {
             ))}
           </div>
         </div>
-
-        {/* GitHub Tips */}
-        <div className="github-tips">
-          <h3>💡 How to Earn More Achievements</h3>
-          <div className="tips-grid">
-            <div className="tip-card">
-              <i className="fas fa-code"></i>
-              <h4>Create More Repositories</h4>
-              <p>Build and share your projects to increase your repository count</p>
-            </div>
-            <div className="tip-card">
-              <i className="fas fa-star"></i>
-              <h4>Write Quality Code</h4>
-              <p>Create useful projects that others will star and use</p>
-            </div>
-            <div className="tip-card">
-              <i className="fas fa-users"></i>
-              <h4>Engage with Community</h4>
-              <p>Follow developers and contribute to open source projects</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
