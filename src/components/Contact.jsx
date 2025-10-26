@@ -329,41 +329,6 @@ const Contact = ({ personalInfo }) => {
             </div>
           </form>
         </div>
-
-        {/* Process Section */}
-        <div className="process-section">
-          <h2>My Working Process</h2>
-          <div className="process-steps">
-            <div className="process-step">
-              <div className="step-number">1</div>
-              <div className="step-content">
-                <h4>Consultation</h4>
-                <p>We discuss your project requirements and goals</p>
-              </div>
-            </div>
-            <div className="process-step">
-              <div className="step-number">2</div>
-              <div className="step-content">
-                <h4>Planning</h4>
-                <p>I create a detailed project plan and timeline</p>
-              </div>
-            </div>
-            <div className="process-step">
-              <div className="step-number">3</div>
-              <div className="step-content">
-                <h4>Development</h4>
-                <p>I build your project with regular updates</p>
-              </div>
-            </div>
-            <div className="process-step">
-              <div className="step-number">4</div>
-              <div className="step-content">
-                <h4>Delivery</h4>
-                <p>Final review, deployment, and support</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
