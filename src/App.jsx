@@ -1,13 +1,13 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Navbar from './components/Navbar';
-import Home from './components/Home';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
-import { projects, personalInfo } from './data/projects';
+import Navbar from './components/Navbar.jsx';
+import Home from './components/Home.jsx';
+import Projects from './components/Projects.jsx';
+import Contact from './components/Contact.jsx';
+import Footer from './components/Footer.jsx';
+import GitHubStats from './components/GithubStats.jsx';
+import { projects, personalInfo } from './data/projects.js';
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home projects={projects} personalInfo={personalInfo} />} />
           <Route path="/projects" element={<Projects projects={projects} />} />
+          <Route path="/github-stats" element={<GitHubStats />} />
           <Route path="/contact" element={<Contact personalInfo={personalInfo} />} />
         </Routes>
         <Footer personalInfo={personalInfo} />

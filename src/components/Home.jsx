@@ -1,10 +1,14 @@
-// src/components/Home.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './styles/Home.css';
 
 const Home = ({ projects, personalInfo }) => {
   const featuredProjects = projects.filter(project => project.featured).slice(0, 3);
+
+  // Function to handle image errors
+  const handleImageError = (e) => {
+    e.target.src = `https://via.placeholder.com/400x200/2563eb/ffffff?text=Project+Image`;
+  };
 
   return (
     <div className="home">
@@ -20,9 +24,11 @@ const Home = ({ projects, personalInfo }) => {
             </p>
             <div className="hero-buttons">
               <Link to="/projects" className="btn btn-primary">
+                <i className="fas fa-briefcase"></i>
                 View My Work
               </Link>
               <Link to="/contact" className="btn btn-secondary">
+                <i className="fas fa-paper-plane"></i>
                 Get In Touch
               </Link>
             </div>
@@ -41,6 +47,7 @@ const Home = ({ projects, personalInfo }) => {
           <div className="hero-image">
             <div className="image-placeholder">
               <i className="fas fa-code"></i>
+              <div className="placeholder-text">Your Photo</div>
             </div>
           </div>
         </div>
@@ -62,13 +69,20 @@ const Home = ({ projects, personalInfo }) => {
                   <i className="fas fa-map-marker-alt"></i>
                   <span>{personalInfo.location}</span>
                 </div>
+                <div className="detail-item">
+                  <i className="fas fa-phone"></i>
+                  <span>{personalInfo.phone}</span>
+                </div>
               </div>
             </div>
             <div className="skills">
               <h3>Technologies I Work With</h3>
               <div className="skills-list">
                 {personalInfo.skills.map((skill, index) => (
-                  <span key={index} className="skill-tag">{skill}</span>
+                  <span key={index} className="skill-tag">
+                    <i className="fas fa-check"></i>
+                    {skill}
+                  </span>
                 ))}
               </div>
             </div>
@@ -84,21 +98,31 @@ const Home = ({ projects, personalInfo }) => {
             {featuredProjects.map(project => (
               <div key={project.id} className="project-card fade-in-up">
                 <div className="project-image">
-                  <img src={project.image} alt={project.title} />
+                  <img 
+                    src={`https://via.placeholder.com/400x200/2563eb/ffffff?text=${encodeURIComponent(project.title)}`} 
+                    alt={project.title}
+                    onError={handleImageError}
+                  />
                   <div className="project-overlay">
                     <div className="project-links">
                       {project.githubUrl && (
-                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
                           <i className="fab fa-github"></i>
                         </a>
                       )}
                       {project.liveUrl && (
-                        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
                           <i className="fas fa-external-link-alt"></i>
                         </a>
                       )}
                     </div>
                   </div>
+                  {project.featured && (
+                    <div className="featured-badge">
+                      <i className="fas fa-star"></i>
+                      Featured
+                    </div>
+                  )}
                 </div>
                 <div className="project-content">
                   <h3>{project.title}</h3>
@@ -113,7 +137,10 @@ const Home = ({ projects, personalInfo }) => {
             ))}
           </div>
           <div className="view-all">
-            <Link to="/projects" className="btn btn-primary">View All Projects</Link>
+            <Link to="/projects" className="btn btn-primary">
+              <i className="fas fa-eye"></i>
+              View All Projects
+            </Link>
           </div>
         </div>
       </section>

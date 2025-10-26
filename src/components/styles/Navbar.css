@@ -1,4 +1,3 @@
-/* src/components/styles/Navbar.css */
 .navbar {
   position: fixed;
   top: 0;
@@ -31,6 +30,7 @@
   text-decoration: none;
   color: var(--primary-color);
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
 .nav-logo:hover {
@@ -50,6 +50,7 @@
   transition: all 0.3s ease;
   position: relative;
   padding: 0.5rem 0;
+  cursor: pointer;
 }
 
 .nav-link:hover {

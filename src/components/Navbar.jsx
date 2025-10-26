@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './styles/Navbar.css';
@@ -46,6 +45,13 @@ const Navbar = ({ personalInfo }) => {
             onClick={closeMenu}
           >
             Projects
+          </Link>
+          <Link 
+            to="/github-stats" 
+            className={`nav-link ${location.pathname === '/github-stats' ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            GitHub Stats
           </Link>
           <Link 
             to="/contact" 

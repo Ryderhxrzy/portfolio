@@ -1,4 +1,3 @@
-/* src/components/styles/Home.css */
 .hero {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   color: var(--white);
@@ -334,4 +333,16 @@
   .image-placeholder i {
     font-size: 4rem;
   }
+}
+
+/* Add to existing Home.css */
+.placeholder-text {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.skill-tag i {
+  margin-right: 0.5rem;
+  font-size: 0.8rem;
 }
