@@ -495,3 +495,70 @@
     transform: translateY(0);
   }
 }
+
+/* Section base styles */
+.section {
+  padding: 80px 0;
+}
+
+/* GitHub Stats Section */
+.github-stats-section {
+  background: var(--background-light);
+}
+
+.github-stats-section .github-stats-page {
+  padding: 0;
+}
+
+.github-stats-section .page-header {
+  padding-top: 0;
+}
+
+/* Reviews Section */
+.reviews-section {
+  background: var(--white);
+}
+
+.reviews-section .reviews-page {
+  padding: 0;
+}
+
+.reviews-section .page-header {
+  padding-top: 0;
+}
+
+/* Contact Section */
+.contact-section {
+  background: var(--background-light);
+}
+
+.contact-section .contact-page {
+  padding: 0;
+}
+
+.contact-section .page-header {
+  padding-top: 0;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure sections have proper spacing */
+#home,
+#about,
+#projects,
+#github-stats,
+#reviews,
+#contact {
+  scroll-margin-top: 70px; /* Account for fixed navbar */
+}
+
+/* Remove individual page padding since they're now sections */
+.github-stats-page,
+.reviews-page,
+.contact-page {
+  padding: 0 !important;
+  min-height: auto !important;
+}

@@ -1,6 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './styles/Home.css';
+import GitHubStats from './GitHubStats';
+import Reviews from './Reviews';
+import Contact from './Contact';
 
 const Home = ({ projects, personalInfo }) => {
   const featuredProjects = projects.filter(project => project.featured).slice(0, 3);
@@ -13,7 +15,7 @@ const Home = ({ projects, personalInfo }) => {
   return (
     <div className="home">
       {/* Hero Section */}
-      <section className="hero">
+      <section id="home" className="hero">
         <div className="container">
           <div className="hero-content fade-in-up">
             <h1>Hi, I'm <span className="highlight">{personalInfo.name}</span></h1>
@@ -26,14 +28,20 @@ const Home = ({ projects, personalInfo }) => {
               and deliver exceptional user experiences.
             </p>
             <div className="hero-buttons">
-              <Link to="/projects" className="btn btn-primary">
+              <button 
+                className="btn btn-primary"
+                onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
+              >
                 <i className="fas fa-briefcase"></i>
                 View My Work
-              </Link>
-              <Link to="/contact" className="btn btn-secondary">
+              </button>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+              >
                 <i className="fas fa-paper-plane"></i>
                 Get In Touch
-              </Link>
+              </button>
             </div>
             <div className="hero-social">
               <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer">
@@ -57,7 +65,7 @@ const Home = ({ projects, personalInfo }) => {
       </section>
 
       {/* About Section */}
-      <section className="about section">
+      <section id="about" className="about section">
         <div className="container">
           <h2 className="section-title">About Me</h2>
           <div className="about-content">
@@ -109,8 +117,8 @@ const Home = ({ projects, personalInfo }) => {
         </div>
       </section>
 
-      {/* Featured Projects */}
-      <section className="featured-projects section">
+      {/* Projects Section */}
+      <section id="projects" className="featured-projects section">
         <div className="container">
           <h2 className="section-title">Featured Projects</h2>
           <div className="projects-grid">
@@ -156,11 +164,42 @@ const Home = ({ projects, personalInfo }) => {
             ))}
           </div>
           <div className="view-all">
-            <Link to="/projects" className="btn btn-primary">
+            <button 
+              className="btn btn-primary"
+              onClick={() => {
+                // Show all projects (you can expand this section)
+                const allProjects = document.querySelector('.projects-grid');
+                if (allProjects) {
+                  allProjects.innerHTML = ''; // Clear current
+                  // Add logic to show all projects
+                }
+              }}
+            >
               <i className="fas fa-eye"></i>
               View All Projects
-            </Link>
+            </button>
           </div>
+        </div>
+      </section>
+
+      {/* GitHub Stats Section */}
+      <section id="github-stats" className="github-stats-section section">
+        <div className="container">
+          <GitHubStats />
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section id="reviews" className="reviews-section section">
+        <div className="container">
+          <Reviews />
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="contact-section section">
+        <div className="container">
+          <Contact personalInfo={personalInfo} />
         </div>
       </section>
     </div>

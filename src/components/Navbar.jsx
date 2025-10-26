@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import './styles/Navbar.css';
 
 const Navbar = ({ personalInfo }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+      
+      // Update active section based on scroll position
+      const sections = ['home', 'about', 'projects', 'github-stats', 'reviews', 'contact'];
+      const current = sections.find(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+      
+      if (current) {
+        setActiveSection(current);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -24,54 +38,66 @@ const Navbar = ({ personalInfo }) => {
     setIsMenuOpen(false);
   };
 
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offsetTop = element.offsetTop - 70; // Adjust for navbar height
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
+    }
+    closeMenu();
+  };
+
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
-        <Link to="/" className="nav-logo" onClick={closeMenu}>
-          {/* Test with placeholder first */}
+        <div className="nav-logo" onClick={() => scrollToSection('home')}>
           <img 
-            src="./logo.png"
+            src="/logo.png" 
             alt={`${personalInfo.name} Logo`}
             className="logo-image"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              const fallback = e.target.nextSibling;
+              if (fallback) fallback.style.display = 'block';
+            }}
           />
-        </Link>
+          <span className="logo-text">{personalInfo.name.split(' ')[0]}</span>
+        </div>
         
         <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
-          <Link 
-            to="/" 
-            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-            onClick={closeMenu}
+          <div 
+            className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}
+            onClick={() => scrollToSection('home')}
           >
             Home
-          </Link>
-          <Link 
-            to="/projects" 
-            className={`nav-link ${location.pathname === '/projects' ? 'active' : ''}`}
-            onClick={closeMenu}
+          </div>
+          <div 
+            className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`}
+            onClick={() => scrollToSection('projects')}
           >
             Projects
-          </Link>
-          <Link 
-            to="/github-stats" 
-            className={`nav-link ${location.pathname === '/github-stats' ? 'active' : ''}`}
-            onClick={closeMenu}
+          </div>
+          <div 
+            className={`nav-link ${activeSection === 'github-stats' ? 'active' : ''}`}
+            onClick={() => scrollToSection('github-stats')}
           >
             GitHub Stats
-          </Link>
-          <Link 
-            to="/reviews" 
-            className={`nav-link ${location.pathname === '/reviews' ? 'active' : ''}`}
-            onClick={closeMenu}
+          </div>
+          <div 
+            className={`nav-link ${activeSection === 'reviews' ? 'active' : ''}`}
+            onClick={() => scrollToSection('reviews')}
           >
             Reviews
-          </Link>
-          <Link 
-            to="/contact" 
-            className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}
-            onClick={closeMenu}
+          </div>
+          <div 
+            className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}
+            onClick={() => scrollToSection('contact')}
           >
             Contact
-          </Link>
+          </div>
         </div>
 
         <div className="nav-toggle" onClick={toggleMenu}>
