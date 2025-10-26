@@ -54,6 +54,14 @@ const Navbar = ({ personalInfo }) => {
             GitHub Stats
           </Link>
           <Link 
+            to="/reviews" 
+            className={`nav-link ${location.pathname === '/reviews' ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            <i className="fas fa-star"></i>
+            Reviews
+          </Link>
+          <Link 
             to="/contact" 
             className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}
             onClick={closeMenu}
