@@ -1,7 +1,7 @@
 .reviews-page {
   padding: 120px 0 80px;
   min-height: 100vh;
-  background: var(--background-light);
+  background: var(--white);
 }
 
 .stats-overview {
