@@ -7,6 +7,7 @@ import Projects from './components/Projects.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
 import GitHubStats from './components/GithubStats.jsx';
+import Reviews from './components/Reviews.jsx';
 import { projects, personalInfo } from './data/projects.js';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/projects" element={<Projects projects={projects} />} />
           <Route path="/github-stats" element={<GitHubStats />} />
           <Route path="/contact" element={<Contact personalInfo={personalInfo} />} />
+          <Route path="/reviews" element={<Reviews />} />
         </Routes>
         <Footer personalInfo={personalInfo} />
       </div>
