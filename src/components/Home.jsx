@@ -155,8 +155,8 @@ const Home = () => {
                 <div className="education-item">
                   <i className="fas fa-graduation-cap"></i>
                   <div>
-                    <h4>4th Year Computer Science Student</h4>
-                    <p>Currently pursuing Bachelor's degree in Computer Science</p>
+                    <h4>4th Year Information Technology Student</h4>
+                    <p>Currently pursuing Bachelor's degree in Information Technology</p>
                   </div>
                 </div>
                 <div className="education-item">
