@@ -13,7 +13,7 @@ const Reviews = () => {
       project: "E-commerce Platform",
       rating: 5,
       text: "Working with Alex was an absolute pleasure. He delivered our e-commerce platform ahead of schedule and exceeded our expectations. His attention to detail and technical expertise are remarkable.",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
       category: "web"
     },
     {
