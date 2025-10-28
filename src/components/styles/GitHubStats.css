@@ -720,3 +720,178 @@
   background: var(--white);
   margin: 1.5rem 0;
 }
+
+/* Achievement Category Filters - Fixed Design */
+.achievement-categories {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.category-filter {
+  padding: 10px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 25px;
+  background: white;
+  color: var(--text-light);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.category-filter:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.category-filter.active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.filter-count {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* Correct Contribution Graph Colors */
+.graph-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* Match these colors with the actual GitHub contribution chart colors */
+.legend-color.less {
+  background: #ebedf0; /* Light gray for 0 contributions */
+}
+
+.legend-color.more {
+  background: #216e39; /* Dark green for high contributions */
+}
+
+/* Alternative: Use gradient to match GitHub's actual colors */
+.legend-color.less {
+  background: #ebedf0; /* #ebedf0, #9be9a8, #40c463, #30a14e, #216e39 */
+}
+
+.legend-color.more {
+  background: #216e39;
+}
+
+/* Loading State Improvements */
+.loading-spinner {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-light);
+}
+
+.loading-spinner i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.loading-spinner p {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.loading-spinner small {
+  opacity: 0.7;
+}
+
+/* Error State Improvements */
+.warning-message {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  color: #856404;
+}
+
+.warning-message i {
+  color: #f39c12;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.warning-message strong {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Mobile Responsiveness for Filters */
+@media (max-width: 768px) {
+  .achievement-categories {
+    gap: 0.5rem;
+  }
+  
+  .category-filter {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .filter-count {
+    font-size: 0.7rem;
+  }
+  
+  .legend-item {
+    font-size: 0.8rem;
+  }
+  
+  .legend-color {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .achievement-categories {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .category-filter {
+    width: 200px;
+    justify-content: center;
+  }
+  
+  .graph-legend {
+    gap: 1rem;
+  }
+}
