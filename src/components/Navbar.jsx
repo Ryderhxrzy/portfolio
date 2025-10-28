@@ -41,7 +41,7 @@ const Navbar = ({ personalInfo }) => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offsetTop = element.offsetTop - 70; // Adjust for navbar height
+      const offsetTop = element.offsetTop - 70;
       window.scrollTo({
         top: offsetTop,
         behavior: 'smooth'
