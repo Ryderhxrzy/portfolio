@@ -5,13 +5,13 @@ export const personalInfo = {
   email: "jhayrcervantes0981@gmail.com",
   phone: "+(+63) 969-597-2435",
   location: "Manila, Philippines",
-  about: "I'm a passionate full-stack developer with expertise in MERN stack and various programming languages. As a 4th year Computer Science student and freelance developer since 2023, I combine academic knowledge with practical experience to deliver high-quality web solutions.",
+  about: "I'm a passionate full-stack developer and creative vector artist with a strong foundation in both technology and design. As a 4th-year Information Technology student and freelance developer since 2023, I specialize in various programming languages. I enjoy building modern web applications and creating engaging cartoon artworks that blend creativity with functionality.",
   skills: [
-    "HTML", "CSS", "JavaScript", "MERN Stack", "MySQL",
-    "MSSQL", "PostgreSQL", "Java", "C#", "C++", "Python",
-    "Visual Basic", "XAMPP", "GitHub", "Git", "Photoshop",
-    "Vector Art", "Filmora", "CapCut"
-  ],
+  "HTML", "CSS", "JavaScript", "MERN Stack", "MySQL",
+  "MSSQL", "PostgreSQL", "Java", "C#", "C++", "Python",
+  "Visual Basic", "XAMPP", "Git", "GitHub", "Photoshop",
+  "Vector Art", "Cartoon Illustration", "Filmora", "CapCut"
+],
   socialLinks: {
     github: "https://github.com/Ryderhxrzy",
     linkedin: "https://linkedin.com/in/jhayrcervantes",
