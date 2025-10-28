@@ -552,3 +552,171 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* GitHub Stats as Component */
+.github-stats-component {
+  padding: 0;
+}
+
+.github-stats-component .page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.github-stats-component .page-header h2 {
+  font-size: 2.5rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.github-stats-component .page-header p {
+  font-size: 1.2rem;
+  color: var(--text-light);
+}
+
+/* Responsive Contribution Graph */
+.contribution-graph {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.contribution-graph h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+  text-align: center;
+}
+
+.graph-container {
+  position: relative;
+  background: var(--background-light);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.contribution-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: 100%;
+}
+
+.graph-fallback {
+  display: none;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-light);
+  background: var(--background-light);
+}
+
+.graph-fallback i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+/* Graph Legend */
+.graph-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.legend-color.less {
+  background: #ebedf0;
+}
+
+.legend-color.more {
+  background: #216e39;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .github-stats-component .page-header h2 {
+    font-size: 2rem;
+  }
+  
+  .github-stats-component .page-header p {
+    font-size: 1rem;
+  }
+  
+  .contribution-graph {
+    padding: 1.5rem;
+  }
+  
+  .graph-container {
+    border-radius: 8px;
+  }
+  
+  .contribution-chart {
+    min-height: 120px; /* Ensure visibility on mobile */
+  }
+  
+  .graph-legend {
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .legend-color {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .contribution-graph {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .contribution-graph h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .graph-container {
+    border-radius: 6px;
+  }
+  
+  .contribution-chart {
+    min-height: 100px;
+  }
+}
+
+/* Ensure the component works well in the home page layout */
+#github-stats .github-stats-component {
+  background: transparent;
+}
+
+#github-stats .contribution-graph,
+#github-stats .languages-section,
+#github-stats .achievements-section,
+#github-stats .activity-section {
+  background: var(--white);
+  margin: 1.5rem 0;
+}

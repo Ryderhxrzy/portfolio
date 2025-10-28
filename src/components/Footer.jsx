@@ -1,4 +1,3 @@
-// src/components/Footer.js
 import React from 'react';
 import './styles/Footer.css';
 
@@ -27,9 +26,9 @@ const Footer = ({ personalInfo }) => {
           
           <div className="footer-links">
             <h4>Quick Links</h4>
-            <a href="/">Home</a>
-            <a href="/projects">Projects</a>
-            <a href="/contact">Contact</a>
+            <a href="#home">Home</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
           </div>
           
           <div className="footer-contact">

@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import './styles/GitHubStats.css';
 
 const GitHubStats = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const username = "Ryderhxrzy"; // Your GitHub username
+
+  // Track window width for responsive design
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchGitHubData = async () => {
@@ -129,8 +140,17 @@ const GitHubStats = () => {
     const hasPinnedRepos = reposData.some(repo => repo.topics && repo.topics.length > 0);
     const hasReadme = reposData.some(repo => repo.has_wiki || repo.description);
     const hasMultipleLanguages = new Set(reposData.map(repo => repo.language).filter(Boolean)).size > 3;
+    
+    // Calculate PR-related stats for PullShark
+    const totalPRs = reposData.reduce((acc, repo) => acc + (repo.open_issues_count || 0), 0);
+    const hasMergedPRs = reposData.some(repo => repo.has_issues);
+    
+    // Calculate collaboration stats for Pair Extraordinaire
+    const hasCollaborativeRepos = reposData.some(repo => repo.has_projects || repo.has_wiki);
+    const forkCount = reposData.filter(repo => repo.fork).length;
 
     return [
+      // Existing achievements...
       {
         id: 1,
         name: "Open Source Contributor",
@@ -171,65 +191,31 @@ const GitHubStats = () => {
         target: 1,
         category: "collaboration"
       },
+
+      // GitHub-style achievements (simulated)
       {
-        id: 5,
-        name: "GitHub Veteran",
-        description: "Active on GitHub for a while",
-        icon: "fas fa-calendar-alt",
-        unlocked: accountAge >= 1,
-        progress: accountAge,
-        target: 1,
-        category: "commitment"
-      },
-      {
-        id: 6,
-        name: "Polyglot Programmer",
-        description: "Uses multiple programming languages",
-        icon: "fas fa-language",
-        unlocked: hasMultipleLanguages,
-        progress: hasMultipleLanguages ? 1 : 0,
-        target: 1,
-        category: "skills"
-      },
-      {
-        id: 7,
-        name: "Documentation Pro",
-        description: "Maintains good project documentation",
-        icon: "fas fa-book",
-        unlocked: hasReadme,
-        progress: hasReadme ? 1 : 0,
-        target: 1,
-        category: "quality"
-      },
-      {
-        id: 8,
-        name: "Project Organizer",
-        description: "Uses GitHub topics and organization",
-        icon: "fas fa-tags",
-        unlocked: hasPinnedRepos,
-        progress: hasPinnedRepos ? 1 : 0,
-        target: 1,
-        category: "organization"
-      },
-      {
-        id: 9,
-        name: "Repository Explorer",
-        description: "Has forked repositories",
-        icon: "fas fa-code-fork",
-        unlocked: userData.public_repos > 5,
-        progress: Math.min(userData.public_repos, 10),
-        target: 5,
-        category: "exploration"
-      },
-      {
-        id: 10,
-        name: "Code Collaborator",
-        description: "Active in community projects",
-        icon: "fas fa-handshake",
-        unlocked: totalForks > 2,
-        progress: Math.min(totalForks, 5),
+        id: 11,
+        name: "Pull Shark",
+        description: "2 pull requests merged",
+        icon: "fas fa-code-merge",
+        unlocked: hasMergedPRs || userData.public_repos >= 2,
+        progress: hasMergedPRs ? 2 : Math.min(userData.public_repos, 2),
         target: 2,
-        category: "collaboration"
+        category: "collaboration",
+        githubOfficial: true,
+        color: "#2DA44E"
+      },
+      {
+        id: 12,
+        name: "Pair Extraordinaire",
+        description: "Co-authored commits",
+        icon: "fas fa-people-arrows",
+        unlocked: hasCollaborativeRepos || forkCount > 0,
+        progress: hasCollaborativeRepos ? 1 : 0,
+        target: 1,
+        category: "collaboration",
+        githubOfficial: true,
+        color: "#8250DF"
       }
     ];
   };
@@ -270,9 +256,34 @@ const GitHubStats = () => {
     ];
   };
 
+  // Get responsive contribution graph URL based on screen size
+  const getContributionGraphUrl = () => {
+    if (windowWidth < 768) {
+      return `https://ghchart.rshah.org/2563eb/${username}`; // Standard size for mobile
+    } else if (windowWidth < 1024) {
+      return `https://ghchart.rshah.org/2563eb/${username}`; // Standard size for tablet
+    } else {
+      return `https://ghchart.rshah.org/2563eb/${username}`; // Standard size for desktop
+    }
+  };
+
+  // Filter achievements by category
+  const filteredAchievements = stats?.achievements?.filter(achievement => 
+    activeCategory === 'all' || achievement.category === activeCategory
+  ) || [];
+
+  // Get unique categories for filters
+  const categories = stats?.achievements ? 
+    ['all', ...new Set(stats.achievements.map(a => a.category))] : ['all'];
+
+  // Calculate achievement stats
+  const totalAchievements = stats?.achievements?.length || 0;
+  const unlockedAchievements = stats?.achievements?.filter(a => a.unlocked).length || 0;
+  const completionRate = totalAchievements > 0 ? (unlockedAchievements / totalAchievements) * 100 : 0;
+
   if (loading) {
     return (
-      <div className="github-stats-page">
+      <div className="github-stats-component">
         <div className="container">
           <div className="loading-spinner">
             <i className="fas fa-spinner fa-spin"></i>
@@ -285,181 +296,204 @@ const GitHubStats = () => {
   }
 
   return (
-    <div className="github-stats-page">
-      <div className="container">
-        <div className="page-header">
-          <h1>GitHub Statistics</h1>
-          <p>My coding activity and open-source contributions</p>
-          
-          {stats?.userData && (
-            <div className="github-profile">
-              <img 
-                src={stats.userData.avatar_url} 
-                alt={`${username}'s GitHub profile`}
-                className="profile-avatar"
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/150/2563eb/ffffff?text=GitHub';
-                }}
-              />
-              <h2>{stats.userData.name || username}</h2>
-              <p className="profile-bio">{stats.userData.bio || 'GitHub Developer'}</p>
-              <div className="profile-meta">
-                <span>Joined GitHub in {stats.joinedDate}</span>
-              </div>
-              <a 
-                href={stats.userData.html_url}
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="btn btn-primary"
-              >
-                <i className="fab fa-github"></i>
-                View Profile on GitHub
-              </a>
-            </div>
-          )}
+    <div className="github-stats-component">
+      <div className="page-header">
+        <h2>GitHub Statistics</h2>
+        <p>My coding activity and open-source contributions</p>
+      </div>
+
+      {error && (
+        <div className="warning-message">
+          <i className="fas fa-exclamation-triangle"></i>
+          <div>
+            <strong>Note:</strong> {error}
+          </div>
         </div>
+      )}
 
-        {error && (
-          <div className="warning-message">
-            <i className="fas fa-exclamation-triangle"></i>
-            <div>
-              <strong>Note:</strong> {error}
-            </div>
+      {/* Stats Grid */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-code-branch"></i>
           </div>
-        )}
-
-        {/* Stats Grid */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-code-branch"></i>
-            </div>
-            <div className="stat-content">
-              <h3>{stats?.repositories?.toLocaleString() || '0'}</h3>
-              <p>Public Repositories</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-star"></i>
-            </div>
-            <div className="stat-content">
-              <h3>{stats?.stars?.toLocaleString() || '0'}</h3>
-              <p>Stars Received</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-users"></i>
-            </div>
-            <div className="stat-content">
-              <h3>{stats?.followers?.toLocaleString() || '0'}</h3>
-              <p>Followers</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-network-wired"></i>
-            </div>
-            <div className="stat-content">
-              <h3>{stats?.contributions?.toLocaleString() || '0'}</h3>
-              <p>Total Contributions</p>
-            </div>
+          <div className="stat-content">
+            <h3>{stats?.repositories?.toLocaleString() || '0'}</h3>
+            <p>Public Repositories</p>
           </div>
         </div>
 
-        {/* GitHub Achievements Section */}
-        <div className="achievements-section">
-          <h2>GitHub Achievements</h2>
-          <p className="section-subtitle">Milestones and accomplishments on GitHub</p>
-          
-          <div className="achievements-grid">
-            {stats?.achievements?.map(achievement => (
-              <div 
-                key={achievement.id} 
-                className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`}
-              >
-                <div className="achievement-icon">
-                  <i className={achievement.icon}></i>
-                </div>
-                <div className="achievement-content">
-                  <h4>{achievement.name}</h4>
-                  <p>{achievement.description}</p>
-                  <div className="achievement-progress">
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill"
-                        style={{ 
-                          width: `${(achievement.progress / achievement.target) * 100}%` 
-                        }}
-                      ></div>
-                    </div>
-                    <span className="progress-text">
-                      {achievement.progress}/{achievement.target}
-                    </span>
-                  </div>
-                </div>
-                <div className="achievement-status">
-                  {achievement.unlocked ? (
-                    <i className="fas fa-check-circle unlocked"></i>
-                  ) : (
-                    <i className="fas fa-lock locked"></i>
-                  )}
-                </div>
-              </div>
-            ))}
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-star"></i>
+          </div>
+          <div className="stat-content">
+            <h3>{stats?.stars?.toLocaleString() || '0'}</h3>
+            <p>Stars Received</p>
           </div>
         </div>
 
-        {/* Languages Section */}
-        <div className="languages-section">
-          <h2>Top Programming Languages</h2>
-          <div className="languages-list">
-            {stats?.languages?.map((language, index) => (
-              <div key={index} className="language-tag">
-                <i className="fas fa-circle" style={{ color: getLanguageColor(language) }}></i>
-                {language}
-              </div>
-            ))}
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-users"></i>
+          </div>
+          <div className="stat-content">
+            <h3>{stats?.followers?.toLocaleString() || '0'}</h3>
+            <p>Followers</p>
           </div>
         </div>
 
-        {/* Contribution Graph */}
-        <div className="contribution-graph">
-          <h2>GitHub Contribution Activity</h2>
-          <div className="graph-container">
-            <img 
-              src={`https://ghchart.rshah.org/2563eb/${username}`}
-              alt={`GitHub contribution chart for ${username}`}
-              className="contribution-chart"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                const fallback = e.target.parentElement.querySelector('.graph-fallback');
-                if (fallback) fallback.style.display = 'block';
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-network-wired"></i>
+          </div>
+          <div className="stat-content">
+            <h3>{stats?.contributions?.toLocaleString() || '0'}</h3>
+            <p>Total Contributions</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Contribution Graph - Made Responsive */}
+      <div className="contribution-graph">
+        <h3>GitHub Contribution Activity</h3>
+        <div className="graph-container">
+          <img 
+            src={getContributionGraphUrl()}
+            alt={`GitHub contribution chart for ${username}`}
+            className="contribution-chart"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              const fallback = e.target.parentElement.querySelector('.graph-fallback');
+              if (fallback) fallback.style.display = 'block';
+            }}
+          />
+          <div className="graph-fallback">
+            <i className="fab fa-github"></i>
+            <p>Live contribution graph</p>
+            <small>Contribution data visualization</small>
+          </div>
+        </div>
+        <div className="graph-legend">
+          <div className="legend-item">
+            <span className="legend-color less"></span>
+            <span>Less</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color more"></span>
+            <span>More</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Languages Section */}
+      <div className="languages-section">
+        <h3>Top Programming Languages</h3>
+        <div className="languages-list">
+          {stats?.languages?.map((language, index) => (
+            <div key={index} className="language-tag">
+              <i className="fas fa-circle" style={{ color: getLanguageColor(language) }}></i>
+              {language}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* GitHub Achievements Section */}
+      <div className="achievements-section">
+        <h3>GitHub Achievements</h3>
+        <p className="section-subtitle">Milestones and accomplishments on GitHub</p>
+        
+        {/* Achievement Summary */}
+        <div className="achievement-summary">
+          <div className="summary-item">
+            <span className="summary-number">{unlockedAchievements}</span>
+            <span className="summary-label">Unlocked</span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-number">{totalAchievements}</span>
+            <span className="summary-label">Total</span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-number">{Math.round(completionRate)}%</span>
+            <span className="summary-label">Completion</span>
+          </div>
+        </div>
+
+        {/* Category Filters */}
+        <div className="achievement-categories">
+          {categories.map(category => (
+            <button
+              key={category}
+              className={`category-filter ${activeCategory === category ? 'active' : ''}`}
+              onClick={() => setActiveCategory(category)}
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </button>
+          ))}
+        </div>
+        
+        <div className="achievements-grid">
+          {filteredAchievements.map(achievement => (
+            <div 
+              key={achievement.id} 
+              className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'} ${
+                achievement.githubOfficial ? 'github-official' : ''
+              }`}
+              style={{
+                '--achievement-color': achievement.color,
+                '--achievement-light': achievement.color ? `${achievement.color}20` : undefined
               }}
-            />
-            <div className="graph-fallback">
-              <i className="fab fa-github"></i>
-              <p>Live contribution graph</p>
-              <small>Contribution data visualization</small>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div className="activity-section">
-          <h2>Recent Activity</h2>
-          <div className="activity-list">
-            {stats?.recentActivity?.map((activity, index) => (
-              <div key={index} className="activity-item">
-                <i className="fas fa-circle"></i>
-                <span>{activity}</span>
+            >
+              {achievement.githubOfficial && (
+                <div className="achievement-badge">GitHub</div>
+              )}
+              
+              <div className="achievement-icon">
+                <i className={achievement.icon}></i>
               </div>
-            ))}
-          </div>
+              
+              <div className="achievement-content">
+                <h4>{achievement.name}</h4>
+                <p>{achievement.description}</p>
+                <div className="achievement-progress">
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill"
+                      style={{ 
+                        width: `${(achievement.progress / achievement.target) * 100}%`,
+                        backgroundColor: achievement.color
+                      }}
+                    ></div>
+                  </div>
+                  <span className="progress-text">
+                    {achievement.progress}/{achievement.target}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="achievement-status">
+                {achievement.unlocked ? (
+                  <i className="fas fa-check-circle unlocked"></i>
+                ) : (
+                  <i className="fas fa-lock locked"></i>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="activity-section">
+        <h3>Recent Activity</h3>
+        <div className="activity-list">
+          {stats?.recentActivity?.map((activity, index) => (
+            <div key={index} className="activity-item">
+              <i className="fas fa-circle"></i>
+              <span>{activity}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

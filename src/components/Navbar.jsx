@@ -72,30 +72,42 @@ const Navbar = ({ personalInfo }) => {
             className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}
             onClick={() => scrollToSection('home')}
           >
+            <i className="fas fa-home"></i>
             Home
+          </div>
+          <div 
+            className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}
+            onClick={() => scrollToSection('about')}
+          >
+            <i className="fas fa-user"></i>
+            About Me
           </div>
           <div 
             className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`}
             onClick={() => scrollToSection('projects')}
           >
+            <i className="fas fa-briefcase"></i>
             Projects
           </div>
           <div 
             className={`nav-link ${activeSection === 'github-stats' ? 'active' : ''}`}
             onClick={() => scrollToSection('github-stats')}
           >
+            <i className="fab fa-github"></i>
             GitHub Stats
           </div>
           <div 
             className={`nav-link ${activeSection === 'reviews' ? 'active' : ''}`}
             onClick={() => scrollToSection('reviews')}
           >
+            <i className="fas fa-star"></i>
             Reviews
           </div>
           <div 
             className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}
             onClick={() => scrollToSection('contact')}
           >
+            <i className="fas fa-envelope"></i>
             Contact
           </div>
         </div>
