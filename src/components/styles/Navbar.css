@@ -24,26 +24,36 @@
   height: 70px;
 }
 
-/* CRITICAL: Logo styles */
 .nav-logo {
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  height: 50px; /* Give it some height */
-  min-width: 150px; /* Ensure it has width */
-  background: transparent; /* Make sure background is transparent */
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .logo-image {
-  height: 55px !important;
-  width: auto !important;
-  max-width: 150px !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  transition: all 0.3s ease;
 }
 
-/* Rest of your existing CSS */
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  display: none; /* Hidden by default, shows as fallback */
+}
+
+.nav-logo:hover .logo-image {
+  transform: scale(1.05);
+}
+
+.nav-logo:hover .logo-text {
+  color: var(--primary-dark);
+}
+
 .nav-menu {
   display: flex;
   gap: 2rem;
@@ -58,6 +68,15 @@
   position: relative;
   padding: 0.5rem 0;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-link i {
+  font-size: 0.9rem;
+  width: 16px;
+  text-align: center;
 }
 
 .nav-link:hover {
@@ -115,7 +134,7 @@
     flex-direction: column;
     background: var(--white);
     width: 100%;
-    text-align: center;
+    text-align: left;
     transition: 0.3s;
     box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
     padding: 2rem 0;
@@ -127,9 +146,10 @@
   }
 
   .nav-link {
-    padding: 1rem;
-    display: block;
+    padding: 1rem 2rem;
+    display: flex;
     width: 100%;
+    gap: 1rem;
   }
 
   .nav-link.active::after {
@@ -141,15 +161,46 @@
     color: var(--white);
   }
 
+  .nav-link.active i {
+    color: var(--white);
+  }
+
   .nav-toggle {
     display: flex;
   }
 
-  .nav-logo {
-    min-width: 120px; /* Smaller on mobile */
+  .logo-image {
+    height: 35px; /* Slightly smaller on mobile */
+  }
+}
+
+/* For very small screens */
+@media screen and (max-width: 480px) {
+  .nav-container {
+    padding: 0 15px;
   }
   
   .logo-image {
-    height: 35px !important;
+    height: 30px;
+  }
+  
+  .nav-link {
+    padding: 1rem 1.5rem;
+  }
+  
+  .nav-link i {
+    font-size: 0.8rem;
+    width: 14px;
+  }
+}
+
+/* For larger screens, hide icons if too crowded */
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+  .nav-link i {
+    display: none;
+  }
+  
+  .nav-link {
+    gap: 0;
   }
 }
