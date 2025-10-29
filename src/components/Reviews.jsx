@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/Reviews.css';
 
 const Reviews = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Confidential testimonials data
   const testimonials = [
@@ -93,13 +95,50 @@ const Reviews = () => {
     { key: 'all', label: 'All Projects', count: testimonials.length },
     { key: 'web', label: 'Web Development', count: testimonials.filter(t => t.category === 'web').length },
     { key: 'mobile', label: 'Mobile Apps', count: testimonials.filter(t => t.category === 'mobile').length },
-    { key: 'data', label: 'Data Solutions', count: testimonials.filter(t => t.category === 'data').length },
-    { key: 'other', label: 'Others', count: testimonials.filter(t => t.category === 'other').length }
+    { key: 'data', label: 'Data Solutions', count: testimonials.filter(t => t.category === 'data').length }
   ];
 
   const filteredTestimonials = activeFilter === 'all' 
     ? testimonials 
     : testimonials.filter(testimonial => testimonial.category === activeFilter);
+
+  // Carousel configuration - 3 cards per slide
+  const slidesPerView = 3;
+  const totalSlides = Math.ceil(filteredTestimonials.length / slidesPerView);
+
+  // Auto-play functionality
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, currentSlide, totalSlides]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+    setCurrentSlide(0);
+  };
+
+  // Get current testimonials for the slide
+  const getCurrentTestimonials = () => {
+    const startIndex = currentSlide * slidesPerView;
+    return filteredTestimonials.slice(startIndex, startIndex + slidesPerView);
+  };
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -109,6 +148,8 @@ const Reviews = () => {
       ></i>
     ));
   };
+
+  const currentTestimonials = getCurrentTestimonials();
 
   return (
     <div className="reviews-page">
@@ -150,7 +191,7 @@ const Reviews = () => {
             <button
               key={category.key}
               className={`filter-btn ${activeFilter === category.key ? 'active' : ''}`}
-              onClick={() => setActiveFilter(category.key)}
+              onClick={() => handleFilterChange(category.key)}
             >
               {category.label}
               <span className="project-count">({category.count})</span>
@@ -158,38 +199,101 @@ const Reviews = () => {
           ))}
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="testimonials-grid">
-          {filteredTestimonials.map(testimonial => (
-            <div key={testimonial.id} className="testimonial-card">
-              <div className="testimonial-header">
-                <div className="client-info">
-                  <h4 className="client-name">{testimonial.name}</h4>
-                  <p className="client-project">
-                    <i className="fas fa-briefcase"></i>
-                    {testimonial.project}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="testimonial-rating">
-                {renderStars(testimonial.rating)}
-                <span className="rating-text">{testimonial.rating}.0/5.0</span>
-              </div>
-              
-              <p className="testimonial-text">"{testimonial.text}"</p>
-              
-              <div className="testimonial-category">
-                <span className={`category-tag ${testimonial.category}`}>
-                  {testimonial.category === 'web' && <i className="fas fa-globe"></i>}
-                  {testimonial.category === 'mobile' && <i className="fas fa-mobile-alt"></i>}
-                  {testimonial.category === 'data' && <i className="fas fa-chart-bar"></i>}
-                  {testimonial.category === 'other' && <i className="fas fa-cogs"></i>}
-                  {categories.find(c => c.key === testimonial.category)?.label}
-                </span>
+        {/* Carousel Section */}
+        <div className="carousel-container">
+          <div className="carousel-wrapper">
+            {/* Previous Button */}
+            <button 
+              className="carousel-btn carousel-btn-prev"
+              onClick={prevSlide}
+              aria-label="Previous slide"
+            >
+              <i className="fas fa-chevron-left"></i>
+            </button>
+
+            {/* Carousel Content */}
+            <div className="carousel-content">
+              <div 
+                className="carousel-track"
+                style={{
+                  transform: `translateX(-${currentSlide * 100}%)`
+                }}
+              >
+                {Array.from({ length: totalSlides }).map((_, slideIndex) => {
+                  const slideTestimonials = filteredTestimonials.slice(
+                    slideIndex * slidesPerView,
+                    slideIndex * slidesPerView + slidesPerView
+                  );
+                  
+                  return (
+                    <div key={slideIndex} className="carousel-slide">
+                      {slideTestimonials.map((testimonial) => (
+                        <div key={testimonial.id} className="testimonial-card">
+                          <div className="testimonial-header">
+                            <div className="client-avatar">
+                              {testimonial.initials}
+                            </div>
+                            <div className="client-info">
+                              <h4 className="client-name">{testimonial.name}</h4>
+                              <p className="client-project">
+                                <i className="fas fa-briefcase"></i>
+                                {testimonial.project}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="testimonial-rating">
+                            {renderStars(testimonial.rating)}
+                            <span className="rating-text">{testimonial.rating}.0/5.0</span>
+                          </div>
+                          
+                          <p className="testimonial-text">"{testimonial.text}"</p>
+                          
+                          <div className="testimonial-category">
+                            <span className={`category-tag ${testimonial.category}`}>
+                              {testimonial.category === 'web' && <i className="fas fa-globe"></i>}
+                              {testimonial.category === 'mobile' && <i className="fas fa-mobile-alt"></i>}
+                              {testimonial.category === 'data' && <i className="fas fa-chart-bar"></i>}
+                              {testimonial.category === 'other' && <i className="fas fa-cogs"></i>}
+                              {categories.find(c => c.key === testimonial.category)?.label}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          ))}
+
+            {/* Next Button */}
+            <button 
+              className="carousel-btn carousel-btn-next"
+              onClick={nextSlide}
+              aria-label="Next slide"
+            >
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          {/* Carousel Indicators */}
+          <div className="carousel-indicators">
+            {Array.from({ length: totalSlides }).map((_, index) => (
+              <button
+                key={index}
+                className={`indicator ${index === currentSlide ? 'active' : ''}`}
+                onClick={() => goToSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Slide Counter */}
+          <div className="slide-counter">
+            <span className="current-slide">{currentSlide + 1}</span>
+            <span className="divider">/</span>
+            <span className="total-slides">{totalSlides}</span>
+          </div>
         </div>
 
         {/* CTA Section */}
