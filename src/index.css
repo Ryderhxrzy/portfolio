@@ -5,14 +5,15 @@
 }
 
 :root {
-  --primary-color: #2563eb;
-  --primary-dark: #1d4ed8;
+  --primary-color: #0e0c5b;
+  --primary-dark: #0b0a48;
   --secondary-color: #64748b;
-  --accent-color: #f59e0b;
+  --accent-color: #f0ac00;
   --text-dark: #1e293b;
   --text-light: #64748b;
   --background-light: #f8fafc;
   --white: #ffffff;
+  --border-light: #e2e8f0; /* Add this line */
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
