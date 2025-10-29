@@ -1,7 +1,7 @@
 /* src/components/styles/Footer.css */
 .footer {
-  background: var(--text-dark);
-  color: var(--white);
+  background: var(--primary-color);
+  color: var(--text-dark);
   padding: 3rem 0 1rem;
 }
 
@@ -79,7 +79,7 @@
 }
 
 .footer-contact i {
-  color: var(--primary-color);
+  color: var(--accent-color);
   width: 20px;
 }
 
