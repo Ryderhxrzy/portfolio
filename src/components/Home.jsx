@@ -96,53 +96,113 @@ const Home = () => {
     <div className="home">
       {/* Hero Section */}
       <section id="home" className="hero">
-        <div className="container">
-          <div className="hero-content fade-in-up">
-            <h1>Hi, I'm <span className="highlight">{personalInfo.name}</span></h1>
-            <p className="hero-aka">AKA <span className="aka-name">{personalInfo.aka}</span></p>
-            <p className="hero-subtitle">{personalInfo.title}</p>
-            <p className="hero-description">
-              Freelance Developer since 2023 | 4th Year Computer Science Student
-              <br />
-              I create beautiful, functional web applications that solve real-world problems 
-              and deliver exceptional user experiences.
-            </p>
-            <div className="hero-buttons">
-              <button 
-                className="btn btn-primary"
-                onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
-              >
-                <i className="fas fa-briefcase"></i>
-                View My Work
-              </button>
-              <button 
-                className="btn btn-secondary"
-                onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-              >
-                <i className="fas fa-paper-plane"></i>
-                Get In Touch
-              </button>
-            </div>
-            <div className="hero-social">
-              <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer">
-                <i className="fab fa-github"></i>
-              </a>
-              <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                <i className="fab fa-linkedin"></i>
-              </a>
-              <a href={personalInfo.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
-                <i className="fab fa-twitter"></i>
-              </a>
-            </div>
-          </div>
-          <div className="hero-image">
-            <div className="image-placeholder">
-              <i className="fas fa-code"></i>
-              <div className="placeholder-text">Your Photo</div>
-            </div>
+  <div className="container">
+    <div className="hero-content fade-in-up">
+      {/* Main Introduction */}
+      <div className="hero-intro">
+        <p className="hero-greeting">Hello, I'm</p>
+        <h1>
+          <span className="highlight">{personalInfo.name}</span>
+        </h1>
+        <p className="hero-aka">Also known as <span className="aka-name">{personalInfo.aka}</span></p>
+      </div>
+
+      {/* Professional Info */}
+      <div className="hero-professional">
+        <p className="hero-subtitle">{personalInfo.title}</p>
+        <div className="hero-badges">
+          <span className="badge">
+            <i className="fas fa-laptop-code"></i>
+            Freelance Developer
+          </span>
+          <span className="badge">
+            <i className="fas fa-graduation-cap"></i>
+            IT Student
+          </span>
+          <span className="badge">
+            <i className="fas fa-rocket"></i>
+            Since 2023
+          </span>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="hero-description">
+        <p>
+          I specialize in creating <strong>beautiful, functional web applications</strong> that 
+          solve real-world problems. With a passion for clean code and user-centered design, 
+          I deliver exceptional digital experiences.
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="hero-stats">
+        <div className="stats">
+          <div className="stat-number">2+</div>
+          <div className="stat-label">Years Experience</div>
+        </div>
+        <div className="stats">
+          <div className="stat-number">50+</div>
+          <div className="stat-label">Projects Completed</div>
+        </div>
+        <div className="stats">
+          <div className="stat-number">100%</div>
+          <div className="stat-label">Client Satisfaction</div>
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      <div className="hero-actions">
+        <div className="hero-buttons">
+          <button 
+            className="btn btn-primary"
+            onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
+          >
+            <i className="fas fa-sparkles"></i>
+            View My Work
+            <i className="fas fa-arrow-down"></i>
+          </button>
+          
+          <button 
+            className="btn btn-secondary"
+            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+          >
+            <i className="fas fa-download"></i>
+            Download Resume
+          </button>
+        </div>
+
+        {/* Social Links */}
+        <div className="hero-social">
+          <p className="social-label">Follow my journey</p>
+          <div className="social-links">
+            <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" className="social-link">
+              <i className="fab fa-github"></i>
+              <span>GitHub</span>
+            </a>
+            <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
+              <i className="fab fa-linkedin"></i>
+              <span>LinkedIn</span>
+            </a>
+            <a href={personalInfo.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="social-link">
+              <i className="fab fa-twitter"></i>
+              <span>Twitter</span>
+            </a>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+
+    {/* Hero Image */}
+    <div className="hero-image">
+      <div className="profile-container">
+        <div className="profile-image">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* About Section */}
       <section id="about" className="about section">
