@@ -42,23 +42,21 @@ const Contact = ({ personalInfo }) => {
   };
 
   const projectTypes = [
-    'Web Application',
-    'Mobile App',
-    'E-commerce Website',
+    'Web Development',
+    'Mobile Development',
+    'Desktop Application',
     'Portfolio Website',
-    'API Development',
     'Database Design',
     'UI/UX Design',
-    'Maintenance & Support',
     'Other'
   ];
 
   const budgetRanges = [
-    '$500 - $1,000',
-    '$1,000 - $2,500',
-    '$2,500 - $5,000',
-    '$5,000 - $10,000',
-    '$10,000+',
+    '₱500 - ₱1,000',
+    '₱1,000 - ₱2,500',
+    '₱2,500 - ₱5,000',
+    '₱5,000 - ₱10,000',
+    '₱10,000+',
     'To be discussed'
   ];
 
@@ -99,12 +97,12 @@ const Contact = ({ personalInfo }) => {
                     <span>Responsive Web Design</span>
                   </div>
                   <div className="service-item">
-                    <i className="fas fa-shopping-cart"></i>
-                    <span>E-commerce Solutions</span>
+                    <i className="fas fa-computer"></i>
+                    <span>Desktop Application</span>
                   </div>
                   <div className="service-item">
                     <i className="fas fa-database"></i>
-                    <span>API & Database Design</span>
+                    <span>Database Design</span>
                   </div>
                 </div>
               </div>
@@ -163,9 +161,9 @@ const Contact = ({ personalInfo }) => {
                     <i className="fab fa-linkedin"></i>
                     <span>LinkedIn</span>
                   </a>
-                  <a href={personalInfo.socialLinks.twitter} target="_blank" rel="noopener noreferrer" title="Twitter">
-                    <i className="fab fa-twitter"></i>
-                    <span>Twitter</span>
+                  <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" title="Facebook">
+                    <i className="fab fa-facebook"></i>
+                    <span>Facebook</span>
                   </a>
                 </div>
               </div>
