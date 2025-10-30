@@ -132,10 +132,6 @@ const GitHubStats = () => {
 
   // Rest of your existing functions (calculateAchievements, getDefaultAchievements, etc.)
   const calculateAchievements = (userData, reposData, totalStars, totalForks) => {
-    const accountAge = new Date().getFullYear() - new Date(userData.created_at).getFullYear();
-    const hasPinnedRepos = reposData.some(repo => repo.topics && repo.topics.length > 0);
-    const hasReadme = reposData.some(repo => repo.has_wiki || repo.description);
-    const hasMultipleLanguages = new Set(reposData.map(repo => repo.language).filter(Boolean)).size > 3;
     const hasMergedPRs = reposData.some(repo => repo.has_issues);
     const hasCollaborativeRepos = reposData.some(repo => repo.has_projects || repo.has_wiki);
     const forkCount = reposData.filter(repo => repo.fork).length;
