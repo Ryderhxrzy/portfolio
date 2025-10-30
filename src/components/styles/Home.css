@@ -283,6 +283,20 @@
   border: 6px solid var(--white);
 }
 
+.profile-photo {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  border: 3px solid #fff;
+  transition: transform 0.3s ease;
+}
+
+.profile-photo:hover {
+  transform: scale(1.05);
+}
+
 .profile-image i {
   font-size: 6rem;
   color: var(--white);

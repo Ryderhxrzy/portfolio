@@ -4,6 +4,7 @@ import GitHubStats from './GitHubStats';
 import Reviews from './Reviews';
 import Contact from './Contact';
 import { personalInfo, fetchGitHubRepositories } from '../data/projects';
+import profileImage from '/profile.jpg';
 
 const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -142,7 +143,7 @@ const Home = () => {
           <div className="stat-label">Years Experience</div>
         </div>
         <div className="stats">
-          <div className="stat-number">50+</div>
+          <div className="stat-number">10+</div>
           <div className="stat-label">Projects Completed</div>
         </div>
         <div className="stats">
@@ -197,7 +198,12 @@ const Home = () => {
     <div className="hero-image">
       <div className="profile-container">
         <div className="profile-image">
-          
+          <img 
+    src={profileImage} 
+    alt="Profile" 
+    className="profile-photo"
+    loading="lazy"
+  />
         </div>
       </div>
     </div>
