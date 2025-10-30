@@ -322,6 +322,7 @@
   letter-spacing: 0.5px;
 }
 
+/* Category Colors */
 .category-tag.web {
   background: #dbeafe;
   color: #1e40af;
@@ -330,6 +331,11 @@
 .category-tag.mobile {
   background: #fce7f3;
   color: #be185d;
+}
+
+.category-tag.desktop {
+  background: #f3e8ff;
+  color: #7c3aed;
 }
 
 .category-tag.data {
@@ -438,6 +444,38 @@
 .btn-primary {
   background: white;
   color: #667eea;
+}
+
+/* Loading, Error, and Empty States */
+.loading-state,
+.error-state,
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+}
+
+.loading-state i,
+.error-state i,
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #2563eb;
+}
+
+.error-state i {
+  color: #ef4444;
+}
+
+.empty-state i {
+  color: #9ca3af;
+}
+
+.loading-state p,
+.error-state p,
+.empty-state p {
+  font-size: 1.1rem;
+  margin-top: 1rem;
 }
 
 /* Responsive Design */
