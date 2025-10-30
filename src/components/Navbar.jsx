@@ -11,7 +11,7 @@ const Navbar = ({ personalInfo }) => {
       setIsScrolled(window.scrollY > 50);
       
       // Update active section based on scroll position
-      const sections = ['home', 'about', 'projects', 'github-stats', 'reviews', 'contact'];
+      const sections = ['home', 'about', 'skills', 'projects', 'github-stats', 'reviews', 'contact'];
       const current = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -82,6 +82,13 @@ const Navbar = ({ personalInfo }) => {
             <i className="fas fa-user"></i>
             About Me
           </div>
+          {/*<div 
+            className={`nav-link ${activeSection === 'skills' ? 'active' : ''}`}
+            onClick={() => scrollToSection('skills')}
+          >
+            <i className="fas fa-chart-bar"></i>
+            Skills
+          </div>*/}
           <div 
             className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`}
             onClick={() => scrollToSection('projects')}
