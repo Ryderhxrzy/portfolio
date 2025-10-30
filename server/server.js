@@ -9,21 +9,18 @@ const PORT = process.env.PORT || 4000;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const MONGO_URI = process.env.MONGO_URI;
 
+// Validate environment variables
 if (!GITHUB_TOKEN) {
-  console.error("❌ Missing GITHUB_TOKEN in environment. Add it to the root .env file.");
+  console.error("❌ Missing GITHUB_TOKEN in environment.");
   process.exit(1);
 }
 
 if (!MONGO_URI) {
-  console.error("❌ Missing MONGO_URI in environment. Add it to the root .env file.");
+  console.error("❌ Missing MONGO_URI in environment.");
   process.exit(1);
 }
 
-app.use(
-  cors({
-    origin: true,
-  })
-);
+app.use(cors({ origin: true }));
 app.use(express.json());
 
 // MongoDB connection
@@ -34,38 +31,52 @@ let mongoClient;
 async function connectToMongo() {
   try {
     console.log("🔗 Attempting MongoDB connection...");
-    console.log("MongoDB URI present:", MONGO_URI ? "Yes" : "No");
+    console.log("Node.js version:", process.version);
     
-    // Minimal configuration - let MongoDB driver handle defaults
+    // Enhanced connection options for Render.com
     const client = new MongoClient(MONGO_URI, {
-      serverSelectionTimeoutMS: 30000,
-      connectTimeoutMS: 30000,
-      // Remove deprecated options
+      serverSelectionTimeoutMS: 15000,
+      connectTimeoutMS: 15000,
+      tls: true,
+      tlsAllowInvalidCertificates: false,
+      retryWrites: true,
+      retryReads: true,
+      maxIdleTimeMS: 10000,
+      socketTimeoutMS: 20000,
     });
-    
+
+    console.log("⏳ Connecting to MongoDB...");
     await client.connect();
     console.log("✅ Connected to MongoDB");
-    
+
     mongoClient = client;
     db = client.db("portfolio");
     reviewsCollection = db.collection("reviews");
-    
+
     // Test the connection
+    console.log("⏳ Testing connection...");
     await db.command({ ping: 1 });
     console.log("✅ MongoDB connection verified");
-    
+
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err.message);
-    console.error("Error name:", err.name);
-    console.error("Error code:", err.code);
+    console.error("❌ MongoDB connection failed!");
+    console.error("Error:", err.message);
+    console.error("Error details:", {
+      name: err.name,
+      code: err.code
+    });
+    
+    console.log("\n🔧 Troubleshooting steps:");
+    console.log("1. Check MongoDB Atlas Network Access → Add 0.0.0.0/0");
+    console.log("2. Verify database user has correct permissions");
+    console.log("3. Ensure connection string in Render.com environment variables is correct");
+    console.log("4. Try creating a new database user in MongoDB Atlas");
+    
     process.exit(1);
   }
 }
 
-/**
- * GET /api/reviews
- * Returns all reviews from MongoDB
- */
+// Routes
 app.get("/api/reviews", async (req, res) => {
   try {
     if (!reviewsCollection) {
@@ -76,25 +87,19 @@ app.get("/api/reviews", async (req, res) => {
     }
 
     const reviews = await reviewsCollection.find({}).toArray();
-    
     return res.json(reviews);
   } catch (err) {
     console.error("❌ Error fetching reviews:", err);
     return res.status(500).json({ 
       ok: false, 
-      error: err.message || String(err) 
+      error: err.message 
     });
   }
 });
 
-/**
- * GET /api/github/pinned?username=USERNAME
- * Returns normalized repos array: { ok: true, repos: [...] }
- */
 app.get("/api/github/pinned", async (req, res) => {
   try {
     const username = req.query.username || "Ryderhxrzy";
-
     const query = `
       query($login: String!) {
         user(login: $login) {
@@ -129,18 +134,15 @@ app.get("/api/github/pinned", async (req, res) => {
     });
 
     if (!response.ok) {
-      const text = await response.text().catch(() => "");
       return res.status(response.status).json({ 
         ok: false, 
-        status: response.status, 
-        error: text 
+        error: `GitHub API returned ${response.status}` 
       });
     }
 
     const json = await response.json();
-
+    
     if (json.errors) {
-      console.error('GitHub API Errors:', json.errors);
       return res.status(500).json({ 
         ok: false, 
         errors: json.errors 
@@ -148,17 +150,12 @@ app.get("/api/github/pinned", async (req, res) => {
     }
 
     const nodes = json.data?.user?.pinnedItems?.nodes || [];
-
-    if (nodes.length === 0) {
-      console.log('No pinned repositories found for user:', username);
-    }
-
     const repos = nodes.map((repo) => {
       const lang = repo.primaryLanguage?.name || null;
       return {
         id: repo.id,
         title: repo.name,
-        description: repo.description || "No description provided",
+        description: repo.description || "No description",
         githubUrl: repo.url,
         liveUrl: repo.homepageUrl || null,
         stars: repo.stargazerCount || 0,
@@ -175,62 +172,22 @@ app.get("/api/github/pinned", async (req, res) => {
       };
     });
 
-    return res.json({ 
-      ok: true, 
-      repos,
-      count: repos.length 
-    });
-    
+    return res.json({ ok: true, repos, count: repos.length });
   } catch (err) {
     console.error("❌ Error in /api/github/pinned:", err);
-    return res.status(500).json({ 
-      ok: false, 
-      error: err.message || String(err) 
-    });
+    return res.status(500).json({ ok: false, error: err.message });
   }
 });
 
-// Health check endpoint
+// Health check
 app.get("/api/health", (req, res) => {
   res.json({ 
     ok: true, 
     message: "Server is running", 
     timestamp: new Date().toISOString(),
-    database: reviewsCollection ? "connected" : "disconnected"
+    database: reviewsCollection ? "connected" : "disconnected",
+    nodeVersion: process.version
   });
-});
-
-// Test endpoint to verify GitHub token
-app.get("/api/test-github", async (req, res) => {
-  try {
-    const response = await fetch("https://api.github.com/user", {
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        "User-Agent": "Pinned-Repos-Server",
-      },
-    });
-
-    if (!response.ok) {
-      return res.status(response.status).json({
-        ok: false,
-        error: `GitHub API returned ${response.status}`,
-      });
-    }
-
-    const userData = await response.json();
-    res.json({
-      ok: true,
-      user: {
-        login: userData.login,
-        name: userData.name,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      ok: false,
-      error: err.message,
-    });
-  }
 });
 
 // Graceful shutdown
@@ -242,41 +199,24 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// Start server after MongoDB connection
+// Start server
 connectToMongo().then(() => {
   app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`🌐 Reviews: http://localhost:${PORT}/api/reviews`);
-    console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
-    console.log(`🌐 Pinned repos: http://localhost:${PORT}/api/github/pinned?username=Ryderhxrzy`);
   });
 }).catch(err => {
   console.error("❌ Failed to start server:", err);
   process.exit(1);
 });
 
-/* Helper */
 function getLanguageColor(language) {
   const colors = {
-    JavaScript: "#f7df1e",
-    Python: "#3572A5",
-    TypeScript: "#3178c6",
-    Java: "#b07219",
-    CSS: "#563d7c",
-    HTML: "#e34c26",
-    React: "#61dafb",
-    "C++": "#f34b7d",
-    PHP: "#4F5D95",
-    Ruby: "#701516",
-    Go: "#00ADD8",
-    Rust: "#dea584",
-    "C#": "#178600",
-    Swift: "#ffac45",
-    Kotlin: "#F18E33",
-    Shell: "#89e051",
-    Vue: "#41b883",
+    JavaScript: "#f7df1e", Python: "#3572A5", TypeScript: "#3178c6",
+    Java: "#b07219", CSS: "#563d7c", HTML: "#e34c26", React: "#61dafb",
+    "C++": "#f34b7d", PHP: "#4F5D95", Ruby: "#701516", Go: "#00ADD8",
+    Rust: "#dea584", "C#": "#178600", Swift: "#ffac45", Kotlin: "#F18E33",
+    Shell: "#89e051", Vue: "#41b883",
   };
-  if (!language) return "#2563eb";
   return colors[language] || "#2563eb";
 }
