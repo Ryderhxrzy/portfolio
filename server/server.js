@@ -34,15 +34,13 @@ let mongoClient;
 async function connectToMongo() {
   try {
     console.log("🔗 Attempting MongoDB connection...");
+    console.log("MongoDB URI present:", MONGO_URI ? "Yes" : "No");
     
+    // Minimal configuration - let MongoDB driver handle defaults
     const client = new MongoClient(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 30000,
       connectTimeoutMS: 30000,
-      tls: true,
-      tlsAllowInvalidCertificates: false,
-      retryWrites: true,
+      // Remove deprecated options
     });
     
     await client.connect();
@@ -58,7 +56,8 @@ async function connectToMongo() {
     
   } catch (err) {
     console.error("❌ MongoDB connection error:", err.message);
-    console.error("Full error:", err);
+    console.error("Error name:", err.name);
+    console.error("Error code:", err.code);
     process.exit(1);
   }
 }
