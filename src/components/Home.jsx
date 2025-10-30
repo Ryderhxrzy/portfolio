@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './styles/Home.css';
-import GitHubStats from './GitHubStats.jsx';
+import GithubStats from './GithubStats.jsx';
 import Reviews from './Reviews.jsx';
 import Contact from './Contact.jsx';
 import { personalInfo, fetchGitHubRepositories } from '../data/projects.js';
@@ -424,7 +424,7 @@ const Home = () => {
       {/* GitHub Stats Section */}
       <section id="github-stats" className="github-stats-section section">
         <div className="container">
-          <GitHubStats />
+          <GithubStats />
         </div>
       </section>
 
