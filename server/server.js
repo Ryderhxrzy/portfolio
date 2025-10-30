@@ -1,15 +1,22 @@
 const path = require("path");
 const express = require("express");
-const fetch = require("node-fetch"); // Make sure to use this import
+const fetch = require("node-fetch");
 const cors = require("cors");
+const { MongoClient } = require("mongodb");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const MONGO_URI = process.env.MONGO_URI;
 
 if (!GITHUB_TOKEN) {
   console.error("❌ Missing GITHUB_TOKEN in environment. Add it to the root .env file.");
+  process.exit(1);
+}
+
+if (!MONGO_URI) {
+  console.error("❌ Missing MONGO_URI in environment. Add it to the root .env file.");
   process.exit(1);
 }
 
@@ -19,6 +26,49 @@ app.use(
   })
 );
 app.use(express.json());
+
+// MongoDB connection
+let db;
+let reviewsCollection;
+
+async function connectToMongo() {
+  try {
+    const client = new MongoClient(MONGO_URI);
+    await client.connect();
+    console.log("✅ Connected to MongoDB");
+    
+    db = client.db("portfolio");
+    reviewsCollection = db.collection("reviews");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
+  }
+}
+
+/**
+ * GET /api/reviews
+ * Returns all reviews from MongoDB
+ */
+app.get("/api/reviews", async (req, res) => {
+  try {
+    if (!reviewsCollection) {
+      return res.status(500).json({ 
+        ok: false, 
+        error: "Database not connected" 
+      });
+    }
+
+    const reviews = await reviewsCollection.find({}).toArray();
+    
+    return res.json(reviews);
+  } catch (err) {
+    console.error("❌ Error fetching reviews:", err);
+    return res.status(500).json({ 
+      ok: false, 
+      error: err.message || String(err) 
+    });
+  }
+});
 
 /**
  * GET /api/github/pinned?username=USERNAME
@@ -128,7 +178,8 @@ app.get("/api/health", (req, res) => {
   res.json({ 
     ok: true, 
     message: "Server is running", 
-    timestamp: new Date().toISOString() 
+    timestamp: new Date().toISOString(),
+    database: reviewsCollection ? "connected" : "disconnected"
   });
 });
 
@@ -165,11 +216,15 @@ app.get("/api/test-github", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Pinned repos server running on port ${PORT}`);
-  console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
-  console.log(`🌐 Pinned repos: http://localhost:${PORT}/api/github/pinned?username=Ryderhxrzy`);
+// Start server after MongoDB connection
+connectToMongo().then(() => {
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🌐 Reviews: http://localhost:${PORT}/api/reviews`);
+    console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
+    console.log(`🌐 Pinned repos: http://localhost:${PORT}/api/github/pinned?username=Ryderhxrzy`);
+  });
 });
 
 /* Helper */
