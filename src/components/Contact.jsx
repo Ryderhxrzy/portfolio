@@ -45,9 +45,6 @@ const Contact = ({ personalInfo }) => {
     'Web Development',
     'Mobile Development',
     'Desktop Application',
-    'Portfolio Website',
-    'Database Design',
-    'UI/UX Design',
     'Other'
   ];
 
@@ -94,7 +91,7 @@ const Contact = ({ personalInfo }) => {
                   </div>
                   <div className="service-item">
                     <i className="fas fa-mobile-alt"></i>
-                    <span>Responsive Web Design</span>
+                    <span>Mobile Development</span>
                   </div>
                   <div className="service-item">
                     <i className="fas fa-computer"></i>
