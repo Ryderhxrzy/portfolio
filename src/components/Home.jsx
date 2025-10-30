@@ -187,9 +187,9 @@ const Home = () => {
               <i className="fab fa-linkedin"></i>
               <span>LinkedIn</span>
             </a>
-            <a href={personalInfo.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="social-link">
-              <i className="fab fa-twitter"></i>
-              <span>Twitter</span>
+            <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-link">
+              <i className="fab fa-facebook"></i>
+              <span>Facebook</span>
             </a>
           </div>
         </div>
