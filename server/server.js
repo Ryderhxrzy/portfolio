@@ -23,6 +23,22 @@ if (!MONGO_URI) {
 app.use(cors({ origin: true }));
 app.use(express.json());
 
+// ✅ Root route to prevent "Cannot GET /"
+app.get("/", (req, res) => {
+  res.json({
+    message: "🚀 Portfolio API Server is running!",
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: "/api/health",
+      reviews: "/api/reviews",
+      github_pinned: "/api/github/pinned?username=Ryderhxrzy", 
+      test_github: "/api/test-github"
+    },
+    documentation: "Use the endpoints above to access the API"
+  });
+});
+
 // MongoDB connection
 let db;
 let reviewsCollection;
@@ -33,7 +49,6 @@ async function connectToMongo() {
     console.log("🔗 Attempting MongoDB connection...");
     console.log("Node.js version:", process.version);
     
-    // Enhanced connection options for Render.com
     const client = new MongoClient(MONGO_URI, {
       serverSelectionTimeoutMS: 15000,
       connectTimeoutMS: 15000,
@@ -53,7 +68,6 @@ async function connectToMongo() {
     db = client.db("portfolio");
     reviewsCollection = db.collection("reviews");
 
-    // Test the connection
     console.log("⏳ Testing connection...");
     await db.command({ ping: 1 });
     console.log("✅ MongoDB connection verified");
@@ -76,7 +90,10 @@ async function connectToMongo() {
   }
 }
 
-// Routes
+/**
+ * GET /api/reviews
+ * Returns all reviews from MongoDB
+ */
 app.get("/api/reviews", async (req, res) => {
   try {
     if (!reviewsCollection) {
@@ -97,9 +114,14 @@ app.get("/api/reviews", async (req, res) => {
   }
 });
 
+/**
+ * GET /api/github/pinned?username=USERNAME
+ * Returns normalized repos array: { ok: true, repos: [...] }
+ */
 app.get("/api/github/pinned", async (req, res) => {
   try {
     const username = req.query.username || "Ryderhxrzy";
+
     const query = `
       query($login: String!) {
         user(login: $login) {
@@ -134,15 +156,18 @@ app.get("/api/github/pinned", async (req, res) => {
     });
 
     if (!response.ok) {
+      const text = await response.text().catch(() => "");
       return res.status(response.status).json({ 
         ok: false, 
-        error: `GitHub API returned ${response.status}` 
+        status: response.status, 
+        error: text 
       });
     }
 
     const json = await response.json();
-    
+
     if (json.errors) {
+      console.error('GitHub API Errors:', json.errors);
       return res.status(500).json({ 
         ok: false, 
         errors: json.errors 
@@ -150,12 +175,17 @@ app.get("/api/github/pinned", async (req, res) => {
     }
 
     const nodes = json.data?.user?.pinnedItems?.nodes || [];
+
+    if (nodes.length === 0) {
+      console.log('No pinned repositories found for user:', username);
+    }
+
     const repos = nodes.map((repo) => {
       const lang = repo.primaryLanguage?.name || null;
       return {
         id: repo.id,
         title: repo.name,
-        description: repo.description || "No description",
+        description: repo.description || "No description provided",
         githubUrl: repo.url,
         liveUrl: repo.homepageUrl || null,
         stars: repo.stargazerCount || 0,
@@ -172,14 +202,22 @@ app.get("/api/github/pinned", async (req, res) => {
       };
     });
 
-    return res.json({ ok: true, repos, count: repos.length });
+    return res.json({ 
+      ok: true, 
+      repos,
+      count: repos.length 
+    });
+    
   } catch (err) {
     console.error("❌ Error in /api/github/pinned:", err);
-    return res.status(500).json({ ok: false, error: err.message });
+    return res.status(500).json({ 
+      ok: false, 
+      error: err.message || String(err) 
+    });
   }
 });
 
-// Health check
+// Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({ 
     ok: true, 
@@ -188,6 +226,39 @@ app.get("/api/health", (req, res) => {
     database: reviewsCollection ? "connected" : "disconnected",
     nodeVersion: process.version
   });
+});
+
+// Test endpoint to verify GitHub token
+app.get("/api/test-github", async (req, res) => {
+  try {
+    const response = await fetch("https://api.github.com/user", {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        "User-Agent": "Pinned-Repos-Server",
+      },
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        ok: false,
+        error: `GitHub API returned ${response.status}`,
+      });
+    }
+
+    const userData = await response.json();
+    res.json({
+      ok: true,
+      user: {
+        login: userData.login,
+        name: userData.name,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err.message,
+    });
+  }
 });
 
 // Graceful shutdown
@@ -199,24 +270,41 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// Start server
+// Start server after MongoDB connection
 connectToMongo().then(() => {
   app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🌐 Reviews: http://localhost:${PORT}/api/reviews`);
+    console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
+    console.log(`🌐 Pinned repos: http://localhost:${PORT}/api/github/pinned?username=Ryderhxrzy`);
   });
 }).catch(err => {
   console.error("❌ Failed to start server:", err);
   process.exit(1);
 });
 
+/* Helper */
 function getLanguageColor(language) {
   const colors = {
-    JavaScript: "#f7df1e", Python: "#3572A5", TypeScript: "#3178c6",
-    Java: "#b07219", CSS: "#563d7c", HTML: "#e34c26", React: "#61dafb",
-    "C++": "#f34b7d", PHP: "#4F5D95", Ruby: "#701516", Go: "#00ADD8",
-    Rust: "#dea584", "C#": "#178600", Swift: "#ffac45", Kotlin: "#F18E33",
-    Shell: "#89e051", Vue: "#41b883",
+    JavaScript: "#f7df1e",
+    Python: "#3572A5",
+    TypeScript: "#3178c6",
+    Java: "#b07219",
+    CSS: "#563d7c",
+    HTML: "#e34c26",
+    React: "#61dafb",
+    "C++": "#f34b7d",
+    PHP: "#4F5D95",
+    Ruby: "#701516",
+    Go: "#00ADD8",
+    Rust: "#dea584",
+    "C#": "#178600",
+    Swift: "#ffac45",
+    Kotlin: "#F18E33",
+    Shell: "#89e051",
+    Vue: "#41b883",
   };
+  if (!language) return "#2563eb";
   return colors[language] || "#2563eb";
 }
