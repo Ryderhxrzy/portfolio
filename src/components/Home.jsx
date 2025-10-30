@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './styles/Home.css';
-import GitHubStats from './GitHubStats';
-import Reviews from './Reviews';
-import Contact from './Contact';
-import { personalInfo, fetchGitHubRepositories } from '../data/projects';
+import GitHubStats from './GitHubStats.jsx';
+import Reviews from './Reviews.jsx';
+import Contact from './Contact.jsx';
+import { personalInfo, fetchGitHubRepositories } from '../data/projects.js';
 import profileImage from '/profile.jpg';
 
 const Home = () => {
@@ -129,12 +129,14 @@ const Home = () => {
 
       {/* Description */}
       <div className="hero-description">
-        <p>
-          I specialize in creating <strong>beautiful, functional web applications</strong> that 
-          solve real-world problems. With a passion for clean code and user-centered design, 
-          I deliver exceptional digital experiences.
-        </p>
-      </div>
+  <p>
+    I create <strong>modern and user-friendly web applications</strong> that make everyday tasks easier and more enjoyable. 
+    I focus on building projects that are functional, clean, and visually appealing. 
+    I aim to write clean code and design smooth experiences that people can easily use and appreciate.
+  </p>
+</div>
+
+
 
       {/* Stats */}
       <div className="hero-stats">
