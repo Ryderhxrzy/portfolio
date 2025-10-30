@@ -1,6 +1,5 @@
 const path = require("path");
 const express = require("express");
-const fetch = require("node-fetch");
 const cors = require("cors");
 const { MongoClient } = require("mongodb");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
@@ -30,17 +29,36 @@ app.use(express.json());
 // MongoDB connection
 let db;
 let reviewsCollection;
+let mongoClient;
 
 async function connectToMongo() {
   try {
-    const client = new MongoClient(MONGO_URI);
+    console.log("🔗 Attempting MongoDB connection...");
+    
+    const client = new MongoClient(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000,
+      connectTimeoutMS: 30000,
+      tls: true,
+      tlsAllowInvalidCertificates: false,
+      retryWrites: true,
+    });
+    
     await client.connect();
     console.log("✅ Connected to MongoDB");
     
+    mongoClient = client;
     db = client.db("portfolio");
     reviewsCollection = db.collection("reviews");
+    
+    // Test the connection
+    await db.command({ ping: 1 });
+    console.log("✅ MongoDB connection verified");
+    
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
+    console.error("❌ MongoDB connection error:", err.message);
+    console.error("Full error:", err);
     process.exit(1);
   }
 }
@@ -216,6 +234,15 @@ app.get("/api/test-github", async (req, res) => {
   }
 });
 
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('🛑 Shutting down gracefully...');
+  if (mongoClient) {
+    await mongoClient.close();
+  }
+  process.exit(0);
+});
+
 // Start server after MongoDB connection
 connectToMongo().then(() => {
   app.listen(PORT, () => {
@@ -225,6 +252,9 @@ connectToMongo().then(() => {
     console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
     console.log(`🌐 Pinned repos: http://localhost:${PORT}/api/github/pinned?username=Ryderhxrzy`);
   });
+}).catch(err => {
+  console.error("❌ Failed to start server:", err);
+  process.exit(1);
 });
 
 /* Helper */
