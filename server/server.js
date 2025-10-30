@@ -1,73 +1,30 @@
-// server.js
 const path = require("path");
 const express = require("express");
-const fetch = require("node-fetch"); // fine if you have node-fetch installed
+const fetch = require("node-fetch");
 const cors = require("cors");
-const helmet = require("helmet"); // small security middleware
-const rateLimit = require("express-rate-limit"); // optional but recommended
 const { MongoClient } = require("mongodb");
-
-// Load .env only in development (Render / production will use real environment variables)
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const MONGO_URI = process.env.MONGO_URI;
-const FRONTEND_URL = process.env.FRONTEND_URL || ""; // e.g. https://your-frontend.vercel.app
-const BACKEND_URL = process.env.BACKEND_URL || "";   // optional, e.g. your Render URL
 
-// Validate required envs (fail fast)
 if (!GITHUB_TOKEN) {
-  console.error("❌ Missing GITHUB_TOKEN in environment. Add it to Render env vars.");
+  console.error("❌ Missing GITHUB_TOKEN in environment. Add it to the root .env file.");
   process.exit(1);
 }
+
 if (!MONGO_URI) {
-  console.error("❌ Missing MONGO_URI in environment. Add it to Render env vars.");
+  console.error("❌ Missing MONGO_URI in environment. Add it to the root .env file.");
   process.exit(1);
-}
-
-// Basic security hardening
-app.use(helmet());
-
-// Basic rate limiting (adjust values as needed)
-const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 100, // limit each IP to 100 requests per windowMs
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use(limiter);
-
-// Configure CORS
-const allowedOrigins = [];
-if (FRONTEND_URL) allowedOrigins.push(FRONTEND_URL);
-
-// allow local dev origin too (optional)
-if (process.env.NODE_ENV !== "production") {
-  allowedOrigins.push("http://localhost:5173", "http://localhost:3000");
 }
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like curl, Postman)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.length === 0) {
-        // if no allowedOrigins provided, allow all (dev fallback) — but prefer explicit FRONTEND_URL
-        return callback(null, true);
-      }
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `CORS policy: The origin ${origin} is not allowed.`;
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
+    origin: true,
   })
 );
-
 app.use(express.json());
 
 // MongoDB connection
@@ -79,7 +36,7 @@ async function connectToMongo() {
     const client = new MongoClient(MONGO_URI);
     await client.connect();
     console.log("✅ Connected to MongoDB");
-
+    
     db = client.db("portfolio");
     reviewsCollection = db.collection("reviews");
   } catch (err) {
@@ -88,31 +45,35 @@ async function connectToMongo() {
   }
 }
 
-/* --- Routes --- */
-
-app.get("/api/health", (req, res) => {
-  res.json({
-    ok: true,
-    message: "Server is running",
-    timestamp: new Date().toISOString(),
-    database: reviewsCollection ? "connected" : "disconnected",
-    backendUrl: BACKEND_URL || undefined,
-  });
-});
-
+/**
+ * GET /api/reviews
+ * Returns all reviews from MongoDB
+ */
 app.get("/api/reviews", async (req, res) => {
   try {
     if (!reviewsCollection) {
-      return res.status(500).json({ ok: false, error: "Database not connected" });
+      return res.status(500).json({ 
+        ok: false, 
+        error: "Database not connected" 
+      });
     }
+
     const reviews = await reviewsCollection.find({}).toArray();
+    
     return res.json(reviews);
   } catch (err) {
     console.error("❌ Error fetching reviews:", err);
-    return res.status(500).json({ ok: false, error: err.message || String(err) });
+    return res.status(500).json({ 
+      ok: false, 
+      error: err.message || String(err) 
+    });
   }
 });
 
+/**
+ * GET /api/github/pinned?username=USERNAME
+ * Returns normalized repos array: { ok: true, repos: [...] }
+ */
 app.get("/api/github/pinned", async (req, res) => {
   try {
     const username = req.query.username || "Ryderhxrzy";
@@ -152,17 +113,28 @@ app.get("/api/github/pinned", async (req, res) => {
 
     if (!response.ok) {
       const text = await response.text().catch(() => "");
-      return res.status(response.status).json({ ok: false, status: response.status, error: text });
+      return res.status(response.status).json({ 
+        ok: false, 
+        status: response.status, 
+        error: text 
+      });
     }
 
     const json = await response.json();
 
     if (json.errors) {
-      console.error("GitHub API Errors:", json.errors);
-      return res.status(500).json({ ok: false, errors: json.errors });
+      console.error('GitHub API Errors:', json.errors);
+      return res.status(500).json({ 
+        ok: false, 
+        errors: json.errors 
+      });
     }
 
     const nodes = json.data?.user?.pinnedItems?.nodes || [];
+
+    if (nodes.length === 0) {
+      console.log('No pinned repositories found for user:', username);
+    }
 
     const repos = nodes.map((repo) => {
       const lang = repo.primaryLanguage?.name || null;
@@ -177,20 +149,41 @@ app.get("/api/github/pinned", async (req, res) => {
         language: lang || "Various",
         languageColor: getLanguageColor(lang),
         updated_at: repo.updatedAt,
-        topics: (repo.repositoryTopics?.nodes || []).map((n) => n.topic?.name).filter(Boolean),
+        topics: (repo.repositoryTopics?.nodes || [])
+          .map((n) => n.topic?.name)
+          .filter(Boolean),
         technologies: lang ? [lang] : ["Various"],
         image: repo.openGraphImageUrl || `https://opengraph.githubassets.com/1/${username}/${repo.name}`,
         isPinned: true,
       };
     });
 
-    return res.json({ ok: true, repos, count: repos.length });
+    return res.json({ 
+      ok: true, 
+      repos,
+      count: repos.length 
+    });
+    
   } catch (err) {
     console.error("❌ Error in /api/github/pinned:", err);
-    return res.status(500).json({ ok: false, error: err.message || String(err) });
+    return res.status(500).json({ 
+      ok: false, 
+      error: err.message || String(err) 
+    });
   }
 });
 
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ 
+    ok: true, 
+    message: "Server is running", 
+    timestamp: new Date().toISOString(),
+    database: reviewsCollection ? "connected" : "disconnected"
+  });
+});
+
+// Test endpoint to verify GitHub token
 app.get("/api/test-github", async (req, res) => {
   try {
     const response = await fetch("https://api.github.com/user", {
@@ -201,27 +194,36 @@ app.get("/api/test-github", async (req, res) => {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({ ok: false, error: `GitHub API returned ${response.status}` });
+      return res.status(response.status).json({
+        ok: false,
+        error: `GitHub API returned ${response.status}`,
+      });
     }
 
     const userData = await response.json();
-    res.json({ ok: true, user: { login: userData.login, name: userData.name } });
+    res.json({
+      ok: true,
+      user: {
+        login: userData.login,
+        name: userData.name,
+      },
+    });
   } catch (err) {
-    console.error("❌ Error in /api/test-github:", err);
-    res.status(500).json({ ok: false, error: err.message });
+    res.status(500).json({
+      ok: false,
+      error: err.message,
+    });
   }
 });
 
-/* --- Start server --- */
+// Start server after MongoDB connection
 connectToMongo().then(() => {
   app.listen(PORT, () => {
-    console.log(`✅ Server listening on port ${PORT}`);
-    if (BACKEND_URL) {
-      console.log(`🌐 Health check: ${BACKEND_URL}/api/health`);
-      console.log(`🌐 Pinned repos: ${BACKEND_URL}/api/github/pinned?username=Ryderhxrzy`);
-    } else {
-      console.log(`🌐 Health check: /api/health`);
-    }
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🌐 Reviews: http://localhost:${PORT}/api/reviews`);
+    console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
+    console.log(`🌐 Pinned repos: http://localhost:${PORT}/api/github/pinned?username=Ryderhxrzy`);
   });
 });
 
