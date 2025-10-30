@@ -3,7 +3,7 @@ export const personalInfo = {
   title: "Full Stack Developer",
   aka: "Ryder Hxrzy",
   email: "jhayrcervantes0981@gmail.com",
-  phone: "+(+63) 969-597-2435",
+  phone: "(+63) 969-597-2435",
   location: "Manila, Philippines",
   about: "I'm a passionate full-stack developer and creative vector artist with a strong foundation in both technology and design. As a 4th-year Information Technology student and freelance developer since 2023, I specialize in various programming languages. I enjoy building modern web applications and creating engaging cartoon artworks that blend creativity with functionality.",
   skills: [
@@ -15,7 +15,7 @@ export const personalInfo = {
   socialLinks: {
     github: "https://github.com/Ryderhxrzy",
     linkedin: "https://linkedin.com/in/jhayrcervantes",
-    twitter: "https://twitter.com/jhayrcervantes"
+    facebook: "https://www.facebook.com/jhayr.cervantes.351"
   }
 };
 
