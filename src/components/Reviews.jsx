@@ -12,7 +12,6 @@ const Reviews = () => {
   // ✅ Use environment variable with fallback for local development
   const API_BASE_URL = process.env.VITE_APP_API_BASE || 'http://localhost:4000';
 
-  // Fetch testimonials from API
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
