@@ -9,33 +9,36 @@ const Reviews = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ Use environment variable with fallback for local development
-  const API_BASE_URL = process.env.VITE_APP_API_BASE || 'http://localhost:4000';
+  // ✅ Vite environment variables (correct way)
+  const API_BASE_URL = import.meta.env.VITE_APP_API_BASE || 'http://localhost:4000';
+  const ENVIRONMENT = import.meta.env.MODE || 'development';
 
+  // Fetch testimonials from API
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
         setLoading(true);
-        console.log('Fetching from:', `${API_BASE_URL}/api/reviews`);
+        console.log('🌐 Environment:', ENVIRONMENT);
+        console.log('🔗 Fetching from:', `${API_BASE_URL}/api/reviews`);
         
         const response = await fetch(`${API_BASE_URL}/api/reviews`);
         
         if (!response.ok) {
-          throw new Error(`Failed to fetch reviews: ${response.status} ${response.statusText}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
         setTestimonials(data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching testimonials:', err);
+        console.error('❌ Error fetching testimonials:', err);
         setError(err.message);
         setLoading(false);
       }
     };
 
     fetchTestimonials();
-  }, [API_BASE_URL]);
+  }, [API_BASE_URL, ENVIRONMENT]);
 
   // Map category names to keys
   const getCategoryKey = (category) => {
@@ -119,6 +122,7 @@ const Reviews = () => {
             <i className="fas fa-spinner fa-spin"></i>
             <p>Loading testimonials...</p>
             <p className="api-url">From: {API_BASE_URL}</p>
+            <p className="environment">Environment: {ENVIRONMENT}</p>
           </div>
         </div>
       </div>
@@ -134,6 +138,7 @@ const Reviews = () => {
             <i className="fas fa-exclamation-triangle"></i>
             <p>Error loading testimonials: {error}</p>
             <p className="api-url">Tried to fetch from: {API_BASE_URL}</p>
+            <p className="environment">Environment: {ENVIRONMENT}</p>
             <button 
               onClick={() => window.location.reload()} 
               className="btn btn-primary"
