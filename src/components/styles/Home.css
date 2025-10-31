@@ -1053,3 +1053,57 @@ html {
   padding: 0 !important;
   min-height: auto !important;
 }
+
+@media (max-width: 360px) {
+  .hero-content h1 {
+    font-size: 1.6rem;
+  }
+
+  .profile-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .profile-photo {
+    width: 150px;
+    height: 150px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+
+  .social-link {
+    min-width: 80px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .project-image {
+    height: 140px;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* Fix for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .project-card:hover {
+    transform: none;
+  }
+  
+  .btn:hover {
+    transform: none;
+  }
+  
+  .skill-tag:hover {
+    transform: none;
+  }
+  
+  .badge:hover {
+    transform: none;
+  }
+}
