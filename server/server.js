@@ -21,42 +21,13 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-// ✅ FIXED: Enhanced CORS configuration with your actual Vercel domain
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:5173',
-  'https://my-portfolio-ryder-hxrzys-projects.vercel.app',
-  // Vercel also auto-generates these variants:
-  'https://my-portfolio-ryder-hxrzys-projects-git-main.vercel.app',
-  'https://my-portfolio-ryder-hxrzys-projects-*.vercel.app'
-];
-
+// Enhanced CORS configuration for both local and production
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    // Check if origin is in allowed list or matches Vercel pattern
-    if (allowedOrigins.some(allowed => 
-      origin === allowed || origin.includes('my-portfolio-ryder-hxrzys-projects') && origin.includes('vercel.app')
-    )) {
-      callback(null, true);
-    } else if (NODE_ENV === 'production') {
-      // In production, allow all Vercel domains temporarily
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
-  maxAge: 600
+  origin: NODE_ENV === 'production' 
+    ? ['https://your-frontend-domain.vercel.app', 'https://your-frontend-domain.netlify.app']
+    : ['http://localhost:3000', 'http://localhost:5173'],
+  credentials: true
 }));
-
-// ✅ Handle preflight requests
-app.options('*', cors());
 
 app.use(express.json());
 
@@ -89,14 +60,14 @@ async function connectToMongo() {
     console.log("Environment:", NODE_ENV);
     
     const client = new MongoClient(MONGO_URI, {
-      serverSelectionTimeoutMS: 30000, // ✅ Increased timeout
-      connectTimeoutMS: 30000,
+      serverSelectionTimeoutMS: 15000,
+      connectTimeoutMS: 15000,
       tls: true,
       tlsAllowInvalidCertificates: false,
       retryWrites: true,
       retryReads: true,
       maxIdleTimeMS: 10000,
-      socketTimeoutMS: 45000,
+      socketTimeoutMS: 20000,
     });
 
     console.log("⏳ Connecting to MongoDB...");
@@ -125,8 +96,6 @@ async function connectToMongo() {
  */
 app.get("/api/reviews", async (req, res) => {
   try {
-    console.log(`📨 Received request for reviews from: ${req.headers.origin || 'unknown'}`);
-    
     if (!reviewsCollection) {
       return res.status(500).json({ 
         ok: false, 
@@ -307,25 +276,9 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// ✅ Keep-alive ping to prevent Render free tier from sleeping
-if (NODE_ENV === 'production') {
-  const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
-  
-  setInterval(async () => {
-    try {
-      const response = await fetch(`${RENDER_URL}/api/health`);
-      if (response.ok) {
-        console.log('✅ Keep-alive ping successful');
-      }
-    } catch (err) {
-      console.log('⚠️ Keep-alive ping failed:', err.message);
-    }
-  }, 14 * 60 * 1000); // Ping every 14 minutes
-}
-
 // Start server after MongoDB connection
 connectToMongo().then(() => {
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🌍 Environment: ${NODE_ENV}`);
     console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
