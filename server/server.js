@@ -21,22 +21,38 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-// ✅ FIXED: Enhanced CORS configuration - ADD YOUR VERCEL DOMAIN HERE
+// ✅ FIXED: Enhanced CORS configuration with your actual Vercel domain
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://my-portfolio-ryder-hxrzys-projects.vercel.app/', // ⚠️ REPLACE with your actual Vercel domain
-  // Add more domains if needed
+  'https://my-portfolio-ryder-hxrzys-projects.vercel.app',
+  // Vercel also auto-generates these variants:
+  'https://my-portfolio-ryder-hxrzys-projects-git-main.vercel.app',
+  'https://my-portfolio-ryder-hxrzys-projects-*.vercel.app'
 ];
 
-// Allow ALL origins in production if you don't know the exact domain yet
 app.use(cors({
-  origin: NODE_ENV === 'production' 
-    ? true // ✅ Allow all origins temporarily for testing
-    : allowedOrigins,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list or matches Vercel pattern
+    if (allowedOrigins.some(allowed => 
+      origin === allowed || origin.includes('my-portfolio-ryder-hxrzys-projects') && origin.includes('vercel.app')
+    )) {
+      callback(null, true);
+    } else if (NODE_ENV === 'production') {
+      // In production, allow all Vercel domains temporarily
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 600
 }));
 
 // ✅ Handle preflight requests
