@@ -8,37 +8,78 @@ const Reviews = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
-  // ✅ Vite environment variables (correct way)
+  // ✅ Vite environment variables
   const API_BASE_URL = import.meta.env.VITE_APP_API_BASE || 'http://localhost:4000';
   const ENVIRONMENT = import.meta.env.MODE || 'development';
 
-  // Fetch testimonials from API
+  // Fetch testimonials from API with retry logic
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
         setLoading(true);
+        setError(null);
+        
         console.log('🌐 Environment:', ENVIRONMENT);
         console.log('🔗 Fetching from:', `${API_BASE_URL}/api/reviews`);
         
-        const response = await fetch(`${API_BASE_URL}/api/reviews`);
+        // ✅ Add timeout to fetch request
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+        
+        const response = await fetch(`${API_BASE_URL}/api/reviews`, {
+          signal: controller.signal,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
+        
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid data format received from API');
+        }
+        
         setTestimonials(data);
         setLoading(false);
+        setRetryCount(0); // Reset retry count on success
+        
       } catch (err) {
         console.error('❌ Error fetching testimonials:', err);
-        setError(err.message);
+        
+        let errorMessage = 'Failed to load testimonials';
+        
+        if (err.name === 'AbortError') {
+          errorMessage = 'Request timeout - The server is taking too long to respond. It might be waking up (Render free tier). Please wait 30 seconds and try again.';
+        } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+          errorMessage = 'Cannot connect to server. Please check if the backend is running at: ' + API_BASE_URL;
+        } else {
+          errorMessage = err.message;
+        }
+        
+        setError(errorMessage);
         setLoading(false);
+        
+        // ✅ Auto-retry up to 3 times for Render wake-up
+        if (retryCount < 3 && (err.name === 'AbortError' || err.message.includes('Failed to fetch'))) {
+          console.log(`🔄 Auto-retrying... (${retryCount + 1}/3)`);
+          setTimeout(() => {
+            setRetryCount(prev => prev + 1);
+          }, 5000); // Wait 5 seconds before retry
+        }
       }
     };
 
     fetchTestimonials();
-  }, [API_BASE_URL, ENVIRONMENT]);
+  }, [API_BASE_URL, ENVIRONMENT, retryCount]);
 
   // Map category names to keys
   const getCategoryKey = (category) => {
@@ -113,6 +154,10 @@ const Reviews = () => {
     ));
   };
 
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -121,6 +166,9 @@ const Reviews = () => {
           <div className="loading-state">
             <i className="fas fa-spinner fa-spin"></i>
             <p>Loading testimonials...</p>
+            {retryCount > 0 && (
+              <p className="retry-info">Retry attempt {retryCount}/3 - Server might be waking up...</p>
+            )}
             <p className="api-url">From: {API_BASE_URL}</p>
             <p className="environment">Environment: {ENVIRONMENT}</p>
           </div>
@@ -136,15 +184,33 @@ const Reviews = () => {
         <div className="container">
           <div className="error-state">
             <i className="fas fa-exclamation-triangle"></i>
-            <p>Error loading testimonials: {error}</p>
-            <p className="api-url">Tried to fetch from: {API_BASE_URL}</p>
-            <p className="environment">Environment: {ENVIRONMENT}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="btn btn-primary"
-            >
-              Try Again
-            </button>
+            <h3>Unable to Load Testimonials</h3>
+            <p className="error-message">{error}</p>
+            <div className="error-details">
+              <p className="api-url"><strong>API URL:</strong> {API_BASE_URL}/api/reviews</p>
+              <p className="environment"><strong>Environment:</strong> {ENVIRONMENT}</p>
+              {retryCount > 0 && (
+                <p className="retry-count">Retry attempts: {retryCount}</p>
+              )}
+            </div>
+            <div className="error-actions">
+              <button 
+                onClick={handleRetry} 
+                className="btn btn-primary"
+              >
+                <i className="fas fa-redo"></i>
+                Try Again
+              </button>
+              <a 
+                href={`${API_BASE_URL}/api/health`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-secondary"
+              >
+                <i className="fas fa-heartbeat"></i>
+                Check Server Status
+              </a>
+            </div>
           </div>
         </div>
       </div>
