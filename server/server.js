@@ -21,17 +21,44 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-// Enhanced CORS configuration for both local and production
-app.use(cors({
-  origin: NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.vercel.app', 'https://your-frontend-domain.netlify.app']
-    : ['http://localhost:3000', 'http://localhost:5173'],
-  credentials: true
-}));
+// ✅ FIXED CORS - THIS IS THE MOST IMPORTANT PART
+// This must come BEFORE any routes or middleware
+app.use((req, res, next) => {
+  // Allow your Vercel domains
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    'https://my-portfolio-ryder-hxrzys-projects.vercel.app',
+    'https://my-portfolio-woad-iota-ci5m9td9g7.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ];
+  
+  // Check if origin is allowed or matches Vercel pattern
+  if (allowedOrigins.includes(origin) || 
+      (origin && origin.includes('vercel.app') && origin.includes('my-portfolio'))) {
+    res.header('Access-Control-Allow-Origin', origin);
+  } else if (NODE_ENV === 'production') {
+    // Allow all origins in production for testing
+    res.header('Access-Control-Allow-Origin', '*');
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '600');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
 
 app.use(express.json());
 
-// ✅ Root route to prevent "Cannot GET /"
+// ✅ Root route
 app.get("/", (req, res) => {
   res.json({
     message: "🚀 Portfolio API Server is running!",
@@ -44,7 +71,14 @@ app.get("/", (req, res) => {
       github_pinned: "/api/github/pinned?username=Ryderhxrzy", 
       test_github: "/api/test-github"
     },
-    documentation: "Use the endpoints above to access the API"
+    cors: {
+      enabled: true,
+      allowedOrigins: [
+        'https://my-portfolio-ryder-hxrzys-projects.vercel.app',
+        'https://my-portfolio-woad-iota-ci5m9td9g7.vercel.app',
+        '*.vercel.app (with my-portfolio pattern)'
+      ]
+    }
   });
 });
 
@@ -60,14 +94,14 @@ async function connectToMongo() {
     console.log("Environment:", NODE_ENV);
     
     const client = new MongoClient(MONGO_URI, {
-      serverSelectionTimeoutMS: 15000,
-      connectTimeoutMS: 15000,
+      serverSelectionTimeoutMS: 30000,
+      connectTimeoutMS: 30000,
       tls: true,
       tlsAllowInvalidCertificates: false,
       retryWrites: true,
       retryReads: true,
       maxIdleTimeMS: 10000,
-      socketTimeoutMS: 20000,
+      socketTimeoutMS: 45000,
     });
 
     console.log("⏳ Connecting to MongoDB...");
@@ -96,6 +130,8 @@ async function connectToMongo() {
  */
 app.get("/api/reviews", async (req, res) => {
   try {
+    console.log(`📨 Reviews request from: ${req.headers.origin || 'unknown'}`);
+    
     if (!reviewsCollection) {
       return res.status(500).json({ 
         ok: false, 
@@ -104,9 +140,7 @@ app.get("/api/reviews", async (req, res) => {
     }
 
     const reviews = await reviewsCollection.find({}).toArray();
-    
-    // Log for debugging
-    console.log(`📊 Returning ${reviews.length} reviews in ${NODE_ENV} environment`);
+    console.log(`📊 Returning ${reviews.length} reviews`);
     
     return res.json(reviews);
   } catch (err) {
@@ -120,10 +154,10 @@ app.get("/api/reviews", async (req, res) => {
 
 /**
  * GET /api/github/pinned?username=USERNAME
- * Returns normalized repos array: { ok: true, repos: [...] }
  */
 app.get("/api/github/pinned", async (req, res) => {
   try {
+    console.log(`📨 GitHub request from: ${req.headers.origin || 'unknown'}`);
     const username = req.query.username || "Ryderhxrzy";
 
     const query = `
@@ -206,6 +240,8 @@ app.get("/api/github/pinned", async (req, res) => {
       };
     });
 
+    console.log(`📊 Returning ${repos.length} GitHub repos`);
+
     return res.json({ 
       ok: true, 
       repos,
@@ -229,7 +265,8 @@ app.get("/api/health", (req, res) => {
     environment: NODE_ENV,
     timestamp: new Date().toISOString(),
     database: reviewsCollection ? "connected" : "disconnected",
-    nodeVersion: process.version
+    nodeVersion: process.version,
+    cors: "enabled for Vercel domains"
   });
 });
 
@@ -276,15 +313,40 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// Start server after MongoDB connection
+// Keep-alive for Render free tier
+if (NODE_ENV === 'production') {
+  const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `https://portfolio-oftk.onrender.com`;
+  
+  setInterval(async () => {
+    try {
+      const response = await fetch(`${RENDER_URL}/api/health`);
+      if (response.ok) {
+        console.log('✅ Keep-alive ping');
+      }
+    } catch (err) {
+      console.log('⚠️ Keep-alive failed:', err.message);
+    }
+  }, 14 * 60 * 1000); // Every 14 minutes
+}
+
+// Start server
 connectToMongo().then(() => {
-  app.listen(PORT, () => {
-    console.log(`✅ Server running on port ${PORT}`);
-    console.log(`🌍 Environment: ${NODE_ENV}`);
-    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`🌐 Reviews: http://localhost:${PORT}/api/reviews`);
-    console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
-    console.log(`🌐 Pinned repos: http://localhost:${PORT}/api/github/pinned?username=Ryderhxrzy`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`
+╔════════════════════════════════════════════════════════╗
+║  ✅ Server Running Successfully!                      ║
+╠════════════════════════════════════════════════════════╣
+║  Port: ${PORT}                                        ║
+║  Environment: ${NODE_ENV}                             ║
+║  MongoDB: Connected                                    ║
+║  CORS: Enabled for Vercel                             ║
+╠════════════════════════════════════════════════════════╣
+║  Endpoints:                                            ║
+║  📍 Health: /api/health                               ║
+║  📍 Reviews: /api/reviews                             ║
+║  📍 GitHub: /api/github/pinned?username=Ryderhxrzy    ║
+╚════════════════════════════════════════════════════════╝
+    `);
   });
 }).catch(err => {
   console.error("❌ Failed to start server:", err);
