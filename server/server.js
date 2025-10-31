@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const MONGO_URI = process.env.MONGO_URI;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Validate environment variables
 if (!GITHUB_TOKEN) {
@@ -20,7 +21,14 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-app.use(cors({ origin: true }));
+// Enhanced CORS configuration for both local and production
+app.use(cors({
+  origin: NODE_ENV === 'production' 
+    ? ['https://your-frontend-domain.vercel.app', 'https://your-frontend-domain.netlify.app']
+    : ['http://localhost:3000', 'http://localhost:5173'],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // ✅ Root route to prevent "Cannot GET /"
@@ -28,6 +36,7 @@ app.get("/", (req, res) => {
   res.json({
     message: "🚀 Portfolio API Server is running!",
     status: "healthy",
+    environment: NODE_ENV,
     timestamp: new Date().toISOString(),
     endpoints: {
       health: "/api/health",
@@ -48,6 +57,7 @@ async function connectToMongo() {
   try {
     console.log("🔗 Attempting MongoDB connection...");
     console.log("Node.js version:", process.version);
+    console.log("Environment:", NODE_ENV);
     
     const client = new MongoClient(MONGO_URI, {
       serverSelectionTimeoutMS: 15000,
@@ -75,17 +85,7 @@ async function connectToMongo() {
   } catch (err) {
     console.error("❌ MongoDB connection failed!");
     console.error("Error:", err.message);
-    console.error("Error details:", {
-      name: err.name,
-      code: err.code
-    });
-    
-    console.log("\n🔧 Troubleshooting steps:");
-    console.log("1. Check MongoDB Atlas Network Access → Add 0.0.0.0/0");
-    console.log("2. Verify database user has correct permissions");
-    console.log("3. Ensure connection string in Render.com environment variables is correct");
-    console.log("4. Try creating a new database user in MongoDB Atlas");
-    
+    console.error("Environment:", NODE_ENV);
     process.exit(1);
   }
 }
@@ -104,6 +104,10 @@ app.get("/api/reviews", async (req, res) => {
     }
 
     const reviews = await reviewsCollection.find({}).toArray();
+    
+    // Log for debugging
+    console.log(`📊 Returning ${reviews.length} reviews in ${NODE_ENV} environment`);
+    
     return res.json(reviews);
   } catch (err) {
     console.error("❌ Error fetching reviews:", err);
@@ -222,6 +226,7 @@ app.get("/api/health", (req, res) => {
   res.json({ 
     ok: true, 
     message: "Server is running", 
+    environment: NODE_ENV,
     timestamp: new Date().toISOString(),
     database: reviewsCollection ? "connected" : "disconnected",
     nodeVersion: process.version
@@ -252,6 +257,7 @@ app.get("/api/test-github", async (req, res) => {
         login: userData.login,
         name: userData.name,
       },
+      environment: NODE_ENV
     });
   } catch (err) {
     res.status(500).json({
@@ -274,6 +280,7 @@ process.on('SIGINT', async () => {
 connectToMongo().then(() => {
   app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
+    console.log(`🌍 Environment: ${NODE_ENV}`);
     console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
     console.log(`🌐 Reviews: http://localhost:${PORT}/api/reviews`);
     console.log(`🌐 Test GitHub: http://localhost:${PORT}/api/test-github`);
