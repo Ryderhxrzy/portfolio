@@ -720,6 +720,31 @@
   box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
 }
 
+/* Sample Output Link */
+.project-sample-output {
+  margin-bottom: 1rem;
+}
+
+.sample-output-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ef4444;
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sample-output-link:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
 .project-topics {
   display: flex;
   flex-wrap: wrap;

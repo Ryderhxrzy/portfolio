@@ -377,6 +377,21 @@ const Home = () => {
                         </div>
                       )}
                       
+                      {/* Sample Output Button */}
+                      {project.githubUrl && (
+                        <div className="project-sample-output">
+                          <a 
+                            href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="sample-output-link"
+                          >
+                            <i className="fas fa-file-pdf"></i>
+                            Sample Output
+                          </a>
+                        </div>
+                      )}
+                      
                       <div className="project-topics">
                         {project.topics && project.topics.slice(0, 4).map((topic, index) => (
                           <span key={index} className="topic-tag">
