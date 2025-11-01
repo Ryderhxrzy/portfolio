@@ -362,33 +362,41 @@ const Home = () => {
                         </div>
                       )}
                       
-                      {/* Deployment Link */}
-                      {isValidDeployment(project.liveUrl) && (
-                        <div className="project-deployment">
-                          <a 
-                            href={project.liveUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="deployment-link"
-                          >
-                            <i className="fas fa-rocket"></i>
-                            View Live Project
-                          </a>
-                        </div>
-                      )}
-                      
-                      {/* Sample Output Button */}
-                      {project.githubUrl && (
-                        <div className="project-sample-output">
-                          <a 
-                            href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="sample-output-link"
-                          >
-                            <i className="fas fa-file-pdf"></i>
-                            Sample Output
-                          </a>
+                      {/* Project Actions - Deployment and Sample Output */}
+                      {(isValidDeployment(project.liveUrl) || project.githubUrl) && (
+                        <div className="project-actions">
+                          <div className="project-buttons-row">
+                            {isValidDeployment(project.liveUrl) && (
+                              <a 
+                                href={project.liveUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="deployment-link"
+                              >
+                                <i className="fas fa-rocket"></i>
+                                View Live Project
+                              </a>
+                            )}
+                            
+                            {project.githubUrl && (
+                              <a 
+                                href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="sample-output-link"
+                              >
+                                <i className="fas fa-file-pdf"></i>
+                                Sample Output
+                              </a>
+                            )}
+                          </div>
+                          
+                          {project.githubUrl && (
+                            <p className="project-note">
+                              <i className="fas fa-info-circle"></i>
+                              If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
+                            </p>
+                          )}
                         </div>
                       )}
                       
