@@ -734,7 +734,7 @@
   align-items: center;
   gap: 6px;
   background: var(--accent-color);
-  color: var(--text-light);
+  color: var(--white);
   padding: 8px 16px;
   border-radius: 6px;
   text-decoration: none;
