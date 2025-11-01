@@ -390,13 +390,6 @@ const Home = () => {
                               </a>
                             )}
                           </div>
-                          
-                          {project.githubUrl && (
-                            <p className="project-note">
-                              <i className="fas fa-info-circle"></i>
-                              If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
-                            </p>
-                          )}
                         </div>
                       )}
                       
@@ -424,6 +417,14 @@ const Home = () => {
                           {project.stars || 0} stars
                         </div>
                       </div>
+                      
+                      {/* Project Note at Bottom */}
+                      {project.githubUrl && (
+                        <p className="project-note">
+                          <i className="fas fa-info-circle"></i>
+                          If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
