@@ -733,7 +733,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--accent-color);
+  background: #ef4444;
   color: var(--white);
   padding: 8px 16px;
   border-radius: 6px;
@@ -747,9 +747,9 @@
 }
 
 .sample-output-link:hover {
-  background: #d99900;
+  background: #dc2626;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(240, 172, 0, 0.4);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
 }
 
 .project-note {
