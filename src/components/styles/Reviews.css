@@ -1,4 +1,4 @@
-/* Reviews.css - 3 Cards Carousel Version */
+/* Reviews.css - 3 Cards Carousel Version - Full Responsive */
 
 .reviews-page {
   padding: 4rem 0;
@@ -486,116 +486,6 @@
   margin-top: 1rem;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .carousel-slide {
-    gap: 1.5rem;
-    padding: 0.5rem;
-  }
-  
-  .testimonial-card {
-    padding: 1.5rem;
-    height: 380px;
-  }
-  
-  .carousel-btn-prev {
-    left: -15px;
-  }
-  
-  .carousel-btn-next {
-    right: -15px;
-  }
-}
-
-@media (max-width: 768px) {
-  .reviews-page {
-    padding: 2rem 0;
-  }
-  
-  .page-header h1 {
-    font-size: 2rem;
-  }
-  
-  .stats-overview {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    padding: 1.5rem;
-  }
-  
-  .carousel-wrapper {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .carousel-btn {
-    position: static;
-    transform: none;
-    order: 2;
-  }
-  
-  .carousel-btn-prev,
-  .carousel-btn-next {
-    position: static;
-  }
-  
-  .carousel-content {
-    order: 1;
-    width: 100%;
-  }
-  
-  .carousel-slide {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .testimonial-card {
-    height: auto;
-    min-height: 300px;
-  }
-  
-  .filter-buttons {
-    gap: 0.5rem;
-  }
-  
-  .filter-btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
-  
-  .reviews-cta {
-    padding: 3rem 1.5rem;
-  }
-  
-  .cta-content h2 {
-    font-size: 1.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-overview {
-    grid-template-columns: 1fr;
-  }
-  
-  .testimonial-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.75rem;
-  }
-  
-  .client-avatar {
-    align-self: center;
-  }
-  
-  .carousel-indicators {
-    gap: 0.5rem;
-  }
-  
-  .indicator {
-    width: 8px;
-    height: 8px;
-  }
-}
-
 /* Animation for smooth transitions */
 @keyframes fadeIn {
   from {
@@ -610,4 +500,417 @@
 
 .testimonial-card {
   animation: fadeIn 0.5s ease-out;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - ALL BREAKPOINTS
+   ============================================ */
+
+/* Large Desktop - 1440px and above */
+@media (min-width: 1440px) {
+  .reviews-page {
+    padding: 5rem 0;
+  }
+  
+  .carousel-wrapper {
+    max-width: 1400px;
+  }
+  
+  .testimonial-card {
+    height: 420px;
+  }
+}
+
+/* Desktop - 1200px to 1439px */
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .carousel-wrapper {
+    max-width: 1100px;
+  }
+}
+
+/* Laptop/Tablet Landscape - 1024px to 1199px */
+@media (max-width: 1199px) {
+  .carousel-wrapper {
+    max-width: 900px;
+  }
+  
+  .carousel-slide {
+    gap: 1.5rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.75rem;
+    height: 390px;
+  }
+}
+
+/* Tablet - 768px to 1023px */
+@media (max-width: 1023px) {
+  .reviews-page {
+    padding: 3rem 0;
+  }
+  
+  .page-header h1 {
+    font-size: 2.25rem;
+  }
+  
+  .stats-overview {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.75rem;
+  }
+  
+  .carousel-wrapper {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .carousel-btn-prev {
+    left: -10px;
+  }
+  
+  .carousel-btn-next {
+    right: -10px;
+  }
+  
+  .carousel-slide {
+    gap: 1.25rem;
+    padding: 0.75rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+    height: 380px;
+  }
+  
+  .filter-buttons {
+    gap: 0.75rem;
+  }
+  
+  .filter-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile Landscape / Small Tablet - 768px and below */
+@media (max-width: 768px) {
+  .reviews-page {
+    padding: 2rem 0;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .page-header p {
+    font-size: 1rem;
+  }
+  
+  .stats-overview {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .stat-number {
+    font-size: 1.75rem;
+  }
+  
+  .stat-label {
+    font-size: 0.85rem;
+  }
+  
+  .carousel-wrapper {
+    flex-direction: column;
+    gap: 0;
+    padding: 0 1rem;
+  }
+  
+  /* Hide navigation buttons completely on mobile */
+  .carousel-btn,
+  .carousel-btn-prev,
+  .carousel-btn-next {
+    display: none !important;
+  }
+  
+  .carousel-content {
+    width: 100%;
+    padding: 0;
+    overflow: visible;
+  }
+  
+  .carousel-track {
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .carousel-slide {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    scroll-snap-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .testimonial-card {
+    margin-top: 1rem;
+    height: auto;
+    min-height: 320px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .carousel-indicators {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .indicator {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .filter-buttons {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .filter-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .reviews-cta {
+    padding: 3rem 1.5rem;
+  }
+  
+  .cta-content h2 {
+    font-size: 1.75rem;
+  }
+  
+  .cta-content p {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile Portrait - 480px and below */
+@media (max-width: 480px) {
+  .reviews-page {
+    padding: 1.5rem 0;
+  }
+  
+  .page-header {
+    margin-bottom: 2rem;
+  }
+  
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .page-header p {
+    font-size: 0.95rem;
+  }
+  
+  .stats-overview {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+  }
+  
+  .confidential-notice {
+    font-size: 0.85rem;
+    padding: 0.65rem 0.85rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .filter-buttons {
+    gap: 0.5rem;
+    padding: 0 0.75rem;
+  }
+  
+  .filter-btn {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.85rem;
+    flex: 1 1 auto;
+    min-width: calc(50% - 0.25rem);
+  }
+  
+  .project-count {
+    font-size: 0.75rem;
+  }
+  
+  .carousel-wrapper {
+    padding: 0 0.75rem;
+  }
+  
+  .testimonial-card {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    min-height: 300px;
+  }
+  
+  .testimonial-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  
+  .client-avatar {
+    width: 45px;
+    height: 45px;
+    font-size: 0.85rem;
+  }
+  
+  .client-info {
+    text-align: center;
+  }
+  
+  .client-name {
+    font-size: 1rem;
+    white-space: normal;
+  }
+  
+  .client-project {
+    font-size: 0.85rem;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+  
+  .testimonial-rating {
+    justify-content: center;
+  }
+  
+  .testimonial-text {
+    font-size: 0.9rem;
+    padding-left: 0.75rem;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+  }
+  
+  .testimonial-category {
+    justify-content: center;
+  }
+  
+  .category-tag {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.75rem;
+  }
+  
+  .carousel-indicators {
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  
+  .indicator {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .slide-counter {
+    font-size: 0.85rem;
+  }
+  
+  .reviews-cta {
+    padding: 2.5rem 1.25rem;
+  }
+  
+  .cta-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .cta-content p {
+    font-size: 0.95rem;
+  }
+  
+  .btn {
+    padding: 0.85rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra Small Mobile - 375px and below */
+@media (max-width: 375px) {
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .stats-overview {
+    padding: 1rem;
+  }
+  
+  .stat-number {
+    font-size: 1.35rem;
+  }
+  
+  .testimonial-card {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  
+  .client-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 0.8rem;
+  }
+  
+  .testimonial-text {
+    font-size: 0.85rem;
+  }
+  
+  .cta-content h2 {
+    font-size: 1.35rem;
+  }
+  
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Landscape Orientation for Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .reviews-page {
+    padding: 1.5rem 0;
+  }
+  
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .stats-overview {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .testimonial-card {
+    margin-top: 1rem;
+    height: auto;
+    min-height: 250px;
+  }
+  
+  .reviews-cta {
+    padding: 2rem 1.5rem;
+  }
 }
