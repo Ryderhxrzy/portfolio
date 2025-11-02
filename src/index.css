@@ -11,6 +11,7 @@
   /* Background Colors */
   --bg: #fafbfc;
   --surface: #ffffff;
+  --footer-bg: #f3f4f6;
   
   /* Text Colors */
   --text: #474747;
@@ -59,6 +60,7 @@
   /* Background Colors */
   --bg: #1a202c;
   --surface: #2d3748;
+  --footer-bg: #0f1419;
   
   /* Text Colors */
   --text: #e2e8f0;
