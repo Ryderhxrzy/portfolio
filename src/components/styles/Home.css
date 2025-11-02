@@ -2,7 +2,7 @@
 
 /* ===== HERO SECTION ===== */
 .hero {
-  background: var(--white);
+  background: var(--bg);
   padding: 120px 0 80px;
   min-height: 100vh;
   display: flex;
@@ -31,7 +31,7 @@
 
 .hero-greeting {
   font-size: 1.2rem;
-  color: var(--secondary-color);
+  color: var(--muted);
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
@@ -41,11 +41,11 @@
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 0.5rem;
-  color: var(--text-dark);
+  color: var(--text);
 }
 
 .highlight {
-  color: var(--primary-color);
+  color: var(--accent);
   position: relative;
   display: inline-block;
 }
@@ -64,12 +64,12 @@
 
 .hero-aka {
   font-size: 1.3rem;
-  color: var(--secondary-color);
+  color: var(--muted);
   font-weight: 500;
 }
 
 .aka-name {
-  color: var(--accent-color);
+  color: var(--secondary-accent);
   font-weight: 600;
   font-style: italic;
 }
@@ -81,7 +81,7 @@
 
 .hero-subtitle {
   font-size: 1.4rem;
-  color: var(--text-dark);
+  color: var(--text);
   font-weight: 600;
   margin-bottom: 1rem;
 }
@@ -96,14 +96,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--white);
-  color: var(--text-dark);
+  background: var(--badge-bg);
+  color: var(--badge-text);
   padding: 0.6rem 1rem;
   border-radius: 50px;
   font-size: 0.9rem;
   font-weight: 500;
   box-shadow: var(--shadow);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   transition: all 0.3s ease;
 }
 
@@ -113,7 +113,7 @@
 }
 
 .badge i {
-  color: var(--primary-color);
+  color: var(--accent);
   font-size: 0.8rem;
 }
 
@@ -125,11 +125,11 @@
 .hero-description p {
   font-size: 1.1rem;
   line-height: 1.7;
-  color: var(--text-light);
+  color: var(--muted);
 }
 
 .hero-description strong {
-  color: var(--primary-color);
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -139,9 +139,9 @@
   gap: 2rem;
   margin-bottom: 2.5rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--card-bg);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow);
 }
 
@@ -153,13 +153,13 @@
 .stat-number {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--accent);
   margin-bottom: 0.25rem;
 }
 
 .stat-label {
   font-size: 0.85rem;
-  color: var(--secondary-color);
+  color: var(--muted);
   font-weight: 500;
 }
 
@@ -192,28 +192,28 @@
 }
 
 .btn-primary {
-  background: var(--primary-color);
-  color: var(--white);
-  box-shadow: 0 4px 14px rgba(14, 12, 91, 0.4);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-  background: var(--primary-dark);
+  background: var(--accent-hover);
   transform: translateY(-2px);
-  color: var(--white);
-  box-shadow: 0 6px 20px rgba(14, 12, 91, 0.5);
+  color: var(--accent-contrast);
+  box-shadow: var(--shadow-lg);
 }
 
 .btn-secondary {
-  background: var(--white);
-  color: var(--text-dark);
-  border: 2px solid var(--border-light);
+  background: transparent;
+  color: var(--text);
+  border: 2px solid var(--border);
 }
 
 .btn-secondary:hover {
-  background: var(--text-dark);
-  color: var(--white);
-  border-color: var(--text-dark);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
   transform: translateY(-2px);
 }
 
@@ -226,7 +226,7 @@
 
 .social-label {
   font-size: 0.9rem;
-  color: var(--secondary-color);
+  color: var(--muted);
   font-weight: 500;
   margin: 0;
 }
@@ -241,19 +241,19 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1rem;
-  background: var(--white);
-  color: var(--text-dark);
+  background: var(--card-bg);
+  color: var(--text);
   text-decoration: none;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.3s ease;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
 }
 
 .social-link:hover {
-  background: var(--primary-color);
-  color: var(--white);
+  background: var(--accent);
+  color: var(--accent-contrast);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
@@ -273,14 +273,14 @@
 .profile-image {
   width: 320px;
   height: 320px;
-  background: var(--primary-color);
+  background: var(--accent);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: 0 20px 40px rgba(14, 12, 91, 0.3);
-  border: 6px solid var(--white);
+  box-shadow: var(--shadow-lg);
+  border: 6px solid var(--bg);
 }
 
 .profile-photo {
@@ -299,7 +299,7 @@
 
 .profile-image i {
   font-size: 6rem;
-  color: var(--white);
+  color: var(--accent-contrast);
   opacity: 0.9;
 }
 
@@ -316,7 +316,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -327,7 +327,7 @@
 
 .floating-element i {
   font-size: 1.5rem;
-  color: var(--primary-color);
+  color: var(--accent);
 }
 
 .element-1 {
@@ -368,7 +368,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--white);
+  background: var(--card-bg);
   color: #059669;
   padding: 0.8rem 1.5rem;
   border-radius: 50px;
@@ -393,7 +393,7 @@
 
 /* ===== ABOUT SECTION ===== */
 .about {
-  background: var(--background-light);
+  background: var(--surface);
   padding: 80px 0;
 }
 
@@ -408,7 +408,7 @@
   font-size: 1.1rem;
   line-height: 1.8;
   margin-bottom: 2rem;
-  color: var(--text-light);
+  color: var(--muted);
 }
 
 .education-info {
@@ -423,10 +423,10 @@
   align-items: flex-start;
   gap: 1rem;
   padding: 1.5rem;
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: 10px;
   box-shadow: var(--shadow);
-  border-left: 4px solid var(--primary-color);
+  border-left: 4px solid var(--accent);
   transition: all 0.3s ease;
 }
 
@@ -436,20 +436,20 @@
 }
 
 .education-item i {
-  color: var(--primary-color);
+  color: var(--accent);
   font-size: 1.5rem;
   margin-top: 0.2rem;
   flex-shrink: 0;
 }
 
 .education-item h4 {
-  color: var(--text-dark);
+  color: var(--text);
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
 }
 
 .education-item p {
-  color: var(--text-light);
+  color: var(--muted);
   margin: 0;
   line-height: 1.5;
 }
@@ -464,17 +464,17 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: var(--text-light);
+  color: var(--muted);
 }
 
 .detail-item i {
-  color: var(--primary-color);
+  color: var(--accent);
   width: 20px;
 }
 
 .skills h3 {
   margin-bottom: 1.5rem;
-  color: var(--text-dark);
+  color: var(--text);
   text-align: center;
 }
 
@@ -486,8 +486,8 @@
 }
 
 .skill-tag {
-  background: var(--primary-color);
-  color: var(--white);
+  background: var(--skill-tag-bg);
+  color: var(--skill-tag-text);
   padding: 0.6rem 1rem;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -499,7 +499,8 @@
 }
 
 .skill-tag:hover {
-  background: var(--primary-dark);
+  background: var(--accent);
+  color: var(--accent-contrast);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
@@ -510,7 +511,7 @@
 
 /* ===== PROJECTS SECTION ===== */
 .featured-projects {
-  background: var(--white);
+  background: var(--bg);
   padding: 80px 0;
 }
 
@@ -522,12 +523,12 @@
 }
 
 .project-card {
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: all 0.3s ease;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
 }
 
 .project-card:hover {
@@ -581,16 +582,16 @@
   justify-content: center;
   width: 50px;
   height: 50px;
-  background: var(--white);
-  color: var(--primary-color);
+  background: var(--card-bg);
+  color: var(--accent);
   border-radius: 50%;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
 .project-links a:hover {
-  background: var(--accent-color);
-  color: var(--white);
+  background: var(--secondary-accent);
+  color: var(--secondary-accent-contrast);
   transform: scale(1.1);
 }
 
@@ -616,16 +617,16 @@
 }
 
 .stat.language {
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--text-dark);
+  background: var(--card-bg);
+  color: var(--text);
 }
 
 .project-pinned-badge {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: var(--accent-color);
-  color: var(--white);
+  background: var(--secondary-accent);
+  color: var(--secondary-accent-contrast);
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -642,12 +643,12 @@
 .project-content h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-dark);
+  color: var(--text);
   margin-bottom: 0.75rem;
 }
 
 .project-description {
-  color: var(--text-light);
+  color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.5;
   margin-bottom: 1rem;
@@ -660,7 +661,7 @@
 
 .project-languages strong {
   font-size: 0.875rem;
-  color: var(--text-dark);
+  color: var(--text);
   display: block;
   margin-bottom: 8px;
 }
@@ -680,9 +681,9 @@
   font-size: 0.7rem;
   font-weight: 500;
   transition: all 0.2s ease;
-  background: rgba(14, 12, 91, 0.1);
-  color: var(--primary-color);
-  border: 1px solid rgba(14, 12, 91, 0.2);
+  background: var(--skill-tag-bg);
+  color: var(--skill-tag-text);
+  border: 1px solid var(--border);
 }
 
 .language-tag:hover {
@@ -692,7 +693,7 @@
 
 .language-tag .fa-circle {
   font-size: 0.5rem;
-  color: var(--primary-color);
+  color: var(--accent);
 }
 
 /* Project Actions - Deployment and Sample Output */
@@ -757,11 +758,11 @@
   align-items: flex-start;
   gap: 6px;
   font-size: 0.75rem;
-  color: var(--text-light);
+  color: var(--muted);
   margin: 0;
   margin-top: 1rem;
   padding: 8px;
-  background: rgba(59, 130, 246, 0.05);
+  background: rgba(59, 130, 246, 0.1);
   border-left: 3px solid #3b82f6;
   border-radius: 4px;
   line-height: 1.4;
@@ -782,8 +783,8 @@
 }
 
 .topic-tag {
-  background: rgba(14, 12, 91, 0.1);
-  color: var(--primary-color);
+  background: var(--skill-tag-bg);
+  color: var(--skill-tag-text);
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -798,8 +799,8 @@
 }
 
 .tech-tag {
-  background: var(--background-light);
-  color: var(--text-light);
+  background: var(--surface);
+  color: var(--muted);
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -811,9 +812,9 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 1rem;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--border);
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--muted);
 }
 
 .project-updated,
@@ -829,13 +830,13 @@
 }
 
 .view-all .btn {
-  background: var(--primary-color);
-  color: var(--white);
+  background: var(--accent);
+  color: var(--accent-contrast);
   padding: 12px 32px;
 }
 
 .view-all .btn:hover {
-  background: var(--primary-dark);
+  background: var(--accent-hover);
   transform: translateY(-2px);
 }
 
@@ -844,8 +845,8 @@
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 3rem;
-  color: var(--text-dark);
   position: relative;
+  color: var(--text);
 }
 
 .section-title::after {
@@ -856,14 +857,14 @@
   transform: translateX(-50%);
   width: 60px;
   height: 4px;
-  background: var(--primary-color);
+  background: var(--accent);
   border-radius: 2px;
 }
 
 .section-subtitle {
   font-size: 1.1rem;
   text-align: center;
-  color: var(--text-light);
+  color: var(--muted);
   margin-bottom: 3rem;
 }
 
@@ -871,25 +872,25 @@
 .loading-projects {
   text-align: center;
   padding: 3rem;
-  color: var(--text-light);
+  color: var(--muted);
 }
 
 .loading-projects .fa-spinner {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: var(--primary-color);
+  color: var(--accent);
 }
 
 .warning-message {
-  background: #fef3c7;
-  border: 1px solid #f59e0b;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid var(--secondary-accent);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #92400e;
+  color: var(--secondary-accent);
 }
 
 .warning-message .fa-exclamation-triangle {
@@ -899,15 +900,15 @@
 
 /* ===== OTHER SECTIONS ===== */
 .github-stats-section {
-  background: var(--background-light);
+  background: var(--surface);
 }
 
 .reviews-section {
-  background: var(--white);
+  background: var(--bg);
 }
 
 .contact-section {
-  background: var(--background-light);
+  background: var(--surface);
 }
 
 /* ===== UTILITY CLASSES ===== */

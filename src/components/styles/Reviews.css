@@ -2,7 +2,7 @@
 
 .reviews-page {
   padding: 4rem 0;
-  background: var(--white);
+  background: var(--bg);
   min-height: 100vh;
 }
 
@@ -14,13 +14,13 @@
 .page-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text);
   margin-bottom: 0.5rem;
 }
 
 .page-header p {
   font-size: 1.1rem;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 /* Stats Overview */
@@ -30,9 +30,10 @@
   gap: 2rem;
   margin-bottom: 3rem;
   padding: 2rem;
-  background: white;
+  background: var(--card-bg);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .stat-item {
@@ -42,13 +43,13 @@
 .stat-number {
   font-size: 2rem;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--accent);
   margin-bottom: 0.5rem;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--muted);
   font-weight: 500;
 }
 
@@ -58,13 +59,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #dbeafe;
-  color: #1e40af;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent);
   padding: 0.75rem 1rem;
   border-radius: 8px;
   margin-bottom: 2rem;
   font-size: 0.9rem;
   font-weight: 500;
+  border: 1px solid var(--accent);
 }
 
 .confidential-notice i {
@@ -82,9 +84,9 @@
 
 .filter-btn {
   padding: 0.75rem 1.5rem;
-  border: 2px solid #e5e7eb;
-  background: white;
-  color: #6b7280;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  color: var(--muted);
   border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
@@ -95,15 +97,15 @@
 }
 
 .filter-btn:hover {
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: var(--accent);
+  color: var(--accent);
   transform: translateY(-2px);
 }
 
 .filter-btn.active {
-  background: #2563eb;
-  border-color: #2563eb;
-  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
 }
 
 .project-count {
@@ -131,15 +133,15 @@
 .carousel-btn {
   width: 50px;
   height: 50px;
-  border: 2px solid #e5e7eb;
-  background: white;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #6b7280;
+  color: var(--muted);
   font-size: 1.1rem;
   flex-shrink: 0;
   z-index: 10;
@@ -157,11 +159,11 @@
 }
 
 .carousel-btn:hover {
-  border-color: #2563eb;
-  background: #2563eb;
-  color: white;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
   transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .carousel-btn:active {
@@ -192,12 +194,12 @@
 
 /* Testimonial Card */
 .testimonial-card {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow);
   transition: all 0.3s ease;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border);
   flex: 1;
   min-width: 0;
   display: flex;
@@ -207,7 +209,7 @@
 
 .testimonial-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
 }
 
 .testimonial-header {
@@ -224,8 +226,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  background: var(--accent);
+  color: var(--accent-contrast);
   font-weight: 600;
   font-size: 0.9rem;
   flex-shrink: 0;
@@ -239,7 +241,7 @@
 .client-name {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text);
   margin-bottom: 0.25rem;
   letter-spacing: 0.5px;
   white-space: nowrap;
@@ -249,7 +251,7 @@
 
 .client-project {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--muted);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -261,7 +263,7 @@
 
 .client-project i {
   font-size: 0.8rem;
-  color: #2563eb;
+  color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -274,7 +276,7 @@
 }
 
 .testimonial-rating .fa-star {
-  color: #d1d5db;
+  color: var(--border);
   font-size: 1rem;
 }
 
@@ -284,23 +286,24 @@
 
 .rating-text {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--muted);
   font-weight: 500;
   margin-left: 0.5rem;
 }
 
 .testimonial-text {
-  color: #4b5563;
+  color: var(--muted);
   line-height: 1.6;
   margin-bottom: 1.5rem;
   font-style: italic;
   position: relative;
   padding-left: 1rem;
-  border-left: 3px solid #e5e7eb;
+  border-left: 3px solid var(--border);
   flex: 1;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 5;
+  line-clamp: 5;
   -webkit-box-orient: vertical;
 }
 
@@ -365,19 +368,19 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #d1d5db;
+  background: var(--border);
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .indicator.active {
-  background: #2563eb;
+  background: var(--accent);
   transform: scale(1.2);
 }
 
 .indicator:hover {
-  background: #2563eb;
+  background: var(--accent);
   transform: scale(1.1);
 }
 
@@ -385,12 +388,12 @@
 .slide-counter {
   text-align: center;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--muted);
   font-weight: 600;
 }
 
 .current-slide {
-  color: #2563eb;
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -401,8 +404,8 @@
 
 /* CTA Section */
 .reviews-cta {
-  background: var(--primary-color);
-  color: white;
+  background: var(--card-bg);
+  color: var(--accent-contrast);
   padding: 4rem 2rem;
   border-radius: 16px;
   text-align: center;
@@ -426,24 +429,27 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem 2rem;
-  background: white;
-  color: #667eea;
+  background: var(--card-bg);
+  color: var(--accent);
   text-decoration: none;
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  border: 2px solid var(--accent);
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
+  background: var(--accent);
+  color: var(--accent-contrast);
 }
 
 .btn-primary {
-  background: white;
-  color: #667eea;
+  background: var(--card-bg);
+  color: var(--accent);
 }
 
 /* Loading, Error, and Empty States */
@@ -452,7 +458,7 @@
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .loading-state i,
@@ -460,7 +466,7 @@
 .empty-state i {
   font-size: 3rem;
   margin-bottom: 1rem;
-  color: #2563eb;
+  color: var(--accent);
 }
 
 .error-state i {

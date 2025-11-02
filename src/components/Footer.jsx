@@ -18,8 +18,8 @@ const Footer = ({ personalInfo }) => {
               <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <i className="fab fa-linkedin"></i>
               </a>
-              <a href={personalInfo.socialLinks.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <i className="fab fa-twitter"></i>
+              <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                <i className="fab fa-facebook"></i>
               </a>
             </div>
           </div>
