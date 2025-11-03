@@ -45,6 +45,7 @@ const Contact = ({ personalInfo }) => {
     'Web Development',
     'Mobile Development',
     'Desktop Application',
+    'Vector Art',
     'Other'
   ];
 
@@ -68,7 +69,7 @@ const Contact = ({ personalInfo }) => {
     <div className="contact-page">
       <div className="container">
         <div className="page-header">
-          <h1>Let's Work Together</h1>
+          <h2>Let's Work Together</h2>
           <p>Ready to bring your project to life? Get in touch for a free consultation</p>
         </div>
 
@@ -98,9 +99,10 @@ const Contact = ({ personalInfo }) => {
                     <span>Desktop Application</span>
                   </div>
                   <div className="service-item">
-                    <i className="fas fa-database"></i>
-                    <span>Database Design</span>
+                    <i className="fas fa-palette"></i>
+                    <span>Vector Art</span>
                   </div>
+
                 </div>
               </div>
 
