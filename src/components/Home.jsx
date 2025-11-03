@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './styles/Home.css';
 import GithubStats from './GithubStats.jsx';
 import Reviews from './Reviews.jsx';
@@ -13,6 +13,7 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [showAll, setShowAll] = useState(false);
+  const projectsRef = useRef(null);
   
   const { width } = useWindowSize();
   const isMobile = width <= 480; // Adjust breakpoint as needed
@@ -48,6 +49,27 @@ const Home = () => {
   useEffect(() => {
     setShowAll(false);
   }, [filter]);
+
+  useEffect(() => {
+    if (!showAll && projectsRef.current) {
+      projectsRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [showAll]);
+
+  useEffect(() => {
+    if (!showAll) {
+      const projectsSection = document.getElementById('projects');
+      if (projectsSection) {
+        projectsSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  }, [showAll]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -120,6 +142,19 @@ const Home = () => {
     if (filter === 'vector' && project.topics.includes('vector-art')) return true;
     return false;
   });
+
+  const handleToggle = () => {
+    const wasShowingAll = showAll;
+    setShowAll(!showAll);
+
+    // If we're hiding projects (going from showAll=true to false)
+    if (wasShowingAll) {
+      const projectsSection = document.getElementById('projects');
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <div className="home">
@@ -292,7 +327,7 @@ const Home = () => {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="projects-section">
+      <section id="projects" className="projects-section" ref={projectsRef}>
         <div className="container">
           <div className="page-header">
             <h2>My Projects & Certificate</h2>
@@ -493,7 +528,7 @@ const Home = () => {
                 <div className="show-more-container">
                   <button 
                     className="btn btn-show-more"
-                    onClick={() => setShowAll(!showAll)}
+                    onClick={handleToggle}
                     aria-label={showAll ? 'Show Less' : 'Show More'}
                   >
                     <i className={`fas ${showAll ? 'fa-arrow-up' : 'fa-arrow-down'}`}></i>
