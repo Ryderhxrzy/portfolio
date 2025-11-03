@@ -585,9 +585,8 @@
 /* Mobile Landscape / Small Tablet - 768px and below */
 @media (max-width: 768px) {
   .reviews-page {
-    padding: 2rem 0;
+    padding: 0rem 0;
   }
-  
   .page-header h1 {
     font-size: 2rem;
   }
@@ -695,7 +694,7 @@
 /* Mobile Portrait - 480px and below */
 @media (max-width: 480px) {
   .reviews-page {
-    padding: 1.5rem 0;
+    padding: 0rem 0;
   }
   
   .page-header {
