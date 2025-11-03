@@ -11,7 +11,6 @@ const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [showAll, setShowAll] = useState(false);
   const projectsRef = useRef(null);
@@ -23,7 +22,6 @@ const Home = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        setError(null);
         
         console.log('Fetching GitHub repositories and certificates...');
         
@@ -43,7 +41,6 @@ const Home = () => {
         console.log('Loaded certificates:', certs);
       } catch (err) {
         console.error('Error loading data:', err);
-        setError('Failed to load data from GitHub.');
         
         const fallbackProjects = await fetchGitHubRepositories();
         const fallbackCerts = await fetchCertificates();
@@ -398,8 +395,8 @@ const Home = () => {
                     {filteredData.slice(0, showAll ? filteredData.length : (isMobile ? 1 : 3)).map(item => (
                       type === 'mixed' ? (
                         item.itemType === 'certificate' ? (
-                          <div key={item.id} className="project-card certificate-card fade-in-up">
-                            <div className="project-image certificate-image">
+                          <div key={item.id} className="project-card fade-in-up">
+                            <div className="project-image">
                               <img 
                                 src={item.image}
                                 alt={item.title}
@@ -441,10 +438,19 @@ const Home = () => {
                                 </a>
                               </div>
                               
-                              <div className="certificate-meta plain-text">
-                                Issuer: {item.issuer}
-                                Date: {formatDate(item.date)}
-                                Credential ID: {item.credentialId}
+                              <div className="certificate-footer">
+                                <div className="certificate-date">
+                                  <i className="fas fa-calendar"></i>
+                                  {formatDate(item.date)}
+                                </div>
+                                <div className="certificate-issuer">
+                                  <i className="fas fa-building"></i>
+                                  {item.issuer}
+                                </div>
+                                <div className="certificate-id">
+                                  <i className="fas fa-certificate"></i>
+                                  {item.credentialId}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -609,6 +615,20 @@ const Home = () => {
                               <h3>{item.title}</h3>
                               <p className="project-description">{item.description}</p>
                               
+                              <div className="certificate-action">
+                                <div className="project-buttons-row">
+                                  <a 
+                                    href={item.certificateUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="btn-view-certificate"
+                                  >
+                                    <i className="fas fa-external-link-alt"></i>
+                                    View Certificate
+                                  </a>
+                                </div>
+                              </div>
+                              
                               <div className="project-topics">
                                 {item.tags.map((tag, index) => (
                                   <span key={index} className="topic-tag certificate-tag">
@@ -617,22 +637,19 @@ const Home = () => {
                                 ))}
                               </div>
                               
-                              <div className="certificate-action">
-                                <a 
-                                  href={item.certificateUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="btn-view-certificate"
-                                >
-                                  <i className="fas fa-external-link-alt"></i>
-                                  View Certificate
-                                </a>
-                              </div>
-                              
-                              <div className="certificate-meta plain-text">
-                                Issuer: {item.issuer}
-                                Date: {formatDate(item.date)}
-                                Credential ID: {item.credentialId}
+                              <div className="certificate-footer">
+                                <div className="certificate-date">
+                                  <i className="fas fa-calendar"></i>
+                                  {formatDate(item.date)}
+                                </div>
+                                <div className="certificate-issuer">
+                                  <i className="fas fa-building"></i>
+                                  {item.issuer}
+                                </div>
+                                <div className="certificate-id">
+                                  <i className="fas fa-certificate"></i>
+                                  {item.credentialId}
+                                </div>
                               </div>
                             </div>
                           </div>
