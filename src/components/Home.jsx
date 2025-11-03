@@ -3,12 +3,13 @@ import './styles/Home.css';
 import GithubStats from './GithubStats.jsx';
 import Reviews from './Reviews.jsx';
 import Contact from './Contact.jsx';
-import { personalInfo, fetchGitHubRepositories } from '../data/projects.js';
+import { personalInfo, fetchGitHubRepositories, fetchCertificates } from '../data/projects.js';
 import profileImage from '/profile.jpg';
-import useWindowSize from '../hooks/useWindowSize';
+import useWindowSize from '../hooks/useWindowSize.js';
 
 const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
+  const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
@@ -16,34 +17,44 @@ const Home = () => {
   const projectsRef = useRef(null);
   
   const { width } = useWindowSize();
-  const isMobile = width <= 480; // Adjust breakpoint as needed
+  const isMobile = width <= 480;
 
   useEffect(() => {
-    const loadProjects = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
         setError(null);
         
-        console.log('Fetching GitHub repositories...');
-        const projects = await fetchGitHubRepositories();
+        console.log('Fetching GitHub repositories and certificates...');
+        
+        const [projects, certs] = await Promise.all([
+          fetchGitHubRepositories(),
+          fetchCertificates()
+        ]);
         
         if (projects.length === 0) {
           throw new Error('No repositories found');
         }
         
         setFeaturedProjects(projects);
+        setCertificates(certs);
+        
         console.log('Loaded projects:', projects);
+        console.log('Loaded certificates:', certs);
       } catch (err) {
-        console.error('Error loading projects:', err);
-        setError('Failed to load projects from GitHub. Showing sample projects instead.');
+        console.error('Error loading data:', err);
+        setError('Failed to load data from GitHub.');
+        
         const fallbackProjects = await fetchGitHubRepositories();
+        const fallbackCerts = await fetchCertificates();
         setFeaturedProjects(fallbackProjects);
+        setCertificates(fallbackCerts);
       } finally {
         setLoading(false);
       }
     };
-
-    loadProjects();
+    
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -52,22 +63,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!showAll && projectsRef.current) {
-      projectsRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }, [showAll]);
-
-  useEffect(() => {
-    if (!showAll) {
-      const projectsSection = document.getElementById('projects');
-      if (projectsSection) {
-        projectsSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
+      // Removed auto-scroll to hash
     }
   }, [showAll]);
 
@@ -85,7 +81,6 @@ const Home = () => {
     return !url.includes('github.com') && !url.includes('github.io');
   };
 
-  // Function to get color for a specific language
   const getLanguageColor = (language) => {
     const colors = {
       JavaScript: '#f7df1e',
@@ -125,29 +120,45 @@ const Home = () => {
     return colors[language] || '#6e7681';
   };
 
-  // Calculate counts for each filter
   const filterCounts = {
-    all: featuredProjects.length,
+    all: featuredProjects.length + certificates.length,
     web: featuredProjects.filter(project => project.topics.includes('web-development')).length,
     app: featuredProjects.filter(project => project.topics.includes('app-development')).length,
     desktop: featuredProjects.filter(project => project.topics.includes('desktop-application')).length,
     vector: featuredProjects.filter(project => project.topics.includes('vector-art')).length,
+    certificate: certificates.length,
   };
 
-  const filteredProjects = featuredProjects.filter(project => {
-    if (filter === 'all') return true;
-    if (filter === 'web' && project.topics.includes('web-development')) return true;
-    if (filter === 'app' && project.topics.includes('app-development')) return true;
-    if (filter === 'desktop' && project.topics.includes('desktop-application')) return true;
-    if (filter === 'vector' && project.topics.includes('vector-art')) return true;
-    return false;
-  });
+  const getFilteredData = () => {
+    if (filter === 'certificate') {
+      return { type: 'certificate', data: certificates };
+    }
+    
+    if (filter === 'all') {
+      const combined = [
+        ...featuredProjects.map(project => ({ ...project, itemType: 'project' })),
+        ...certificates.map(cert => ({ ...cert, itemType: 'certificate' }))
+      ];
+      return { type: 'mixed', data: combined };
+    }
+    
+    const filtered = featuredProjects.filter(project => {
+      if (filter === 'web') return project.topics.includes('web-development');
+      if (filter === 'app') return project.topics.includes('app-development');
+      if (filter === 'desktop') return project.topics.includes('desktop-application');
+      if (filter === 'vector') return project.topics.includes('vector-art');
+      return false;
+    });
+    
+    return { type: 'project', data: filtered };
+  };
+
+  const { type, data: filteredData } = getFilteredData();
 
   const handleToggle = () => {
     const wasShowingAll = showAll;
     setShowAll(!showAll);
 
-    // If we're hiding projects (going from showAll=true to false)
     if (wasShowingAll) {
       const projectsSection = document.getElementById('projects');
       if (projectsSection) {
@@ -158,11 +169,9 @@ const Home = () => {
 
   return (
     <div className="home">
-      {/* Hero Section */}
       <section id="home" className="hero">
         <div className="container">
           <div className="hero-content fade-in-up">
-            {/* Main Introduction */}
             <div className="hero-intro">
               <p className="hero-greeting">Hello, I'm</p>
               <h1>
@@ -171,7 +180,6 @@ const Home = () => {
               <p className="hero-aka">Also known as <span className="aka-name">{personalInfo.aka}</span></p>
             </div>
 
-            {/* Professional Info */}
             <div className="hero-professional">
               <p className="hero-subtitle">{personalInfo.title}</p>
               <div className="hero-badges">
@@ -190,7 +198,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Description */}
             <div className="hero-description">
               <p>
                 I create <strong>modern and user-friendly web applications</strong> that make everyday tasks easier and more enjoyable. 
@@ -199,7 +206,6 @@ const Home = () => {
               </p>
             </div>
 
-            {/* Stats */}
             <div className="hero-stats">
               <div className="stats">
                 <div className="stat-number">2+</div>
@@ -215,7 +221,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Call to Action */}
             <div className="hero-actions">
               <div className="hero-buttons">
                 <button 
@@ -236,7 +241,6 @@ const Home = () => {
                 </button>
               </div>
 
-              {/* Social Links */}
               <div className="hero-social">
                 <p className="social-label">Follow my journey</p>
                 <div className="social-links">
@@ -257,7 +261,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Hero Image */}
           <div className="hero-image">
             <div className="profile-container">
               <div className="profile-image">
@@ -273,7 +276,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* About Section */}
       <section id="about" className="about section">
         <div className="container">
           <h2 className="section-title">About Me</h2>
@@ -326,247 +328,495 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Projects Section */}
       <section id="projects" className="projects-section" ref={projectsRef}>
         <div className="container">
-          <div className="page-header">
-            <h2>My Projects & Certificate</h2>
-            <p>Featured repositories from my GitHub profile</p>
-          </div>
-
-          {/* Filters */}
-          <div className="filters">
-            <button 
-              className={`filter-btn ${filter === 'all' ? 'active' : ''}`} 
-              onClick={() => setFilter('all')}
-            >
-              All <span className="project-count">({filterCounts.all})</span>
-            </button>
-            <button 
-              className={`filter-btn ${filter === 'web' ? 'active' : ''}`} 
-              onClick={() => setFilter('web')}
-            >
-              Web Development <span className="project-count">({filterCounts.web})</span>
-            </button>
-            <button 
-              className={`filter-btn ${filter === 'app' ? 'active' : ''}`} 
-              onClick={() => setFilter('app')}
-            >
-              App Development <span className="project-count">({filterCounts.app})</span>
-            </button>
-            <button 
-              className={`filter-btn ${filter === 'desktop' ? 'active' : ''}`} 
-              onClick={() => setFilter('desktop')}
-            >
-              Desktop Application <span className="project-count">({filterCounts.desktop})</span>
-            </button>
-            <button 
-              className={`filter-btn ${filter === 'vector' ? 'active' : ''}`} 
-              onClick={() => setFilter('vector')}
-            >
-              Vector Art <span className="project-count">({filterCounts.vector})</span>
-            </button>
-            <button 
-              className={`filter-btn ${filter === 'certificate' ? 'active' : ''}`} 
-              onClick={() => setFilter('certificate')}
-            >
-              Certificate <span className="project-count">({filterCounts.vector})</span>
-            </button>
-          </div>
-
-          {/* Projects Grid */}
-          {filteredProjects.length === 0 ? (
-            <div className="no-results">
-              <i className="fas fa-folder-open"></i>
-              <h3>No projects found</h3>
-              <p>Try selecting a different filter</p>
+          {loading ? (
+            <div className="loading-projects">
+              <i className="fas fa-spinner fa-spin"></i>
+              <p>Loading projects and certificates...</p>
             </div>
           ) : (
-            <>
-              <div className="projects-grid">
-                {filteredProjects.slice(0, showAll ? filteredProjects.length : (isMobile ? 1 : 3)).map(project => (
-                  <div key={project.id} className="project-card fade-in-up">
-                    <div className="project-image">
-                      <img 
-                        src={project.image}
-                        alt={project.title}
-                        loading="eager"
-                      />
-                      <div className="project-overlay">
-                        <div className="project-links">
-                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
-                            <i className="fab fa-github"></i>
-                          </a>
-                          {isValidDeployment(project.liveUrl) && (
-                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
-                              <i className="fas fa-external-link-alt"></i>
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                      <div className="project-stats">
-                        <span className="stat">
-                          <i className="fas fa-star"></i>
-                          {project.stars || 0}
-                        </span>
-                        <span className="stat">
-                          <i className="fas fa-code-branch"></i>
-                          {project.forks || 0}
-                        </span>
-                        {project.language && (
-                          <span className="stat language">
-                            <i className="fas fa-circle" style={{ color: getLanguageColor(project.language) }}></i>
-                            {project.language}
-                          </span>
-                        )}
-                      </div>
-                      {project.isPinned && (
-                        <div className="project-pinned-badge">
-                          <i className="fas fa-thumbtack"></i>
-                          Pinned
-                        </div>
-                      )}
-                    </div>
-                    <div className="project-content">
-                      <h3>{project.title}</h3>
-                      <p className="project-description">{project.description}</p>
-                      
-                      {/* Multiple Languages Display */}
-                      {project.languages && project.languages.length > 0 && (
-                        <div className="project-languages">
-                          <strong>Languages: </strong>
-                          <div className="languages-list">
-                            {project.languages.map((lang, index) => (
-                              <span 
-                                key={index} 
-                                className="language-tag"
-                                style={{ 
-                                  backgroundColor: getLanguageColor(lang) + '20',
-                                  color: getLanguageColor(lang),
-                                  border: `1px solid ${getLanguageColor(lang)}40`
-                                }}
-                              >
-                                <i 
-                                  className="fas fa-circle" 
-                                  style={{ color: getLanguageColor(lang) }}
-                                ></i>
-                                {lang}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Project Actions - Deployment and Sample Output */}
-                      {(isValidDeployment(project.liveUrl) || project.githubUrl) && (
-                        <div className="project-actions">
-                          <div className="project-buttons-row">
-                            {isValidDeployment(project.liveUrl) && (
-                              <a 
-                                href={project.liveUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="deployment-link"
-                              >
-                                <i className="fas fa-rocket"></i>
-                                Live Project
-                              </a>
-                            )}
-                            
-                            {project.githubUrl && (
-                              <a 
-                                href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="sample-output-link"
-                              >
-                                <i className="fas fa-file-pdf"></i>
-                                Sample Output
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="project-topics">
-                        {project.topics && project.topics.slice(0, 8).map((topic, index) => (
-                          <span key={index} className="topic-tag">
-                            {topic}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="project-technologies">
-                        {project.technologies && project.technologies.slice(0, 5).map((tech, index) => (
-                          <span key={index} className="tech-tag">
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="project-footer">
-                        <div className="project-updated">
-                          <i className="fas fa-clock"></i>
-                          Updated {formatDate(project.updated_at)}
-                        </div>
-                        <div className="project-stars">
-                          <i className="fas fa-star"></i>
-                          {project.stars || 0} stars
-                        </div>
-                      </div>
-                      
-                      {/* Project Note at Bottom */}
-                      {project.githubUrl && (
-                        <p className="project-note">
-                          <i className="fas fa-info-circle"></i>
-                          If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+            <React.Fragment>
+              <div className="page-header">
+                <h2>My Projects & Certificates</h2>
+                <p>
+                  {filter === 'all' 
+                    ? `Featured: ${filterCounts.all} projects and certificates`
+                    : 'Featured repositories from my GitHub profile and professional certifications'
+                  }
+                </p>
               </div>
-              {filteredProjects.length > (isMobile ? 1 : 3) && (
-                <div className="show-more-container">
-                  <button 
-                    className="btn btn-show-more"
-                    onClick={handleToggle}
-                    aria-label={showAll ? 'Show Less' : 'Show More'}
-                  >
-                    <i className={`fas ${showAll ? 'fa-arrow-up' : 'fa-arrow-down'}`}></i>
-                    <span className="tooltip-text">{showAll ? 'Show Less' : 'Show More'}</span>
-                  </button>
+
+              <div className="filters">
+                <button 
+                  className={`filter-btn ${filter === 'all' ? 'active' : ''}`} 
+                  onClick={() => setFilter('all')}
+                >
+                  All <span className="project-count">({filterCounts.all})</span>
+                </button>
+                <button 
+                  className={`filter-btn ${filter === 'web' ? 'active' : ''}`} 
+                  onClick={() => setFilter('web')}
+                >
+                  Web Development <span className="project-count">({filterCounts.web})</span>
+                </button>
+                <button 
+                  className={`filter-btn ${filter === 'app' ? 'active' : ''}`} 
+                  onClick={() => setFilter('app')}
+                >
+                  App Development <span className="project-count">({filterCounts.app})</span>
+                </button>
+                <button 
+                  className={`filter-btn ${filter === 'desktop' ? 'active' : ''}`} 
+                  onClick={() => setFilter('desktop')}
+                >
+                  Desktop Application <span className="project-count">({filterCounts.desktop})</span>
+                </button>
+                <button 
+                  className={`filter-btn ${filter === 'vector' ? 'active' : ''}`} 
+                  onClick={() => setFilter('vector')}
+                >
+                  Vector Art <span className="project-count">({filterCounts.vector})</span>
+                </button>
+                <button 
+                  className={`filter-btn ${filter === 'certificate' ? 'active' : ''}`} 
+                  onClick={() => setFilter('certificate')}
+                >
+                  Certificates <span className="project-count">({filterCounts.certificate})</span>
+                </button>
+              </div>
+
+              {filteredData.length === 0 ? (
+                <div className="no-results">
+                  <i className="fas fa-folder-open"></i>
+                  <h3>No {type === 'certificate' ? 'certificates' : 'projects'} found</h3>
+                  <p>Try selecting a different filter</p>
                 </div>
+              ) : (
+                <React.Fragment>
+                  <div className="projects-grid">
+                    {filteredData.slice(0, showAll ? filteredData.length : (isMobile ? 1 : 3)).map(item => (
+                      type === 'mixed' ? (
+                        item.itemType === 'certificate' ? (
+                          <div key={item.id} className="project-card certificate-card fade-in-up">
+                            <div className="project-image certificate-image">
+                              <img 
+                                src={item.image}
+                                alt={item.title}
+                                loading="eager"
+                              />
+                              <div className="project-overlay">
+                                <div className="project-links">
+                                  <a href={item.certificateUrl} target="_blank" rel="noopener noreferrer" title="View Certificate">
+                                    <i className="fas fa-certificate"></i>
+                                  </a>
+                                </div>
+                              </div>
+                              <div className="certificate-badge">
+                                <i className="fas fa-award"></i>
+                                Certified
+                              </div>
+                            </div>
+                            <div className="project-content">
+                              <h3>{item.title}</h3>
+                              <p className="project-description">{item.description}</p>
+                              
+                              <div className="project-topics">
+                                {item.tags.map((tag, index) => (
+                                  <span key={index} className="topic-tag certificate-tag">
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                              
+                              <div className="certificate-action">
+                                <a 
+                                  href={item.certificateUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="btn-view-certificate"
+                                >
+                                  <i className="fas fa-external-link-alt"></i>
+                                  View Certificate
+                                </a>
+                              </div>
+                              
+                              <div className="certificate-meta plain-text">
+                                Issuer: {item.issuer}
+                                Date: {formatDate(item.date)}
+                                Credential ID: {item.credentialId}
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div key={item.id} className="project-card fade-in-up">
+                            <div className="project-image">
+                              <img 
+                                src={item.image}
+                                alt={item.title}
+                                loading="eager"
+                              />
+                              <div className="project-overlay">
+                                <div className="project-links">
+                                  <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
+                                    <i className="fab fa-github"></i>
+                                  </a>
+                                  {isValidDeployment(item.liveUrl) && (
+                                    <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
+                                      <i className="fas fa-external-link-alt"></i>
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="project-stats">
+                                <span className="stat">
+                                  <i className="fas fa-star"></i>
+                                  {item.stars || 0}
+                                </span>
+                                <span className="stat">
+                                  <i className="fas fa-code-branch"></i>
+                                  {item.forks || 0}
+                                </span>
+                                {item.language && (
+                                  <span className="stat language">
+                                    <i className="fas fa-circle" style={{ color: getLanguageColor(item.language) }}></i>
+                                    {item.language}
+                                  </span>
+                                )}
+                              </div>
+                              {item.isPinned && (
+                                <div className="project-pinned-badge">
+                                  <i className="fas fa-thumbtack"></i>
+                                  Pinned
+                                </div>
+                              )}
+                            </div>
+                            <div className="project-content">
+                              <h3>{item.title}</h3>
+                              <p className="project-description">{item.description}</p>
+                              
+                              {item.languages && item.languages.length > 0 && (
+                                <div className="project-languages">
+                                  <strong>Languages: </strong>
+                                  <div className="languages-list">
+                                    {item.languages.map((lang, index) => (
+                                      <span 
+                                        key={index} 
+                                        className="language-tag"
+                                        style={{ 
+                                          backgroundColor: getLanguageColor(lang) + '20',
+                                          color: getLanguageColor(lang),
+                                          border: `1px solid ${getLanguageColor(lang)}40`
+                                        }}
+                                      >
+                                        <i 
+                                          className="fas fa-circle" 
+                                          style={{ color: getLanguageColor(lang) }}
+                                        ></i>
+                                        {lang}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {(isValidDeployment(item.liveUrl) || item.githubUrl) && (
+                                <div className="project-actions">
+                                  <div className="project-buttons-row">
+                                    {isValidDeployment(item.liveUrl) && (
+                                      <a 
+                                        href={item.liveUrl} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="deployment-link"
+                                      >
+                                        <i className="fas fa-rocket"></i>
+                                        Live Project
+                                      </a>
+                                    )}
+                                    
+                                    {item.githubUrl && (
+                                      <a 
+                                        href={`${item.githubUrl}/blob/main/Sample_Output.pdf`}
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="sample-output-link"
+                                      >
+                                        <i className="fas fa-file-pdf"></i>
+                                        Sample Output
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              <div className="project-topics">
+                                {item.topics && item.topics.slice(0, 8).map((topic, index) => (
+                                  <span key={index} className="topic-tag">
+                                    {topic}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="project-technologies">
+                                {item.technologies && item.technologies.slice(0, 5).map((tech, index) => (
+                                  <span key={index} className="tech-tag">
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="project-footer">
+                                <div className="project-updated">
+                                  <i className="fas fa-clock"></i>
+                                  Updated {formatDate(item.updated_at)}
+                                </div>
+                                <div className="project-stars">
+                                  <i className="fas fa-star"></i>
+                                  {item.stars || 0} stars
+                                </div>
+                              </div>
+                              
+                              {item.githubUrl && (
+                                <p className="project-note">
+                                  <i className="fas fa-info-circle"></i>
+                                  If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      ) : (
+                        type === 'certificate' ? (
+                          <div key={item.id} className="project-card certificate-card fade-in-up">
+                            <div className="project-image certificate-image">
+                              <img 
+                                src={item.image}
+                                alt={item.title}
+                                loading="eager"
+                              />
+                              <div className="project-overlay">
+                                <div className="project-links">
+                                  <a href={item.certificateUrl} target="_blank" rel="noopener noreferrer" title="View Certificate">
+                                    <i className="fas fa-certificate"></i>
+                                  </a>
+                                </div>
+                              </div>
+                              <div className="certificate-badge">
+                                <i className="fas fa-award"></i>
+                                Certified
+                              </div>
+                            </div>
+                            <div className="project-content">
+                              <h3>{item.title}</h3>
+                              <p className="project-description">{item.description}</p>
+                              
+                              <div className="project-topics">
+                                {item.tags.map((tag, index) => (
+                                  <span key={index} className="topic-tag certificate-tag">
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                              
+                              <div className="certificate-action">
+                                <a 
+                                  href={item.certificateUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="btn-view-certificate"
+                                >
+                                  <i className="fas fa-external-link-alt"></i>
+                                  View Certificate
+                                </a>
+                              </div>
+                              
+                              <div className="certificate-meta plain-text">
+                                Issuer: {item.issuer}
+                                Date: {formatDate(item.date)}
+                                Credential ID: {item.credentialId}
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div key={item.id} className="project-card fade-in-up">
+                            <div className="project-image">
+                              <img 
+                                src={item.image}
+                                alt={item.title}
+                                loading="eager"
+                              />
+                              <div className="project-overlay">
+                                <div className="project-links">
+                                  <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
+                                    <i className="fab fa-github"></i>
+                                  </a>
+                                  {isValidDeployment(item.liveUrl) && (
+                                    <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
+                                      <i className="fas fa-external-link-alt"></i>
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="project-stats">
+                                <span className="stat">
+                                  <i className="fas fa-star"></i>
+                                  {item.stars || 0}
+                                </span>
+                                <span className="stat">
+                                  <i className="fas fa-code-branch"></i>
+                                  {item.forks || 0}
+                                </span>
+                                {item.language && (
+                                  <span className="stat language">
+                                    <i className="fas fa-circle" style={{ color: getLanguageColor(item.language) }}></i>
+                                    {item.language}
+                                  </span>
+                                )}
+                              </div>
+                              {item.isPinned && (
+                                <div className="project-pinned-badge">
+                                  <i className="fas fa-thumbtack"></i>
+                                  Pinned
+                                </div>
+                              )}
+                            </div>
+                            <div className="project-content">
+                              <h3>{item.title}</h3>
+                              <p className="project-description">{item.description}</p>
+                              
+                              {item.languages && item.languages.length > 0 && (
+                                <div className="project-languages">
+                                  <strong>Languages: </strong>
+                                  <div className="languages-list">
+                                    {item.languages.map((lang, index) => (
+                                      <span 
+                                        key={index} 
+                                        className="language-tag"
+                                        style={{ 
+                                          backgroundColor: getLanguageColor(lang) + '20',
+                                          color: getLanguageColor(lang),
+                                          border: `1px solid ${getLanguageColor(lang)}40`
+                                        }}
+                                      >
+                                        <i 
+                                          className="fas fa-circle" 
+                                          style={{ color: getLanguageColor(lang) }}
+                                        ></i>
+                                        {lang}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {(isValidDeployment(item.liveUrl) || item.githubUrl) && (
+                                <div className="project-actions">
+                                  <div className="project-buttons-row">
+                                    {isValidDeployment(item.liveUrl) && (
+                                      <a 
+                                        href={item.liveUrl} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="deployment-link"
+                                      >
+                                        <i className="fas fa-rocket"></i>
+                                        Live Project
+                                      </a>
+                                    )}
+                                    
+                                    {item.githubUrl && (
+                                      <a 
+                                        href={`${item.githubUrl}/blob/main/Sample_Output.pdf`}
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="sample-output-link"
+                                      >
+                                        <i className="fas fa-file-pdf"></i>
+                                        Sample Output
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              <div className="project-topics">
+                                {item.topics && item.topics.slice(0, 8).map((topic, index) => (
+                                  <span key={index} className="topic-tag">
+                                    {topic}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="project-technologies">
+                                {item.technologies && item.technologies.slice(0, 5).map((tech, index) => (
+                                  <span key={index} className="tech-tag">
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="project-footer">
+                                <div className="project-updated">
+                                  <i className="fas fa-clock"></i>
+                                  Updated {formatDate(item.updated_at)}
+                                </div>
+                                <div className="project-stars">
+                                  <i className="fas fa-star"></i>
+                                  {item.stars || 0} stars
+                                </div>
+                              </div>
+                              
+                              {item.githubUrl && (
+                                <p className="project-note">
+                                  <i className="fas fa-info-circle"></i>
+                                  If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      )
+                    ))}
+                  </div>
+                  {filteredData.length > (isMobile ? 1 : 3) && (
+                    <div className="show-more-container">
+                      <button 
+                        className="btn btn-show-more"
+                        onClick={handleToggle}
+                        aria-label={showAll ? 'Show Less' : 'Show More'}
+                      >
+                        <i className={`fas ${showAll ? 'fa-arrow-up' : 'fa-arrow-down'}`}></i>
+                        <span className="tooltip-text">{showAll ? 'Show Less' : 'Show More'}</span>
+                      </button>
+                    </div>
+                  )}
+                </React.Fragment>
               )}
-            </>
+              <div className="view-all">
+                <a 
+                  href={personalInfo.socialLinks.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
+                  <i className="fab fa-github"></i>
+                  View All Repositories on GitHub
+                </a>
+              </div>
+            </React.Fragment>
           )}
-          <div className="view-all">
-            <a 
-              href={personalInfo.socialLinks.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-            >
-              <i className="fab fa-github"></i>
-              View All Repositories on GitHub
-            </a>
-          </div>
         </div>
       </section>
 
-      {/* GitHub Stats Section */}
       <section id="github-stats" className="github-stats-section section">
         <div className="container">
           <GithubStats />
         </div>
       </section>
 
-      {/* Reviews Section */}
       <section id="reviews" className="reviews-section section">
         <div className="container">
           <Reviews />
         </div>
       </section>
 
-      {/* Contact Section */}
       <section id="contact" className="contact-section section">
         <div className="container">
           <Contact personalInfo={personalInfo} />

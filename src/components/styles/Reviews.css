@@ -11,30 +11,6 @@
   margin-bottom: 3rem;
 }
 
-.page-header h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 2rem;
-}
-
-.page-header h2::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 4px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-
-.page-header p {
-  font-size: 1.1rem;
-  color: var(--muted);
-}
-
 /* Stats Overview */
 .stats-overview {
   display: grid;

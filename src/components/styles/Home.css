@@ -937,6 +937,10 @@
   border-radius: 2px;
 }
 
+.section-title {
+  color: var(--text);
+}
+
 .section-title p {
   font-size: 1.2rem;
   color: var(--muted);
@@ -1867,4 +1871,390 @@
 .btn-show-more:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+
+/* ===== CERTIFICATE CARD STYLES ===== */
+
+/* Certificate specific image styling - NO GRADIENT */
+.certificate-card .project-image {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+  background: var(--card-bg);
+}
+
+.certificate-card .project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.certificate-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+/* Certificate badge instead of pinned badge - SAME STYLE AS PINNED */
+.certificate-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.certificate-badge i {
+  font-size: 0.85rem;
+}
+
+/* Certificate overlay - SAME AS PROJECTS */
+.certificate-card .project-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(14, 12, 91, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.certificate-card:hover .project-overlay {
+  opacity: 1;
+}
+
+/* Certificate overlay icon - SAME AS PROJECTS */
+.certificate-card .project-overlay .project-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: var(--card-bg);
+  color: var(--accent);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.certificate-card .project-overlay .project-links a:hover {
+  background: var(--secondary-accent);
+  color: var(--secondary-accent-contrast);
+  transform: scale(1.1);
+}
+
+/* Certificate content styling */
+.certificate-card .project-content {
+  padding: 1.5rem;
+}
+
+.certificate-card .project-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+/* Certificate issuer - replaces description position */
+.certificate-issuer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+.certificate-issuer i {
+  color: var(--accent);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Certificate description */
+.certificate-card .project-description {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Certificate date - replaces languages section */
+.certificate-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+.certificate-date i {
+  color: var(--accent);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* Credential ID - replaces project actions section */
+.credential-id {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.credential-id i {
+  color: var(--accent);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.credential-id span {
+  word-break: break-all;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+}
+
+/* Certificate tags - same layout and style as project topics */
+.certificate-card .project-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+.certificate-tag {
+  background: var(--skill-tag-bg);
+  color: var(--skill-tag-text);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.certificate-tag:hover {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Certificate action - replaces footer */
+.certificate-action {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* View certificate button - SAME STYLE AS PROJECT BUTTONS */
+.btn-view-certificate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-view-certificate:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-view-certificate i {
+  font-size: 0.85rem;
+}
+
+/* Hide project-specific elements for certificates */
+.certificate-card .project-stats {
+  display: none !important;
+}
+
+.certificate-card .project-pinned-badge {
+  display: none !important;
+}
+
+.certificate-card .project-languages {
+  display: none !important;
+}
+
+.certificate-card .project-actions {
+  display: none !important;
+}
+
+.certificate-card .project-technologies {
+  display: none !important;
+}
+
+.certificate-card .project-footer {
+  display: none !important;
+}
+
+.certificate-card .project-note {
+  display: none !important;
+}
+
+/* Certificate card - SAME STYLE AS PROJECTS */
+.certificate-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.certificate-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Responsive adjustments for certificates */
+@media (max-width: 768px) {
+  .certificate-badge {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    gap: 4px;
+  }
+  
+  .certificate-issuer {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+  
+  .certificate-date,
+  .credential-id {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+  
+  .btn-view-certificate {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .certificate-card .project-image {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .certificate-card .project-image {
+    height: 160px;
+  }
+  
+  .certificate-badge {
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    gap: 4px;
+  }
+  
+  .certificate-badge i {
+    font-size: 0.75rem;
+  }
+  
+  .certificate-issuer {
+    font-size: 0.8rem;
+    gap: 6px;
+    padding: 6px 8px;
+  }
+  
+  .certificate-issuer i {
+    font-size: 0.8rem;
+  }
+  
+  .certificate-date,
+  .credential-id {
+    font-size: 0.7rem;
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  
+  .credential-id span {
+    font-size: 0.7rem;
+  }
+  
+  .certificate-tag {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+  
+  .btn-view-certificate {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+  
+  .certificate-card .project-content {
+    padding: 1.2rem;
+  }
+  
+  .certificate-card .project-content h3 {
+    font-size: 1.1rem;
+  }
+  
+  .certificate-card .project-description {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .certificate-card .project-image {
+    height: 140px;
+  }
+  
+  .certificate-card .project-content {
+    padding: 1rem;
+  }
+  
+  .certificate-card .project-content h3 {
+    font-size: 1rem;
+  }
+  
+  .certificate-issuer {
+    font-size: 0.75rem;
+  }
+  
+  .certificate-date,
+  .credential-id {
+    font-size: 0.65rem;
+  }
+  
+  .btn-view-certificate {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
 }
