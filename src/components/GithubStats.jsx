@@ -384,7 +384,7 @@ const GitHubStats = () => {
 
       {/* GitHub Achievements Section */}
       <div className="achievements-section">
-        <h3>GitHub Achievements</h3>
+        <h3><span style={{ color: '#6e5494', fontWeight: 'bold' }}>GitHub</span> Achievements</h3>
         <p className="section-subtitle">Milestones and accomplishments on GitHub</p>
         
         {/* Achievement Summary */}
@@ -425,7 +425,7 @@ const GitHubStats = () => {
               key={achievement.id} 
               className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'} ${
                 achievement.githubOfficial ? 'github-official' : ''
-              }`}
+              } ${achievement.name === 'Pull Shark' ? 'pull-shark' : ''}`}
               style={{
                 '--achievement-color': achievement.color,
                 '--achievement-light': achievement.color ? `${achievement.color}20` : undefined

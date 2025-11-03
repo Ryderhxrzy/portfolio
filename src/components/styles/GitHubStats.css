@@ -114,6 +114,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
 }
 
 .language-tag {
@@ -351,28 +352,51 @@
 
 /* Achievements Section */
 .achievements-section {
-  background: var(--card-bg);
+  background: none;
+  border: none;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: var(--shadow);
   margin: 2rem 0;
-  border: 1px solid var(--border);
 }
 
 .achievements-section h2,
-.achievements-section h3 {
+.achievements-section h3,
+.languages-section h3 {
   margin-bottom: 0.5rem;
   color: var(--text);
+  text-align: center;
 }
 
 .achievement-summary {
-  color: var(--muted);
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 2rem;
 }
 
 .section-subtitle {
   color: var(--muted);
-  margin-bottom: 2rem;
   text-align: center;
+}
+
+.summary-item {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+}
+
+.summary-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 .achievements-grid {
@@ -497,6 +521,18 @@
 .achievement-status .locked {
   color: var(--muted);
   font-size: 1.2rem;
+}
+
+.achievement-badge {
+  background: #6e5494;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
 }
 
 /* GitHub Tips */
