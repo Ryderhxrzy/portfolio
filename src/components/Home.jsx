@@ -5,12 +5,17 @@ import Reviews from './Reviews.jsx';
 import Contact from './Contact.jsx';
 import { personalInfo, fetchGitHubRepositories } from '../data/projects.js';
 import profileImage from '/profile.jpg';
+import useWindowSize from '../hooks/useWindowSize';
 
 const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [showAll, setShowAll] = useState(false);
+  
+  const { width } = useWindowSize();
+  const isMobile = width <= 480; // Adjust breakpoint as needed
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -39,6 +44,10 @@ const Home = () => {
 
     loadProjects();
   }, []);
+
+  useEffect(() => {
+    setShowAll(false);
+  }, [filter]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -286,7 +295,7 @@ const Home = () => {
       <section id="projects" className="projects-section">
         <div className="container">
           <div className="page-header">
-            <h2>My Pinned GitHub Projects</h2>
+            <h2>My Projects & Certificate</h2>
             <p>Featured repositories from my GitHub profile</p>
           </div>
 
@@ -322,6 +331,12 @@ const Home = () => {
             >
               Vector Art <span className="project-count">({filterCounts.vector})</span>
             </button>
+            <button 
+              className={`filter-btn ${filter === 'certificate' ? 'active' : ''}`} 
+              onClick={() => setFilter('certificate')}
+            >
+              Certificate <span className="project-count">({filterCounts.vector})</span>
+            </button>
           </div>
 
           {/* Projects Grid */}
@@ -332,147 +347,161 @@ const Home = () => {
               <p>Try selecting a different filter</p>
             </div>
           ) : (
-            <div className="projects-grid">
-              {filteredProjects.map(project => (
-                <div key={project.id} className="project-card fade-in-up">
-                  <div className="project-image">
-                    <img 
-                      src={project.image}
-                      alt={project.title}
-                      loading="eager"
-                    />
-                    <div className="project-overlay">
-                      <div className="project-links">
-                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
-                          <i className="fab fa-github"></i>
-                        </a>
-                        {isValidDeployment(project.liveUrl) && (
-                          <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
-                            <i className="fas fa-external-link-alt"></i>
+            <>
+              <div className="projects-grid">
+                {filteredProjects.slice(0, showAll ? filteredProjects.length : (isMobile ? 1 : 3)).map(project => (
+                  <div key={project.id} className="project-card fade-in-up">
+                    <div className="project-image">
+                      <img 
+                        src={project.image}
+                        alt={project.title}
+                        loading="eager"
+                      />
+                      <div className="project-overlay">
+                        <div className="project-links">
+                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
+                            <i className="fab fa-github"></i>
                           </a>
+                          {isValidDeployment(project.liveUrl) && (
+                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
+                              <i className="fas fa-external-link-alt"></i>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      <div className="project-stats">
+                        <span className="stat">
+                          <i className="fas fa-star"></i>
+                          {project.stars || 0}
+                        </span>
+                        <span className="stat">
+                          <i className="fas fa-code-branch"></i>
+                          {project.forks || 0}
+                        </span>
+                        {project.language && (
+                          <span className="stat language">
+                            <i className="fas fa-circle" style={{ color: getLanguageColor(project.language) }}></i>
+                            {project.language}
+                          </span>
                         )}
                       </div>
-                    </div>
-                    <div className="project-stats">
-                      <span className="stat">
-                        <i className="fas fa-star"></i>
-                        {project.stars || 0}
-                      </span>
-                      <span className="stat">
-                        <i className="fas fa-code-branch"></i>
-                        {project.forks || 0}
-                      </span>
-                      {project.language && (
-                        <span className="stat language">
-                          <i className="fas fa-circle" style={{ color: getLanguageColor(project.language) }}></i>
-                          {project.language}
-                        </span>
+                      {project.isPinned && (
+                        <div className="project-pinned-badge">
+                          <i className="fas fa-thumbtack"></i>
+                          Pinned
+                        </div>
                       )}
                     </div>
-                    {project.isPinned && (
-                      <div className="project-pinned-badge">
-                        <i className="fas fa-thumbtack"></i>
-                        Pinned
+                    <div className="project-content">
+                      <h3>{project.title}</h3>
+                      <p className="project-description">{project.description}</p>
+                      
+                      {/* Multiple Languages Display */}
+                      {project.languages && project.languages.length > 0 && (
+                        <div className="project-languages">
+                          <strong>Languages: </strong>
+                          <div className="languages-list">
+                            {project.languages.map((lang, index) => (
+                              <span 
+                                key={index} 
+                                className="language-tag"
+                                style={{ 
+                                  backgroundColor: getLanguageColor(lang) + '20',
+                                  color: getLanguageColor(lang),
+                                  border: `1px solid ${getLanguageColor(lang)}40`
+                                }}
+                              >
+                                <i 
+                                  className="fas fa-circle" 
+                                  style={{ color: getLanguageColor(lang) }}
+                                ></i>
+                                {lang}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Project Actions - Deployment and Sample Output */}
+                      {(isValidDeployment(project.liveUrl) || project.githubUrl) && (
+                        <div className="project-actions">
+                          <div className="project-buttons-row">
+                            {isValidDeployment(project.liveUrl) && (
+                              <a 
+                                href={project.liveUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="deployment-link"
+                              >
+                                <i className="fas fa-rocket"></i>
+                                Live Project
+                              </a>
+                            )}
+                            
+                            {project.githubUrl && (
+                              <a 
+                                href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="sample-output-link"
+                              >
+                                <i className="fas fa-file-pdf"></i>
+                                Sample Output
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="project-topics">
+                        {project.topics && project.topics.slice(0, 8).map((topic, index) => (
+                          <span key={index} className="topic-tag">
+                            {topic}
+                          </span>
+                        ))}
                       </div>
-                    )}
-                  </div>
-                  <div className="project-content">
-                    <h3>{project.title}</h3>
-                    <p className="project-description">{project.description}</p>
-                    
-                    {/* Multiple Languages Display */}
-                    {project.languages && project.languages.length > 0 && (
-                      <div className="project-languages">
-                        <strong>Languages: </strong>
-                        <div className="languages-list">
-                          {project.languages.map((lang, index) => (
-                            <span 
-                              key={index} 
-                              className="language-tag"
-                              style={{ 
-                                backgroundColor: getLanguageColor(lang) + '20',
-                                color: getLanguageColor(lang),
-                                border: `1px solid ${getLanguageColor(lang)}40`
-                              }}
-                            >
-                              <i 
-                                className="fas fa-circle" 
-                                style={{ color: getLanguageColor(lang) }}
-                              ></i>
-                              {lang}
-                            </span>
-                          ))}
+                      <div className="project-technologies">
+                        {project.technologies && project.technologies.slice(0, 5).map((tech, index) => (
+                          <span key={index} className="tech-tag">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="project-footer">
+                        <div className="project-updated">
+                          <i className="fas fa-clock"></i>
+                          Updated {formatDate(project.updated_at)}
+                        </div>
+                        <div className="project-stars">
+                          <i className="fas fa-star"></i>
+                          {project.stars || 0} stars
                         </div>
                       </div>
-                    )}
-                    
-                    {/* Project Actions - Deployment and Sample Output */}
-                    {(isValidDeployment(project.liveUrl) || project.githubUrl) && (
-                      <div className="project-actions">
-                        <div className="project-buttons-row">
-                          {isValidDeployment(project.liveUrl) && (
-                            <a 
-                              href={project.liveUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="deployment-link"
-                            >
-                              <i className="fas fa-rocket"></i>
-                              Live Project
-                            </a>
-                          )}
-                          
-                          {project.githubUrl && (
-                            <a 
-                              href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="sample-output-link"
-                            >
-                              <i className="fas fa-file-pdf"></i>
-                              Sample Output
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    
-                    <div className="project-topics">
-                      {project.topics && project.topics.slice(0, 8).map((topic, index) => (
-                        <span key={index} className="topic-tag">
-                          {topic}
-                        </span>
-                      ))}
+                      
+                      {/* Project Note at Bottom */}
+                      {project.githubUrl && (
+                        <p className="project-note">
+                          <i className="fas fa-info-circle"></i>
+                          If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
+                        </p>
+                      )}
                     </div>
-                    <div className="project-technologies">
-                      {project.technologies && project.technologies.slice(0, 5).map((tech, index) => (
-                        <span key={index} className="tech-tag">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="project-footer">
-                      <div className="project-updated">
-                        <i className="fas fa-clock"></i>
-                        Updated {formatDate(project.updated_at)}
-                      </div>
-                      <div className="project-stars">
-                        <i className="fas fa-star"></i>
-                        {project.stars || 0} stars
-                      </div>
-                    </div>
-                    
-                    {/* Project Note at Bottom */}
-                    {project.githubUrl && (
-                      <p className="project-note">
-                        <i className="fas fa-info-circle"></i>
-                        If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
-                      </p>
-                    )}
                   </div>
+                ))}
+              </div>
+              {filteredProjects.length > (isMobile ? 1 : 3) && (
+                <div className="show-more-container">
+                  <button 
+                    className="btn btn-show-more"
+                    onClick={() => setShowAll(!showAll)}
+                    aria-label={showAll ? 'Show Less' : 'Show More'}
+                  >
+                    <i className={`fas ${showAll ? 'fa-arrow-up' : 'fa-arrow-down'}`}></i>
+                    <span className="tooltip-text">{showAll ? 'Show Less' : 'Show More'}</span>
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
           <div className="view-all">
             <a 
