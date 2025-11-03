@@ -786,6 +786,7 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
+  
 }
 
 .project-technologies {
@@ -1899,8 +1900,8 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  background: var(--accent);
-  color: var(--accent-contrast);
+  background: var(--secondary-accent);
+  color: var(--secondary-accent-contrast);
   padding: 6px 12px;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -1965,27 +1966,6 @@
   margin-bottom: 0.75rem;
 }
 
-/* Certificate issuer - replaces description position */
-.certificate-issuer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
-  padding: 8px 12px;
-  background: var(--surface);
-  border-radius: 6px;
-  border-left: 3px solid var(--accent);
-}
-
-.certificate-issuer i {
-  color: var(--accent);
-  font-size: 0.9rem;
-  flex-shrink: 0;
-}
-
 /* Certificate description */
 .certificate-card .project-description {
   color: var(--muted);
@@ -1994,49 +1974,59 @@
   margin-bottom: 1rem;
 }
 
-/* Certificate date - replaces languages section */
-.certificate-date {
+.certificate-footer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 0.85rem;
-  margin-bottom: 0.75rem;
-  padding: 8px 12px;
-  background: var(--surface);
-  border-radius: 6px;
-}
-
-.certificate-date i {
-  color: var(--accent);
-  font-size: 0.85rem;
-  flex-shrink: 0;
-}
-
-/* Credential ID - replaces project actions section */
-.credential-id {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
+  gap: 1rem; /* spacing between items */
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
   font-size: 0.8rem;
-  margin-bottom: 1rem;
-  padding: 8px 12px;
-  background: var(--surface);
-  border-radius: 6px;
-  border: 1px solid var(--border);
+  color: var(--muted);
+  flex-wrap: wrap; /* allow items to wrap on smaller screens */
 }
 
-.credential-id i {
-  color: var(--accent);
-  font-size: 0.85rem;
-  flex-shrink: 0;
+/* Each section (date, issuer, id) */
+.certificate-footer > div {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1 1 30%; /* allow flexible resizing and wrapping */
+  min-width: 0; /* enables text to wrap properly inside flex */
 }
 
-.credential-id span {
-  word-break: break-all;
-  font-family: 'Courier New', monospace;
-  font-size: 0.75rem;
+/* Icon styling */
+.certificate-footer i {
+  flex-shrink: 0; /* prevent icon from shrinking */
+  font-size: 0.9rem;
+}
+
+/* Text wraps properly when long */
+.certificate-footer span,
+.certificate-footer div {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 600px) {
+  .certificate-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .certificate-footer > div {
+    width: 100%;
+    flex-direction: column; /* stack icon above text */
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .certificate-footer i {
+    margin-bottom: 2px;
+  }
 }
 
 /* Certificate tags - same layout and style as project topics */
@@ -2057,41 +2047,34 @@
   transition: all 0.3s ease;
 }
 
-.certificate-tag:hover {
-  background: var(--accent);
-  color: var(--accent-contrast);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
 /* Certificate action - replaces footer */
 .certificate-action {
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
+  margin-bottom: 1rem;
 }
 
 /* View certificate button - SAME STYLE AS PROJECT BUTTONS */
 .btn-view-certificate {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  padding: 12px 20px;
-  border-radius: 8px;
+  gap: 6px;
+  background: #ef4444;
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 6px;
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: all 0.3s ease;
-  box-shadow: var(--shadow-md);
+  flex: 1;
+  justify-content: center;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .btn-view-certificate:hover {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
 }
 
 .btn-view-certificate i {
