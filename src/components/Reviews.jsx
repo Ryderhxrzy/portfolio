@@ -170,7 +170,7 @@ const Reviews = () => {
     <div className="reviews-page">
       <div className="container">
         <div className="page-header">
-          <h1>Client Testimonials</h1>
+          <h2>Client Testimonials</h2>
           <p>See what my clients say about working with me</p>
         </div>
 
