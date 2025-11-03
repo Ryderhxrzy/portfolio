@@ -394,6 +394,12 @@
   }
 }
 
+@media (min-width: 1440px) {
+  .contact-page {
+    padding: 0rem 0;
+  }
+}
+
 /* Responsive Design - Tablet */
 @media (max-width: 968px) {
   .contact-content {

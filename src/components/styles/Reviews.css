@@ -1,9 +1,10 @@
 /* Reviews.css - 3 Cards Carousel Version - Full Responsive */
 
 .reviews-page {
-  padding: 4rem 0;
+   padding: 120px 0 80px;
+     min-height: 100vh;
+
   background: var(--bg);
-  min-height: 100vh;
 }
 
 .page-header {
@@ -497,7 +498,7 @@
 /* Large Desktop - 1440px and above */
 @media (min-width: 1440px) {
   .reviews-page {
-    padding: 5rem 0;
+    padding: 0rem 0;
   }
   
   .carousel-wrapper {
