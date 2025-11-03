@@ -805,7 +805,8 @@
   font-weight: 500;
 }
 
-.project-footer {
+.project-footer,
+.certificate-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -816,7 +817,9 @@
 }
 
 .project-updated,
-.project-stars {
+.project-stars,
+.certificate-date,
+.certificate-issuer {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1125,7 +1128,8 @@
     gap: 4px;
   }
   
-  .project-footer {
+  .project-footer,
+  .certificate-footer {
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
@@ -1972,61 +1976,6 @@
   font-size: 0.9rem;
   line-height: 1.5;
   margin-bottom: 1rem;
-}
-
-.certificate-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem; /* spacing between items */
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.8rem;
-  color: var(--muted);
-  flex-wrap: wrap; /* allow items to wrap on smaller screens */
-}
-
-/* Each section (date, issuer, id) */
-.certificate-footer > div {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex: 1 1 30%; /* allow flexible resizing and wrapping */
-  min-width: 0; /* enables text to wrap properly inside flex */
-}
-
-/* Icon styling */
-.certificate-footer i {
-  flex-shrink: 0; /* prevent icon from shrinking */
-  font-size: 0.9rem;
-}
-
-/* Text wraps properly when long */
-.certificate-footer span,
-.certificate-footer div {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  white-space: normal;
-}
-
-/* Responsive behavior for smaller screens */
-@media (max-width: 600px) {
-  .certificate-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .certificate-footer > div {
-    width: 100%;
-    flex-direction: column; /* stack icon above text */
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-
-  .certificate-footer i {
-    margin-bottom: 2px;
-  }
 }
 
 /* Certificate tags - same layout and style as project topics */

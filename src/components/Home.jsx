@@ -447,10 +447,6 @@ const Home = () => {
                                   <i className="fas fa-building"></i>
                                   {item.issuer}
                                 </div>
-                                <div className="certificate-id">
-                                  <i className="fas fa-certificate"></i>
-                                  {item.credentialId}
-                                </div>
                               </div>
                             </div>
                           </div>
@@ -645,10 +641,6 @@ const Home = () => {
                                 <div className="certificate-issuer">
                                   <i className="fas fa-building"></i>
                                   {item.issuer}
-                                </div>
-                                <div className="certificate-id">
-                                  <i className="fas fa-certificate"></i>
-                                  {item.credentialId}
                                 </div>
                               </div>
                             </div>
