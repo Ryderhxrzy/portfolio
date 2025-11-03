@@ -244,15 +244,20 @@
 
 .graph-container {
   position: relative;
+  overflow-x: auto;
+  padding-bottom: 10px;
   background: var(--surface);
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .contribution-chart {
   width: 100%;
   height: auto;
   display: block;
+  max-width: 100%;
 }
 
 .graph-fallback {
@@ -260,6 +265,7 @@
   padding: 4rem 2rem;
   text-align: center;
   color: var(--muted);
+  background: var(--surface);
 }
 
 .graph-fallback i {
@@ -658,18 +664,30 @@
 }
 
 .legend-color {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
   display: inline-block;
 }
 
+.graph-container {
+  background: var(--surface); /* dapat dark value sa dark theme */
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.contribution-chart {
+  display: block;
+  background: transparent; /* siguraduhing transparent para lumabas ang parent bg */
+  max-width: 100%;
+}
+
 .legend-color.less {
-  background: #ebedf0;
+  background: var(--less) !important;
 }
 
 .legend-color.more {
-  background: #1e4fbc !important;
+  background: var(--more) !important;
 }
 
 /* Mobile-specific styles */
@@ -808,22 +826,21 @@
   display: inline-block;
 }
 
-/* Match these colors with the actual GitHub contribution chart colors */
 .legend-color.less {
-  background: #ebedf0; /* Light gray for 0 contributions */
+  background: #eee;
 }
 
 .legend-color.more {
-  background: #216e39; /* Dark green for high contributions */
+  background: #0366d6;
 }
 
 /* Alternative: Use gradient to match GitHub's actual colors */
 .legend-color.less {
-  background: #ebedf0; /* #ebedf0, #9be9a8, #40c463, #30a14e, #216e39 */
+  background: #eee;
 }
 
 .legend-color.more {
-  background: #216e39;
+  background: #0366d6;
 }
 
 /* Loading State Improvements */

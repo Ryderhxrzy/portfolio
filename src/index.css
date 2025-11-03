@@ -16,6 +16,9 @@
   /* Text Colors */
   --text: #474747;
   --muted: #718096;
+
+  --more: #3F38B7;
+  --less: #eeeeee;
   
   /* Accent Colors */
   --accent: #4f46e5;
@@ -65,6 +68,9 @@
   /* Text Colors */
   --text: #e2e8f0;
   --muted: #a0aec0;
+
+  --more: #3F38B7;
+  --less: #eeeeee;
   
   /* Accent Colors */
   --accent: #6366f1;

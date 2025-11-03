@@ -6,6 +6,7 @@ const GitHubStats = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [theme, setTheme] = useState('light');
   const username = "Ryderhxrzy"; // Your GitHub username
 
   useEffect(() => {
@@ -105,6 +106,23 @@ const GitHubStats = () => {
 
     fetchGitHubData();
   }, [username]);
+
+  useEffect(() => {
+    const detectTheme = () => {
+      const isDark = document.documentElement.classList.contains('theme-dark');
+      setTheme(isDark ? 'dark' : 'light');
+    };
+
+    detectTheme();
+    
+    const observer = new MutationObserver(detectTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Mock data for fallback
   const getMockData = (username) => ({
@@ -323,7 +341,8 @@ const GitHubStats = () => {
         <h3>GitHub Contribution Activity</h3>
         <div className="graph-container">
           <img 
-            src={`https://ghchart.rshah.org/2563eb/${username}`}
+            key={theme}
+            src={`https://ghchart.rshah.org/${window.getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().replace('#', '')}/${username}?bg=${window.getComputedStyle(document.documentElement).getPropertyValue('--surface').trim().replace('#', '')}&bgc=transparent`}
             alt={`GitHub contribution chart for ${username}`}
             className="contribution-chart"
             onError={(e) => {
@@ -345,7 +364,7 @@ const GitHubStats = () => {
           </div>
           <div className="legend-item">
             <span className="legend-color more"></span>
-            <span>More</span>
+            <span>High</span>
           </div>
         </div>
       </div>
