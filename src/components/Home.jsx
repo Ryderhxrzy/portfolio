@@ -10,6 +10,7 @@ const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -93,124 +94,140 @@ const Home = () => {
     return colors[language] || '#6e7681';
   };
 
+  // Calculate counts for each filter
+  const filterCounts = {
+    all: featuredProjects.length,
+    web: featuredProjects.filter(project => project.topics.includes('web-development')).length,
+    app: featuredProjects.filter(project => project.topics.includes('app-development')).length,
+    desktop: featuredProjects.filter(project => project.topics.includes('desktop-application')).length,
+    vector: featuredProjects.filter(project => project.topics.includes('vector-art')).length,
+  };
+
+  const filteredProjects = featuredProjects.filter(project => {
+    if (filter === 'all') return true;
+    if (filter === 'web' && project.topics.includes('web-development')) return true;
+    if (filter === 'app' && project.topics.includes('app-development')) return true;
+    if (filter === 'desktop' && project.topics.includes('desktop-application')) return true;
+    if (filter === 'vector' && project.topics.includes('vector-art')) return true;
+    return false;
+  });
+
   return (
     <div className="home">
       {/* Hero Section */}
       <section id="home" className="hero">
-  <div className="container">
-    <div className="hero-content fade-in-up">
-      {/* Main Introduction */}
-      <div className="hero-intro">
-        <p className="hero-greeting">Hello, I'm</p>
-        <h1>
-          <span className="highlight">{personalInfo.name}</span>
-        </h1>
-        <p className="hero-aka">Also known as <span className="aka-name">{personalInfo.aka}</span></p>
-      </div>
+        <div className="container">
+          <div className="hero-content fade-in-up">
+            {/* Main Introduction */}
+            <div className="hero-intro">
+              <p className="hero-greeting">Hello, I'm</p>
+              <h1>
+                <span className="highlight">{personalInfo.name}</span>
+              </h1>
+              <p className="hero-aka">Also known as <span className="aka-name">{personalInfo.aka}</span></p>
+            </div>
 
-      {/* Professional Info */}
-      <div className="hero-professional">
-        <p className="hero-subtitle">{personalInfo.title}</p>
-        <div className="hero-badges">
-          <span className="badge">
-            <i className="fas fa-laptop-code"></i>
-            Freelance Developer
-          </span>
-          <span className="badge">
-            <i className="fas fa-graduation-cap"></i>
-            IT Student
-          </span>
-          <span className="badge">
-            <i className="fas fa-rocket"></i>
-            Since 2023
-          </span>
-        </div>
-      </div>
+            {/* Professional Info */}
+            <div className="hero-professional">
+              <p className="hero-subtitle">{personalInfo.title}</p>
+              <div className="hero-badges">
+                <span className="badge">
+                  <i className="fas fa-laptop-code"></i>
+                  Freelance Developer
+                </span>
+                <span className="badge">
+                  <i className="fas fa-graduation-cap"></i>
+                  IT Student
+                </span>
+                <span className="badge">
+                  <i className="fas fa-rocket"></i>
+                  Since 2023
+                </span>
+              </div>
+            </div>
 
-      {/* Description */}
-      <div className="hero-description">
-  <p>
-    I create <strong>modern and user-friendly web applications</strong> that make everyday tasks easier and more enjoyable. 
-    I focus on building projects that are functional, clean, and visually appealing. 
-    I aim to write clean code and design smooth experiences that people can easily use and appreciate.
-  </p>
-</div>
+            {/* Description */}
+            <div className="hero-description">
+              <p>
+                I create <strong>modern and user-friendly web applications</strong> that make everyday tasks easier and more enjoyable. 
+                I focus on building projects that are functional, clean, and visually appealing. 
+                I aim to write clean code and design smooth experiences that people can easily use and appreciate.
+              </p>
+            </div>
 
+            {/* Stats */}
+            <div className="hero-stats">
+              <div className="stats">
+                <div className="stat-number">2+</div>
+                <div className="stat-label">Years Experience</div>
+              </div>
+              <div className="stats">
+                <div className="stat-number">10+</div>
+                <div className="stat-label">Projects Completed</div>
+              </div>
+              <div className="stats">
+                <div className="stat-number">100%</div>
+                <div className="stat-label">Client Satisfaction</div>
+              </div>
+            </div>
 
+            {/* Call to Action */}
+            <div className="hero-actions">
+              <div className="hero-buttons">
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  <i className="fas fa-sparkles"></i>
+                  View My Work
+                  <i className="fas fa-arrow-down"></i>
+                </button>
+                
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  <i className="fas fa-download"></i>
+                  Download Resume
+                </button>
+              </div>
 
-      {/* Stats */}
-      <div className="hero-stats">
-        <div className="stats">
-          <div className="stat-number">2+</div>
-          <div className="stat-label">Years Experience</div>
-        </div>
-        <div className="stats">
-          <div className="stat-number">10+</div>
-          <div className="stat-label">Projects Completed</div>
-        </div>
-        <div className="stats">
-          <div className="stat-number">100%</div>
-          <div className="stat-label">Client Satisfaction</div>
-        </div>
-      </div>
+              {/* Social Links */}
+              <div className="hero-social">
+                <p className="social-label">Follow my journey</p>
+                <div className="social-links">
+                  <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" className="social-link">
+                    <i className="fab fa-github"></i>
+                    <span>GitHub</span>
+                  </a>
+                  <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
+                    <i className="fab fa-linkedin"></i>
+                    <span>LinkedIn</span>
+                  </a>
+                  <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-link">
+                    <i className="fab fa-facebook"></i>
+                    <span>Facebook</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      {/* Call to Action */}
-      <div className="hero-actions">
-        <div className="hero-buttons">
-          <button 
-            className="btn btn-primary"
-            onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
-          >
-            <i className="fas fa-sparkles"></i>
-            View My Work
-            <i className="fas fa-arrow-down"></i>
-          </button>
-          
-          <button 
-            className="btn btn-secondary"
-            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-          >
-            <i className="fas fa-download"></i>
-            Download Resume
-          </button>
-        </div>
-
-        {/* Social Links */}
-        <div className="hero-social">
-          <p className="social-label">Follow my journey</p>
-          <div className="social-links">
-            <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" className="social-link">
-              <i className="fab fa-github"></i>
-              <span>GitHub</span>
-            </a>
-            <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
-              <i className="fab fa-linkedin"></i>
-              <span>LinkedIn</span>
-            </a>
-            <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-link">
-              <i className="fab fa-facebook"></i>
-              <span>Facebook</span>
-            </a>
+          {/* Hero Image */}
+          <div className="hero-image">
+            <div className="profile-container">
+              <div className="profile-image">
+                <img 
+                  src={profileImage} 
+                  alt="Profile" 
+                  className="profile-photo"
+                  loading="lazy"
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    {/* Hero Image */}
-    <div className="hero-image">
-      <div className="profile-container">
-        <div className="profile-image">
-          <img 
-    src={profileImage} 
-    alt="Profile" 
-    className="profile-photo"
-    loading="lazy"
-  />
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* About Section */}
       <section id="about" className="about section">
@@ -266,182 +283,208 @@ const Home = () => {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="featured-projects section">
+      <section id="projects" className="projects-section">
         <div className="container">
-          <h2 className="section-title">My Pinned GitHub Projects</h2>
-          <p className="section-subtitle">Featured repositories from my GitHub profile</p>
-          
-          {error && (
-            <div className="warning-message">
-              <i className="fas fa-exclamation-triangle"></i>
-              <div>
-                <strong>Note:</strong> {error}
-              </div>
-            </div>
-          )}
+          <div className="page-header">
+            <h2>My Pinned GitHub Projects</h2>
+            <p>Featured repositories from my GitHub profile</p>
+          </div>
 
-          {loading ? (
-            <div className="loading-projects">
-              <i className="fas fa-spinner fa-spin"></i>
-              <p>Loading pinned projects from GitHub...</p>
-              <small>Fetching your latest repositories</small>
+          {/* Filters */}
+          <div className="filters">
+            <button 
+              className={`filter-btn ${filter === 'all' ? 'active' : ''}`} 
+              onClick={() => setFilter('all')}
+            >
+              All <span className="project-count">({filterCounts.all})</span>
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'web' ? 'active' : ''}`} 
+              onClick={() => setFilter('web')}
+            >
+              Web Development <span className="project-count">({filterCounts.web})</span>
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'app' ? 'active' : ''}`} 
+              onClick={() => setFilter('app')}
+            >
+              App Development <span className="project-count">({filterCounts.app})</span>
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'desktop' ? 'active' : ''}`} 
+              onClick={() => setFilter('desktop')}
+            >
+              Desktop Application <span className="project-count">({filterCounts.desktop})</span>
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'vector' ? 'active' : ''}`} 
+              onClick={() => setFilter('vector')}
+            >
+              Vector Art <span className="project-count">({filterCounts.vector})</span>
+            </button>
+          </div>
+
+          {/* Projects Grid */}
+          {filteredProjects.length === 0 ? (
+            <div className="no-results">
+              <i className="fas fa-folder-open"></i>
+              <h3>No projects found</h3>
+              <p>Try selecting a different filter</p>
             </div>
           ) : (
-            <>
-              <div className="projects-grid">
-                {featuredProjects.map(project => (
-                  <div key={project.id} className="project-card fade-in-up">
-                    <div className="project-image">
-                      <img 
-                        src={project.image}
-                        alt={project.title}
-                        loading="eager"
-                      />
-                      <div className="project-overlay">
-                        <div className="project-links">
-                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
-                            <i className="fab fa-github"></i>
+            <div className="projects-grid">
+              {filteredProjects.map(project => (
+                <div key={project.id} className="project-card fade-in-up">
+                  <div className="project-image">
+                    <img 
+                      src={project.image}
+                      alt={project.title}
+                      loading="eager"
+                    />
+                    <div className="project-overlay">
+                      <div className="project-links">
+                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
+                          <i className="fab fa-github"></i>
+                        </a>
+                        {isValidDeployment(project.liveUrl) && (
+                          <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
+                            <i className="fas fa-external-link-alt"></i>
                           </a>
+                        )}
+                      </div>
+                    </div>
+                    <div className="project-stats">
+                      <span className="stat">
+                        <i className="fas fa-star"></i>
+                        {project.stars || 0}
+                      </span>
+                      <span className="stat">
+                        <i className="fas fa-code-branch"></i>
+                        {project.forks || 0}
+                      </span>
+                      {project.language && (
+                        <span className="stat language">
+                          <i className="fas fa-circle" style={{ color: getLanguageColor(project.language) }}></i>
+                          {project.language}
+                        </span>
+                      )}
+                    </div>
+                    {project.isPinned && (
+                      <div className="project-pinned-badge">
+                        <i className="fas fa-thumbtack"></i>
+                        Pinned
+                      </div>
+                    )}
+                  </div>
+                  <div className="project-content">
+                    <h3>{project.title}</h3>
+                    <p className="project-description">{project.description}</p>
+                    
+                    {/* Multiple Languages Display */}
+                    {project.languages && project.languages.length > 0 && (
+                      <div className="project-languages">
+                        <strong>Languages: </strong>
+                        <div className="languages-list">
+                          {project.languages.map((lang, index) => (
+                            <span 
+                              key={index} 
+                              className="language-tag"
+                              style={{ 
+                                backgroundColor: getLanguageColor(lang) + '20',
+                                color: getLanguageColor(lang),
+                                border: `1px solid ${getLanguageColor(lang)}40`
+                              }}
+                            >
+                              <i 
+                                className="fas fa-circle" 
+                                style={{ color: getLanguageColor(lang) }}
+                              ></i>
+                              {lang}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Project Actions - Deployment and Sample Output */}
+                    {(isValidDeployment(project.liveUrl) || project.githubUrl) && (
+                      <div className="project-actions">
+                        <div className="project-buttons-row">
                           {isValidDeployment(project.liveUrl) && (
-                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
-                              <i className="fas fa-external-link-alt"></i>
+                            <a 
+                              href={project.liveUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="deployment-link"
+                            >
+                              <i className="fas fa-rocket"></i>
+                              Live Project
+                            </a>
+                          )}
+                          
+                          {project.githubUrl && (
+                            <a 
+                              href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="sample-output-link"
+                            >
+                              <i className="fas fa-file-pdf"></i>
+                              Sample Output
                             </a>
                           )}
                         </div>
                       </div>
-                      <div className="project-stats">
-                        <span className="stat">
-                          <i className="fas fa-star"></i>
-                          {project.stars || 0}
+                    )}
+                    
+                    <div className="project-topics">
+                      {project.topics && project.topics.slice(0, 8).map((topic, index) => (
+                        <span key={index} className="topic-tag">
+                          {topic}
                         </span>
-                        <span className="stat">
-                          <i className="fas fa-code-branch"></i>
-                          {project.forks || 0}
+                      ))}
+                    </div>
+                    <div className="project-technologies">
+                      {project.technologies && project.technologies.slice(0, 5).map((tech, index) => (
+                        <span key={index} className="tech-tag">
+                          {tech}
                         </span>
-                        {project.language && (
-                          <span className="stat language">
-                            <i className="fas fa-circle" style={{ color: getLanguageColor(project.language) }}></i>
-                            {project.language}
-                          </span>
-                        )}
-                      </div>
-                      {project.isPinned && (
-                        <div className="project-pinned-badge">
-                          <i className="fas fa-thumbtack"></i>
-                          Pinned
-                        </div>
-                      )}
+                      ))}
                     </div>
-                    <div className="project-content">
-                      <h3>{project.title}</h3>
-                      <p className="project-description">{project.description}</p>
-                      
-                      {/* Multiple Languages Display */}
-                      {project.languages && project.languages.length > 0 && (
-                        <div className="project-languages">
-                          <strong>Languages: </strong>
-                          <div className="languages-list">
-                            {project.languages.map((lang, index) => (
-                              <span 
-                                key={index} 
-                                className="language-tag"
-                                style={{ 
-                                  backgroundColor: getLanguageColor(lang) + '20',
-                                  color: getLanguageColor(lang),
-                                  border: `1px solid ${getLanguageColor(lang)}40`
-                                }}
-                              >
-                                <i 
-                                  className="fas fa-circle" 
-                                  style={{ color: getLanguageColor(lang) }}
-                                ></i>
-                                {lang}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Project Actions - Deployment and Sample Output */}
-                      {(isValidDeployment(project.liveUrl) || project.githubUrl) && (
-                        <div className="project-actions">
-                          <div className="project-buttons-row">
-                            {isValidDeployment(project.liveUrl) && (
-                              <a 
-                                href={project.liveUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="deployment-link"
-                              >
-                                <i className="fas fa-rocket"></i>
-                                View Live Project
-                              </a>
-                            )}
-                            
-                            {project.githubUrl && (
-                              <a 
-                                href={`${project.githubUrl}/blob/main/Sample_Output.pdf`}
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="sample-output-link"
-                              >
-                                <i className="fas fa-file-pdf"></i>
-                                Sample Output
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="project-topics">
-                        {project.topics && project.topics.slice(0, 4).map((topic, index) => (
-                          <span key={index} className="topic-tag">
-                            {topic}
-                          </span>
-                        ))}
+                    <div className="project-footer">
+                      <div className="project-updated">
+                        <i className="fas fa-clock"></i>
+                        Updated {formatDate(project.updated_at)}
                       </div>
-                      <div className="project-technologies">
-                        {project.technologies && project.technologies.slice(0, 5).map((tech, index) => (
-                          <span key={index} className="tech-tag">
-                            {tech}
-                          </span>
-                        ))}
+                      <div className="project-stars">
+                        <i className="fas fa-star"></i>
+                        {project.stars || 0} stars
                       </div>
-                      <div className="project-footer">
-                        <div className="project-updated">
-                          <i className="fas fa-clock"></i>
-                          Updated {formatDate(project.updated_at)}
-                        </div>
-                        <div className="project-stars">
-                          <i className="fas fa-star"></i>
-                          {project.stars || 0} stars
-                        </div>
-                      </div>
-                      
-                      {/* Project Note at Bottom */}
-                      {project.githubUrl && (
-                        <p className="project-note">
-                          <i className="fas fa-info-circle"></i>
-                          If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
-                        </p>
-                      )}
                     </div>
+                    
+                    {/* Project Note at Bottom */}
+                    {project.githubUrl && (
+                      <p className="project-note">
+                        <i className="fas fa-info-circle"></i>
+                        If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
+                      </p>
+                    )}
                   </div>
-                ))}
-              </div>
-              <div className="view-all">
-                <a 
-                  href={personalInfo.socialLinks.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary"
-                >
-                  <i className="fab fa-github"></i>
-                  View All Repositories on GitHub
-                </a>
-              </div>
-            </>
+                </div>
+              ))}
+            </div>
           )}
+          <div className="view-all">
+            <a 
+              href={personalInfo.socialLinks.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+            >
+              <i className="fab fa-github"></i>
+              View All Repositories on GitHub
+            </a>
+          </div>
         </div>
       </section>
 
