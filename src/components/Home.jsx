@@ -441,11 +441,11 @@ const Home = () => {
                               <div className="certificate-footer">
                                 <div className="certificate-date">
                                   <i className="fas fa-calendar"></i>
-                                  {formatDate(item.date)}
+                                  Held on {formatDate(item.date)}
                                 </div>
                                 <div className="certificate-issuer">
                                   <i className="fas fa-building"></i>
-                                  {item.issuer}
+                                  Issuer is {item.issuer}
                                 </div>
                               </div>
                             </div>
