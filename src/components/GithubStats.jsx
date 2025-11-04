@@ -384,7 +384,7 @@ const GitHubStats = () => {
 
       {/* GitHub Achievements Section */}
       <div className="achievements-section">
-        <h3><span style={{ color: '#6e5494', fontWeight: 'bold' }}>GitHub</span> Achievements</h3>
+        <h3>GitHub Achievements</h3>
         <p className="section-subtitle">Milestones and accomplishments on GitHub</p>
         
         {/* Achievement Summary */}
