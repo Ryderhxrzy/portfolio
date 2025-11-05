@@ -13,6 +13,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [showAll, setShowAll] = useState(false);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
   const projectsRef = useRef(null);
   
   const { width } = useWindowSize();
@@ -162,6 +163,48 @@ const Home = () => {
         projectsSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
+  };
+
+  const toggleDescription = (itemId) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  const truncateDescription = (description, itemId, maxLength = 80) => {
+    if (!description) return '';
+    const isExpanded = expandedDescriptions[itemId];
+    
+    if (description.length <= maxLength) {
+      return description;
+    }
+    
+    if (isExpanded) {
+      return (
+        <>
+          {description}{' '}
+          <button 
+            className="see-more-btn"
+            onClick={() => toggleDescription(itemId)}
+          >
+            See less
+          </button>
+        </>
+      );
+    }
+    
+    return (
+      <>
+        {description.substring(0, maxLength)}...{' '}
+        <button 
+          className="see-more-btn"
+          onClick={() => toggleDescription(itemId)}
+        >
+          See more
+        </button>
+      </>
+    );
   };
 
   return (
@@ -416,7 +459,9 @@ const Home = () => {
                             </div>
                             <div className="project-content">
                               <h3>{item.title}</h3>
-                              <p className="project-description">{item.description}</p>
+                              <p className="project-description">
+                                {truncateDescription(item.description, item.id)}
+                              </p>
                               
                               <div className="project-topics">
                                 {item.tags.map((tag, index) => (
@@ -495,7 +540,9 @@ const Home = () => {
                             </div>
                             <div className="project-content">
                               <h3>{item.title}</h3>
-                              <p className="project-description">{item.description}</p>
+                              <p className="project-description">
+                                {truncateDescription(item.description, item.id)}
+                              </p>
                               
                               {item.languages && item.languages.length > 0 && (
                                 <div className="project-languages">
@@ -609,7 +656,9 @@ const Home = () => {
                             </div>
                             <div className="project-content">
                               <h3>{item.title}</h3>
-                              <p className="project-description">{item.description}</p>
+                              <p className="project-description">
+                                {truncateDescription(item.description, item.id)}
+                              </p>
                               
                               <div className="certificate-action">
                                 <div className="project-buttons-row">
@@ -690,7 +739,9 @@ const Home = () => {
                             </div>
                             <div className="project-content">
                               <h3>{item.title}</h3>
-                              <p className="project-description">{item.description}</p>
+                              <p className="project-description">
+                                {truncateDescription(item.description, item.id)}
+                              </p>
                               
                               {item.languages && item.languages.length > 0 && (
                                 <div className="project-languages">
