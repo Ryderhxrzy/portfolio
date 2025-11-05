@@ -239,10 +239,11 @@ const Home = () => {
             </div>
 
             <div className="hero-description">
-              <p>
-                I create <strong>modern and user-friendly web applications</strong> that make everyday tasks easier and more enjoyable. 
+             <p>
+                I’m an <strong>IT student</strong> passionate about creating 
+                <strong> modern and user-friendly web applications</strong>. 
                 I focus on building projects that are functional, clean, and visually appealing. 
-                I aim to write clean code and design smooth experiences that people can easily use and appreciate.
+                I’m currently seeking opportunities to apply my skills and gain real-world experience through an <strong>On-the-Job Training program</strong>.
               </p>
             </div>
 

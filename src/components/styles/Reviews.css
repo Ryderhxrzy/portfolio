@@ -1,9 +1,7 @@
 /* Reviews.css - 3 Cards Carousel Version - Full Responsive */
 
 .reviews-page {
-   padding: 120px 0 80px;
-     min-height: 100vh;
-
+  padding: 60px 0;
   background: var(--bg);
 }
 
@@ -498,7 +496,7 @@
 /* Large Desktop - 1440px and above */
 @media (min-width: 1440px) {
   .reviews-page {
-    padding: 0rem 0;
+    padding: 60px 0;
   }
   
   .carousel-wrapper {
@@ -536,7 +534,7 @@
 /* Tablet - 768px to 1023px */
 @media (max-width: 1023px) {
   .reviews-page {
-    padding: 3rem 0;
+    padding: 50px 0;
   }
   
   .page-header h1 {
@@ -585,7 +583,7 @@
 /* Mobile Landscape / Small Tablet - 768px and below */
 @media (max-width: 768px) {
   .reviews-page {
-    padding: 0rem 0;
+    padding: 40px 0;
   }
   .page-header h1 {
     font-size: 2rem;
@@ -694,7 +692,7 @@
 /* Mobile Portrait - 480px and below */
 @media (max-width: 480px) {
   .reviews-page {
-    padding: 0rem 0;
+    padding: 40px 0;
   }
   
   .page-header {
@@ -879,7 +877,7 @@
 /* Landscape Orientation for Mobile */
 @media (max-height: 500px) and (orientation: landscape) {
   .reviews-page {
-    padding: 1.5rem 0;
+    padding: 30px 0;
   }
   
   .page-header {

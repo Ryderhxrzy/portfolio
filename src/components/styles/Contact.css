@@ -1,6 +1,5 @@
 .contact-page {
-  padding: 120px 0 80px;
-  min-height: 100vh;
+  padding: 60px 0;
   background: var(--surface);
 }
 
@@ -396,7 +395,7 @@
 
 @media (min-width: 1440px) {
   .contact-page {
-    padding: 0rem 0;
+    padding: 60px 0;
   }
 }
 
@@ -419,7 +418,7 @@
 /* Responsive Design - Mobile Large (768px) */
 @media (max-width: 768px) {
   .contact-page {
-    padding: 0rem 0;
+    padding: 40px 0;
   }
   
   .info-card {
@@ -465,7 +464,7 @@
 /* Responsive Design - Mobile Medium (480px) */
 @media (max-width: 480px) {
   .contact-page {
-    padding: 0rem 0;
+    padding: 40px 0;
   }
   
   .contact-content {
@@ -611,7 +610,7 @@
 /* Responsive Design - Mobile Small (360px) */
 @media (max-width: 360px) {
   .contact-page {
-    padding: 0rem 0;
+    padding: 30px 0;
   }
   
   .info-card {
@@ -662,7 +661,7 @@
 /* Responsive Design - Extra Small (300px) */
 @media (max-width: 320px) {
   .contact-page {
-    padding: 0rem 0;
+    padding: 30px 0;
   }
   
   .container {

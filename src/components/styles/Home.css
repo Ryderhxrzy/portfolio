@@ -1,7 +1,6 @@
 .hero {
   background: var(--bg);
-  padding: 120px 0 80px;
-  min-height: 100vh;
+  padding: 100px 0 60px;
   display: flex;
   align-items: center;
   position: relative;
@@ -11,7 +10,7 @@
 .hero .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: 3rem;
   align-items: center;
   position: relative;
   z-index: 2;
@@ -391,7 +390,7 @@
 /* ===== ABOUT SECTION ===== */
 .about {
   background: var(--surface);
-  padding: 80px 0;
+  padding: 60px 0;
 }
 
 .about-content {
@@ -509,7 +508,7 @@
 /* ===== PROJECTS SECTION ===== */
 .projects-section {
   background: var(--bg);
-  padding: 80px 0;
+  padding: 60px 0;
 }
 
 .projects-grid {
@@ -529,7 +528,6 @@
 }
 
 .project-card:hover {
-  transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -1001,7 +999,7 @@
 }
 
 .section {
-  padding: 80px 0;
+  padding: 60px 0;
 }
 
 .fade-in-up {
@@ -1049,12 +1047,13 @@
 @media (max-width: 968px) {
   .hero .container {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
     text-align: center;
   }
   
   .hero-image {
     order: -1;
+    margin-top: 0.5rem;
   }
   
   .hero-content {
@@ -1082,11 +1081,16 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 100px 0 60px;
+    padding: 80px 0 30px;
   }
   
   .hero-image {
     order: -1;
+    margin-top: 1rem;
+  }
+  
+  .hero .container {
+    gap: 2rem;
   }
   
   .hero-content h1 {
@@ -1117,13 +1121,13 @@
   }
   
   .profile-image {
-    width: 280px;
-    height: 280px;
+    width: 220px;
+    height: 220px;
   }
   
   .profile-photo {
-    width: 240px;
-    height: 240px;
+    width: 190px;
+    height: 190px;
   }
   
   .profile-image i {
@@ -1192,12 +1196,13 @@
 @media (max-width: 968px) {
   .hero .container {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
     text-align: center;
   }
   
   .hero-image {
     order: -1;
+    margin-top: 0.5rem;
   }
   
   .hero-content {
@@ -1234,11 +1239,16 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 100px 0 60px;
+    padding: 80px 0 30px;
   }
   
   .hero-image {
     order: -1;
+    margin-top: 1rem;
+  }
+  
+  .hero .container {
+    gap: 2rem;
   }
   
   .hero-content h1 {
@@ -1272,13 +1282,13 @@
   }
   
   .profile-image {
-    width: 280px;
-    height: 280px;
+    width: 220px;
+    height: 220px;
   }
   
   .profile-photo {
-    width: 240px;
-    height: 240px;
+    width: 190px;
+    height: 190px;
   }
   
   .profile-image i {
@@ -1288,11 +1298,21 @@
 
 @media (max-width: 480px) {
   .hero {
-    padding: 80px 0 40px;
+    padding: 70px 0 20px;
   }
   
   .hero-image {
     order: -1;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-container {
+    margin-bottom: 0;
+  }
+  
+  .hero .container {
+    gap: 1.5rem;
   }
   
   .hero-content {
@@ -1358,19 +1378,24 @@
   }
   
   .profile-image {
-    width: 220px;
-    height: 220px;
+    width: 180px;
+    height: 180px;
   }
   
   .profile-photo {
-    width: 185px;
-    height: 185px;
+    width: 155px;
+    height: 155px;
   }
 }
 
 @media (max-width: 360px) {
+  .hero {
+    padding-top: 80px;
+  }
+  
   .hero .container {
     padding: 0 0.75rem;
+    gap: 1rem;
   }
 
   .hero-content {
@@ -1446,13 +1471,13 @@
   }
 
   .profile-image {
-    width: 180px;
-    height: 180px;
+    width: 160px;
+    height: 160px;
   }
 
   .profile-photo {
-    width: 150px;
-    height: 150px;
+    width: 135px;
+    height: 135px;
   }
 }
 
@@ -1591,11 +1616,11 @@
 
 @media (max-width: 480px) {
   .container {
-    padding: 0 1rem;
+    padding: 0 1.5rem;
   }
   
   .section {
-    padding: 60px 0;
+    padding: 40px 0;
   }
   
   .section-title {
@@ -1618,8 +1643,12 @@
 }
 
 @media (max-width: 360px) {
+  .hero {
+    padding-top: 80px;
+  }
+  
   .hero .container {
-    padding: 0 1rem;
+    padding: 0 1.25rem;
   }
 
   .hero-content {
@@ -1724,7 +1753,7 @@
 
 @media (max-width: 480px) {
   .about {
-    padding: 60px 0;
+    padding: 40px 0;
   }
   
   .education-info {
@@ -1777,7 +1806,7 @@
 
 @media (max-width: 300px) {
   .about {
-    padding: 50px 0;
+    padding: 30px 0;
   }
   
   .about-content {
@@ -2057,7 +2086,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #ef4444;
+  background: #3b82f6;
   color: var(--white);
   padding: 8px 16px;
   border-radius: 6px;
@@ -2072,9 +2101,9 @@
 }
 
 .btn-view-certificate:hover {
-  background: #dc2626;
+  background: #2563eb;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
 }
 
 .btn-view-certificate i {
@@ -2121,7 +2150,6 @@
 }
 
 .certificate-card:hover {
-  transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
 }
 
