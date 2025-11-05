@@ -3,6 +3,23 @@
 .reviews-page {
   padding: 60px 0;
   background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.reviews-page .container,
+.reviews-page .page-header,
+.reviews-page .stats-overview,
+.reviews-page .carousel-container,
+.reviews-page .filter-buttons,
+.reviews-page .reviews-cta {
+  position: relative;
+  z-index: 2;
+}
+
+.reviews-page > * {
+  position: relative;
+  z-index: 2;
 }
 
 .page-header {

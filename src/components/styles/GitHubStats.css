@@ -2,6 +2,24 @@
   padding: 120px 0 80px;
   min-height: 100vh;
   background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.github-stats-page .container,
+.github-stats-page .page-header,
+.github-stats-page .stats-grid,
+.github-stats-page .languages-section,
+.github-stats-page .achievements-section,
+.github-stats-page .activity-section,
+.github-stats-page .contribution-graph {
+  position: relative;
+  z-index: 2;
+}
+
+.github-stats-page > * {
+  position: relative;
+  z-index: 2;
 }
 
 .page-header {

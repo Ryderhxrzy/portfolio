@@ -7,11 +7,17 @@
   overflow: hidden;
 }
 
+
 .hero .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero > * {
   position: relative;
   z-index: 2;
 }
@@ -391,6 +397,19 @@
 .about {
   background: var(--surface);
   padding: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.about .container,
+.about-content {
+  position: relative;
+  z-index: 2;
+}
+
+.about > * {
+  position: relative;
+  z-index: 2;
 }
 
 .about-content {
@@ -509,6 +528,25 @@
 .projects-section {
   background: var(--bg);
   padding: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.projects-section .container,
+.projects-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.projects-section > * {
+  position: relative;
+  z-index: 2;
+}
+
+.projects-section .page-header,
+.projects-section .filters {
+  position: relative;
+  z-index: 2;
 }
 
 .projects-grid {
@@ -1927,17 +1965,22 @@
 
 .tooltip-text {
   visibility: hidden;
-  width: 80px;
+  /* Remove fixed width and use auto */
+  width: auto;
+  /* Add these properties for single line */
+  white-space: nowrap;
+  /* Add some horizontal padding */
+  padding: 5px 12px;
   background-color: #333;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px 0;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
+  bottom: 120%;
   left: 50%;
-  margin-left: -40px;
+  /* Change margin-left to use transform for better centering */
+  transform: translateX(-50%);
   opacity: 0;
   transition: opacity 0.3s;
 }

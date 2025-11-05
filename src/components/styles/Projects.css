@@ -2,7 +2,22 @@
 .projects-page {
   padding: 120px 0 80px;
   min-height: 100vh;
-  background: var(--background-light);
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.projects-page .container,
+.projects-page .page-header,
+.projects-page .filter-buttons,
+.projects-page .projects-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.projects-page > * {
+  position: relative;
+  z-index: 2;
 }
 
 .page-header {

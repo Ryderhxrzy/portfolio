@@ -12,6 +12,7 @@
   "dependencies": {
     "dompurify": "^3.3.0",
     "mongodb": "^6.20.0",
+    "particles.js": "^2.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.4"

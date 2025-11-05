@@ -1,6 +1,20 @@
 .contact-page {
   padding: 60px 0;
   background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-page .container,
+.contact-page .contact-content,
+.contact-page .process-section {
+  position: relative;
+  z-index: 2;
+}
+
+.contact-page > * {
+  position: relative;
+  z-index: 2;
 }
 
 .contact-content {
@@ -401,6 +415,9 @@
 
 /* Responsive Design - Tablet */
 @media (max-width: 968px) {
+  .contact-page {
+    padding: 0;
+  }
   .contact-content {
     grid-template-columns: 1fr;
     gap: 2rem;
