@@ -496,7 +496,7 @@
 /* Large Desktop - 1440px and above */
 @media (min-width: 1440px) {
   .reviews-page {
-    padding: 60px 0;
+    padding: 0;
   }
   
   .carousel-wrapper {
