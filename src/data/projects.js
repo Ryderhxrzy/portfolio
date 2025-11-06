@@ -5,7 +5,7 @@ export const personalInfo = {
   email: "jhayrcervantes0981@gmail.com",
   phone: "(+63) 969-597-2435",
   location: "Manila, Philippines",
-  about: "I'm a passionate full-stack developer and creative vector artist with a strong foundation in both technology and design. As a 4th-year Information Technology student and freelance developer since 2023, I specialize in various programming languages. I enjoy building modern web applications and creating engaging cartoon artworks that blend creativity with functionality.",
+  about: "I am an aspiring Full Stack Developer and vector artist with a strong background in both technology and design. Currently a 4th-year Information Technology student and freelance developer since 2023, I’m passionate about developing responsive web applications and creating visually engaging digital artworks that combine creativity and functionality.",
   skills: [
     "HTML", "CSS", "JavaScript", "MERN Stack", "MySQL",
     "MSSQL", "PostgreSQL", "Java", "C#", "C++", "Python",

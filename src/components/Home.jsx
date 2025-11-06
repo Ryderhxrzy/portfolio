@@ -244,7 +244,7 @@ const Home = () => {
                 <strong> modern, responsive, and user-friendly web applications</strong>. 
                 I focus on building projects that are functional, clean, and visually engaging. 
                 I’m currently seeking an opportunity to apply my skills and gain hands-on experience through an 
-                <strong>On-the-Job Training program</strong>.
+                <strong> On-the-Job Training program</strong>.
               </p>
             </div>
 
@@ -262,7 +262,19 @@ const Home = () => {
                 <div className="stat-label">Client Satisfaction</div>
               </div>
             </div>
-
+          </div>
+          <div className="hero-image">
+            <div className="profile-container">
+              <div className="profile-image">
+                <img 
+                  src={profileImage} 
+                  alt="Profile" 
+                  className="profile-photo"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            
             <div className="hero-actions">
               <div className="hero-buttons">
                 <button 
@@ -275,7 +287,7 @@ const Home = () => {
                 </button>
                 
                 <button 
-                  className="btn btn-secondary"
+                  className="btn btn-outline"
                   onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
                 >
                   <i className="fas fa-download"></i>
@@ -286,15 +298,15 @@ const Home = () => {
               <div className="hero-social">
                 <p className="social-label">Follow my journey</p>
                 <div className="social-links">
-                  <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" className="social-link">
+                  <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
                     <i className="fab fa-github"></i>
                     <span>GitHub</span>
                   </a>
-                  <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
+                  <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
                     <i className="fab fa-linkedin"></i>
                     <span>LinkedIn</span>
                   </a>
-                  <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-link">
+                  <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
                     <i className="fab fa-facebook"></i>
                     <span>Facebook</span>
                   </a>
@@ -302,19 +314,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-
-          <div className="hero-image">
-            <div className="profile-container">
-              <div className="profile-image">
-                <img 
-                  src={profileImage} 
-                  alt="Profile" 
-                  className="profile-photo"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          </div>
+          
         </div>
       </section>
 
