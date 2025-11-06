@@ -1,6 +1,6 @@
 .hero {
   background: var(--bg);
-  padding: 160px 0;
+  padding: 120px 0;
   position: relative;
   overflow: hidden;
 }
@@ -319,7 +319,6 @@
 .scroll-indicator {
   position: absolute;
   left: 50%;
-  bottom: clamp(70px, 4vh, 45px);
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
@@ -393,6 +392,110 @@
   }
 }
 
+/* Mouse Indicator */
+.hero .mouse-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: -70px;
+  transform: translateX(-50%);
+  z-index: 9999;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.mouse-indicator .mouse {
+  width: clamp(20px, 3vw, 24px);
+  height: clamp(28px, 4vw, 35px);
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.mouse-indicator .wheel {
+  width: clamp(3px, 0.8vw, 4px);
+  height: clamp(6px, 1.5vw, 8px);
+  border-radius: 2px;
+  background: var(--accent);
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: wheel-scroll 1.6s infinite;
+}
+
+@keyframes wheel-scroll {
+  0% { transform: translate(-50%, 0); opacity: 1; }
+  40% { transform: translate(-50%, 6px); opacity: 0.6; }
+  80% { transform: translate(-50%, 12px); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero .mouse-indicator {
+    bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero .mouse-indicator {
+    bottom: 10px;
+  }
+  
+  .mouse-indicator .mouse {
+    width: 18px;
+    height: 25px;
+  }
+  
+  .mouse-indicator .wheel {
+    width: 3px;
+    height: 5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero .mouse-indicator {
+    display: none;
+  }
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  .mouse-indicator .wheel {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Mobile View (480px and below) */
+@media (max-width: 480px) {
+  .hero .mouse-indicator {
+    position: fixed; /* Changed from absolute */
+    bottom: 20px; /* Fixed position from bottom */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .mouse-indicator .mouse {
+    width: 22px;
+    height: 32px;
+  }
+  
+  .mouse-indicator .wheel {
+    width: 4px;
+    height: 7px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero .mouse-indicator {
+    bottom: 15px; /* Slightly higher on very small screens */
+  }
+}
+
 /* Particles container */
 #particles {
   position: absolute;
@@ -412,11 +515,7 @@
 }
 
 .about .container,
-.about-content {
-  position: relative;
-  z-index: 2;
-}
-
+.about-content,
 .about > * {
   position: relative;
   z-index: 2;
@@ -1129,7 +1228,7 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 80px 0 30px;
+    padding: 80px 0;
   }
   
   .hero-image {
@@ -1287,7 +1386,7 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 80px 0 30px;
+    padding: 80px 0;
   }
   
   .hero-image {
@@ -1346,7 +1445,7 @@
 
 @media (max-width: 480px) {
   .hero {
-    padding: 70px 0 20px;
+    padding: 60px 0;
   }
   
   .hero-image {

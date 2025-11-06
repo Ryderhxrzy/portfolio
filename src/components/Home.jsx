@@ -15,10 +15,26 @@ const Home = () => {
   const [filter, setFilter] = useState('all');
   const [showAll, setShowAll] = useState(false);
   const [expandedDescriptions, setExpandedDescriptions] = useState({});
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
   const projectsRef = useRef(null);
+  const heroRef = useRef(null);
   
   const { width } = useWindowSize();
   const isMobile = width <= 480;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const heroRect = heroRef.current.getBoundingClientRect();
+        // Hide when hero section top passes viewport bottom
+        setIsHeroVisible(heroRect.bottom > 0 && heroRect.top < window.innerHeight);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -208,9 +224,13 @@ const Home = () => {
     );
   };
 
+  const scrollToAbout = () => {
+    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="home">
-      <section id="home" className="hero">
+      <section id="home" className="hero" ref={heroRef}>
         <Particles />
         <div className="container">
           <div className="hero-content fade-in-up">
@@ -316,10 +336,18 @@ const Home = () => {
               </div>
             </div>
           </div>
+          {isHeroVisible && (
+            <div className="mouse-indicator" onClick={scrollToAbout}>
+              <div className="mouse">
+                <div className="wheel"></div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       <section id="about" className="about section">
+        
         <div className="container">
           <h2 className="section-title">About Me</h2>
           <div className="about-content">
