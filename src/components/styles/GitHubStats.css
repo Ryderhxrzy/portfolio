@@ -741,7 +741,7 @@
 }
 
 .legend-color.more {
-  background: var(--more) !important;
+  background: var(--accent) !important;
 }
 
 /* Mobile-specific styles */

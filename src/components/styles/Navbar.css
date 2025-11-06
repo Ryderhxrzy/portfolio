@@ -33,17 +33,46 @@
 }
 
 .logo-image {
-  height: 40px;
+  margin-right: 12px;
+  height: 36px;
   width: auto;
   object-fit: contain;
   transition: all 0.3s ease;
 }
 
 .logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.logo-accent {
   color: var(--accent);
-  display: none; /* Hidden by default, shows as fallback */
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.logo-dev {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.logo-slash {
+  color: var(--muted);
+  font-weight: 300;
+  padding: 0 4px;
+  font-size: 1.2rem;
 }
 
 .nav-logo:hover .logo-image {
