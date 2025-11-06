@@ -12,8 +12,8 @@ const Particles = () => {
     let animationFrameId;
     
     // Particle configuration
-    const particleColor = 'rgba(108, 92, 231, 0.6)';
-    const connectionColor = 'rgba(108, 92, 231, 0.2)';
+    const particleColor = 'rgba(21, 67, 131, 0.88)';
+    const connectionColor = 'rgba(21, 67, 131, 0.2)';
 
     // Function to get device type and adjust settings
     const getDeviceSettings = () => {
