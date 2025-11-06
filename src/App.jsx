@@ -5,7 +5,7 @@ import Home from './components/Home';
 import Footer from './components/Footer';
 import ThemeToggle from './components/ThemeToggle';
 import { personalInfo } from './data/projects';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const [theme, setTheme] = useState('light');
