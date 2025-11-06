@@ -148,24 +148,6 @@ const Contact = ({ personalInfo }) => {
                   </div>
                 </div>
               </div>
-
-              <div className="social-links">
-                <h4>Follow My Work</h4>
-                <div className="social-icons">
-                  <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" title="GitHub">
-                    <i className="fab fa-github"></i>
-                    <span>GitHub</span>
-                  </a>
-                  <a href={personalInfo.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn">
-                    <i className="fab fa-linkedin"></i>
-                    <span>LinkedIn</span>
-                  </a>
-                  <a href={personalInfo.socialLinks.facebook} target="_blank" rel="noopener noreferrer" title="Facebook">
-                    <i className="fab fa-facebook"></i>
-                    <span>Facebook</span>
-                  </a>
-                </div>
-              </div>
             </div>
           </div>
 
