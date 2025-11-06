@@ -22,11 +22,14 @@
   
   /* Accent Colors */
   --accent: #4f46e5;
+  --accent-rgb: 79, 70, 229;
   --accent-contrast: #ffffff;
   --accent-hover: #4338ca;
+  --accent-rgb-hover: 67, 56, 202;
   
   /* Secondary Accent */
   --secondary-accent: #f59e0b;
+  --secondary-accent-rgb: 245, 158, 11;
   --secondary-accent-contrast: #ffffff;
   
   /* Border & Divider */
@@ -74,11 +77,14 @@
   
   /* Accent Colors */
   --accent: #6366f1;
+  --accent-rgb: 99, 102, 241;
   --accent-contrast: #ffffff;
   --accent-hover: #818cf8;
+  --accent-rgb-hover: 129, 140, 248;
   
   /* Secondary Accent */
   --secondary-accent: #fbbf24;
+  --secondary-accent-rgb: 251, 191, 36;
   --secondary-accent-contrast: #1a202c;
   
   /* Border & Divider */

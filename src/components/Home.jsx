@@ -6,6 +6,7 @@ import Contact from './Contact.jsx';
 import { personalInfo, fetchGitHubRepositories, fetchCertificates } from '../data/projects.js';
 import profileImage from '/profile.jpg';
 import useWindowSize from '../hooks/useWindowSize.js';
+import Particles from './Particles.jsx';
 
 const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -210,6 +211,7 @@ const Home = () => {
   return (
     <div className="home">
       <section id="home" className="hero">
+        <Particles />
         <div className="container">
           <div className="hero-content fade-in-up">
             <div className="hero-intro">
