@@ -194,16 +194,16 @@
 }
 
 .btn-primary {
-  background: var(--accent);
-  color: var(--accent-contrast);
-  box-shadow: var(--shadow-md);
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover, #5a4ee0);
-  transform: translateY(-2px);
-  color: var(--accent-contrast);
-  box-shadow: var(--shadow-lg);
+  background: var(--accent-hover, #5a4ee0) !important;
+  transform: translateY(-2px) !important;
+  color: var(--accent-contrast) !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
 .btn-secondary {
@@ -280,7 +280,7 @@
 .profile-image {
   width: 400px;
   height: 400px;
-  background: var(--accent);
+  background: var(--accent-bg);
   border-radius: 50%;
   display: flex;
   align-items: center;
