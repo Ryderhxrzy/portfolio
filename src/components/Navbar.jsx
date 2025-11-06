@@ -56,15 +56,16 @@ const Navbar = ({ personalInfo }) => {
         <div className="nav-logo" onClick={() => scrollToSection('home')}>
           <img 
             src="/logo.png" 
-            alt={`${personalInfo.name} Logo`}
+            alt="Jhay-R Dev Logo"
             className="logo-image"
+            style={{ marginRight: '12px' }}
             onError={(e) => {
               e.target.style.display = 'none';
               const fallback = e.target.nextSibling;
               if (fallback) fallback.style.display = 'block';
             }}
           />
-          <span className="logo-text">{personalInfo.name.split(' ')[0]}</span>
+          <span className="logo-text">Jhay-R <span className="logo-slash">/</span> <span className="logo-dev">Dev</span></span>
         </div>
         
         <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
