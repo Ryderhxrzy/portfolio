@@ -10,7 +10,7 @@ const Footer = ({ personalInfo }) => {
         <div className="footer-content">
           <div className="footer-info">
             <h3>{personalInfo.name}</h3>
-            <p>Full Stack Developer creating amazing web experiences</p>
+            <p>Aspiring Full Stack Developer eager to apply web development skills and gain hands-on experience through an OJT internship.</p>
             <div className="footer-social">
               <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                 <i className="fab fa-github"></i>
@@ -27,7 +27,10 @@ const Footer = ({ personalInfo }) => {
           <div className="footer-links">
             <h4>Quick Links</h4>
             <a href="#home">Home</a>
+            <a href="#about">About Me</a>
             <a href="#projects">Projects</a>
+            <a href="#github-stats">Github Stats</a>
+            <a href="#reviews">Reviews</a>
             <a href="#contact">Contact</a>
           </div>
           
@@ -46,7 +49,12 @@ const Footer = ({ personalInfo }) => {
         
         <div className="footer-bottom">
           <p>&copy; {currentYear} {personalInfo.name}. All rights reserved.</p>
-          <p>Built with React ❤️</p>
+          <div className="built-with">
+            <p>Built with React JS</p>
+            <a href="#home" aria-label="Scroll to top">
+              <i className="fas fa-arrow-up"></i>
+            </a>
+          </div>
         </div>
       </div>
     </footer>

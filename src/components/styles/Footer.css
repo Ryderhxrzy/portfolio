@@ -4,6 +4,7 @@
   color: var(--text);
   padding: 3rem 0 1rem;
   border-top: 1px solid var(--border);
+  margin-top: auto;
 }
 
 .footer-content {
@@ -121,6 +122,64 @@
 
 .footer-bottom p {
   margin: 0;
+}
+
+/* Scroll to top button */
+.scroll-top {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.scroll-top a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--surface);
+  color: var(--accent);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid var(--border);
+}
+
+.scroll-top a:hover {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+/* Styles for built-with container and scroll-to-top */
+.built-with {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.built-with a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--surface);
+  color: var(--accent);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid var(--border);
+}
+
+.built-with a:hover {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
 }
 
 /* Responsive Design - Tablet */
@@ -305,5 +364,20 @@
   
   .footer-bottom {
     font-size: 0.75rem;
+  }
+}
+
+/* Chrome-specific fixes */
+@supports (-webkit-appearance:none) {
+  .footer-bottom {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+  }
+  
+  .built-with {
+    align-items: center;
+    -webkit-align-items: center;
   }
 }
