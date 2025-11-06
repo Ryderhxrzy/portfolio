@@ -1,6 +1,6 @@
 export const personalInfo = {
   name: "Jhay-R Cervantes",
-  title: "Full Stack Developer",
+  title: "Aspiring Full Stack Developer",
   aka: "Ryder Hxrzy",
   email: "jhayrcervantes0981@gmail.com",
   phone: "(+63) 969-597-2435",
