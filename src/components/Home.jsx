@@ -228,22 +228,23 @@ const Home = () => {
                   Freelance Developer
                 </span>
                 <span className="badge">
-                  <i className="fas fa-graduation-cap"></i>
-                  IT Student
-                </span>
-                <span className="badge">
                   <i className="fas fa-rocket"></i>
                   Since 2023
+                </span>
+                <span className="badge">
+                  <i className="fas fa-graduation-cap"></i>
+                  IT Student
                 </span>
               </div>
             </div>
 
             <div className="hero-description">
              <p>
-                I’m an <strong>IT student</strong> passionate about creating 
-                <strong> modern and user-friendly web applications</strong>. 
-                I focus on building projects that are functional, clean, and visually appealing. 
-                I’m currently seeking opportunities to apply my skills and gain real-world experience through an <strong>On-the-Job Training program</strong>.
+                I’m an <strong>Information Technology student</strong> passionate about creating 
+                <strong> modern, responsive, and user-friendly web applications</strong>. 
+                I focus on building projects that are functional, clean, and visually engaging. 
+                I’m currently seeking an opportunity to apply my skills and gain hands-on experience through an 
+                <strong>On-the-Job Training program</strong>.
               </p>
             </div>
 
