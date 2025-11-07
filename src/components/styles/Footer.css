@@ -232,6 +232,11 @@
     gap: 1rem;
     text-align: center;
   }
+  
+  .built-with {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 /* Responsive Design - Mobile Medium */

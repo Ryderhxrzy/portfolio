@@ -50,7 +50,7 @@ const Footer = ({ personalInfo }) => {
         <div className="footer-bottom">
           <p>&copy; {currentYear} {personalInfo.name}. All rights reserved.</p>
           <div className="built-with">
-            <p>Built with React JS</p>
+            <p>Built with <span><i className='fas fa-heart'></i></span> and Passion</p>
             <a href="#home" aria-label="Scroll to top">
               <i className="fas fa-arrow-up"></i>
             </a>
