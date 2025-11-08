@@ -4,7 +4,7 @@ import GithubStats from './GithubStats.jsx';
 import Reviews from './Reviews.jsx';
 import Contact from './Contact.jsx';
 import { personalInfo, fetchGitHubRepositories, fetchCertificates } from '../data/projects.js';
-import profileImage from '/new-profile.png';
+import profileImage from '/profile_v2.png';
 import useWindowSize from '../hooks/useWindowSize.js';
 import Particles from './Particles.jsx';
 
