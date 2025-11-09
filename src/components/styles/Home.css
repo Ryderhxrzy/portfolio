@@ -287,7 +287,7 @@
   justify-content: center;
   position: relative;
   box-shadow: var(--shadow-lg);
-  border: 6px solid var(--bg);
+  border: 6px solid var(--border);
 }
 
 .profile-photo {
