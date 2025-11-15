@@ -26,13 +26,12 @@ const Home = () => {
     const handleScroll = () => {
       if (heroRef.current) {
         const heroRect = heroRef.current.getBoundingClientRect();
-        // Hide when hero section top passes viewport bottom
         setIsHeroVisible(heroRect.bottom > 0 && heroRect.top < window.innerHeight);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
+    handleScroll()
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
