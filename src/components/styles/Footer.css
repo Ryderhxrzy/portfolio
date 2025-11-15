@@ -12,6 +12,9 @@
   grid-template-columns: 2fr 1fr 1fr;
   gap: 3rem;
   margin-bottom: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footer-info h3 {
