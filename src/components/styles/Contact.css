@@ -273,6 +273,11 @@
   font-size: 1.1rem;
 }
 
+.submit-btn:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
 .submit-btn.loading {
   pointer-events: none;
   opacity: 0.8;
@@ -870,13 +875,13 @@
 .recaptcha-group {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin: 1.5rem 0;
 }
 
 .recaptcha-group > div {
   transform: scale(0.9);
-  transform-origin: left top;
+  transform-origin: center;
 }
 
 .theme-dark .recaptcha-group > div {
