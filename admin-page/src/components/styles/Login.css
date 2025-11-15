@@ -130,12 +130,12 @@
   box-shadow: var(--shadow);
 }
 
-/*.login-btn:disabled {
+.login-btn:disabled {
   cursor: not-allowed !important;
   opacity: 0.6;
   transform: none;
   box-shadow: none;
-}*/
+}
 
 .login-btn i {
   margin-right: 8px;

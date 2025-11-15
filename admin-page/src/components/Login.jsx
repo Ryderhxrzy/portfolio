@@ -109,6 +109,12 @@ const Login = () => {
     }
 
     try {
+      // Call admin login API
+      console.log('🔐 Attempting login with:', { email: credentials.email });
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       // Check if reCAPTCHA is configured
       if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
         setLoading(false);
@@ -254,7 +260,7 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-primary login-btn"
-            disabled={loading}
+            disabled={loading || !recaptchaToken}
           >
             {loading ? (
               <>
