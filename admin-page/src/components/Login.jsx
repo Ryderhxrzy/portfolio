@@ -112,9 +112,6 @@ const Login = () => {
       // Call admin login API
       console.log('🔐 Attempting login with:', { email: credentials.email });
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
       // Check if reCAPTCHA is configured
       if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
         setLoading(false);
@@ -138,11 +135,9 @@ const Login = () => {
           email: credentials.email,
           password: credentials.password,
           recaptchaToken: recaptchaToken
-        }),
-        signal: controller.signal
+        })
       });
 
-      clearTimeout(timeoutId);
       console.log('📡 Response status:', response.status);
 
       const data = await response.json();
@@ -163,12 +158,10 @@ const Login = () => {
     } catch (err) {
       console.error('❌ Login error:', err);
 
-      if (err.name === 'AbortError') {
-        showAlert('error', 'Connection Timeout', 'Server took too long to respond. Please check if the server is running.');
-      } else if (err.message.includes('fetch')) {
-        showAlert('error', 'Connection Failed', 'Cannot connect to server. Please make sure the admin server is running on port 5000.');
+      if (err.message.includes('fetch')) {
+        showAlert('error', 'Connection Failed', 'Cannot connect to server. Please check your internet connection and try again.');
       } else {
-        showAlert('error', 'Login Failed', err.message || 'Invalid email or password. Please try again.');
+        showAlert('error', 'Login Failed', err.message || 'An unexpected error occurred. Please try again.');
       }
 
       // setTimeout(() => setStatus(''), 5000); // Removed - status not used
