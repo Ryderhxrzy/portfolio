@@ -49,27 +49,49 @@ const Contact = ({ personalInfo }) => {
       return;
     }
 
-    // Simulate form submission with reCAPTCHA token
-    setTimeout(() => {
-      setStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        budget: '',
-        timeline: '',
-        projectType: '',
-        message: ''
+    try {
+      // Send form data to server
+      const response = await fetch('http://localhost:4000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          recaptchaToken
+        })
       });
 
-      // Reset reCAPTCHA
-      if (recaptchaRef.current) {
-        recaptchaRef.current.reset();
+      const data = await response.json();
+
+      if (data.ok) {
+        setStatus('success');
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          budget: '',
+          timeline: '',
+          projectType: '',
+          message: ''
+        });
+
+        // Reset reCAPTCHA
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setRecaptchaToken(null);
+      } else {
+        throw new Error(data.error || 'Failed to submit form');
       }
-      setRecaptchaToken(null);
 
       setTimeout(() => setStatus(''), 5000);
-    }, 2000);
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setStatus('error');
+      setTimeout(() => setStatus(''), 5000);
+    }
   };
 
   const projectTypes = [

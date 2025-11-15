@@ -7,6 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const MONGO_URI = process.env.MONGO_URI;
+const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Validate environment variables
@@ -193,6 +194,87 @@ app.get("/api/github/pinned", async (req, res) => {
   } catch (err) {
     console.error("❌ GitHub error:", err);
     return res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Contact form submission with reCAPTCHA verification
+app.post("/api/contact", async (req, res) => {
+  try {
+    console.log("📧 Processing contact form submission");
+
+    const { name, email, company, budget, timeline, projectType, message, recaptchaToken } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !projectType || !message) {
+      return res.status(400).json({
+        ok: false,
+        error: "Missing required fields"
+      });
+    }
+
+    // Verify reCAPTCHA if secret is configured
+    if (RECAPTCHA_SECRET && recaptchaToken) {
+      try {
+        const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `secret=${RECAPTCHA_SECRET}&response=${recaptchaToken}`
+        });
+
+        const recaptchaData = await recaptchaResponse.json();
+
+        if (!recaptchaData.success) {
+          return res.status(400).json({
+            ok: false,
+            error: "reCAPTCHA verification failed"
+          });
+        }
+
+        console.log("✅ reCAPTCHA verified successfully");
+      } catch (recaptchaError) {
+        console.error("❌ reCAPTCHA verification error:", recaptchaError);
+        return res.status(500).json({
+          ok: false,
+          error: "Failed to verify reCAPTCHA"
+        });
+      }
+    } else if (RECAPTCHA_SECRET) {
+      return res.status(400).json({
+        ok: false,
+        error: "reCAPTCHA token required"
+      });
+    }
+
+    // Here you would typically:
+    // 1. Save to database
+    // 2. Send email notification
+    // 3. Process the inquiry
+
+    // For now, just log the submission
+    console.log("📝 Contact form received:", {
+      name,
+      email,
+      company: company || 'Not provided',
+      projectType,
+      budget: budget || 'Not specified',
+      timeline: timeline || 'Not specified',
+      message: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
+      timestamp: new Date().toISOString()
+    });
+
+    res.json({
+      ok: true,
+      message: "Contact form submitted successfully. We'll get back to you soon!"
+    });
+
+  } catch (err) {
+    console.error("❌ Contact form error:", err);
+    res.status(500).json({
+      ok: false,
+      error: "Internal server error"
+    });
   }
 });
 
