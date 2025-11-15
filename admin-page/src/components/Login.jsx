@@ -110,7 +110,6 @@ const Login = () => {
 
     try {
       // Call admin login API
-      console.log('🔐 Attempting login with:', { email: credentials.email });
 
       // Check if reCAPTCHA is configured
       if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
@@ -119,24 +118,18 @@ const Login = () => {
         return;
       }
 
-      // reCAPTCHA validation - TEMPORARILY DISABLED
-      console.log("⚠️ reCAPTCHA validation temporarily disabled for testing");
-      /*
+      // reCAPTCHA validation
       if (!recaptchaToken) {
         setLoading(false);
         showAlert('warning', 'Verification Required', 'Please complete the reCAPTCHA verification before logging in.');
         return;
       }
-      */
 
       const requestBody = {
         email: credentials.email,
         password: credentials.password,
         recaptchaToken: recaptchaToken
       };
-
-      console.log('📤 Sending request body:', requestBody);
-      console.log('🎯 API URL:', `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/admin/login`);
 
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/admin/login`, {
         method: 'POST',
@@ -146,10 +139,7 @@ const Login = () => {
         body: JSON.stringify(requestBody)
       });
 
-      console.log('📡 Response status:', response.status);
-
       const data = await response.json();
-      console.log('📨 Response data:', data);
 
       if (data.ok) {
         showAlert('success', 'Login Successful!', `Welcome back, ${data.admin.email}!`);
@@ -261,7 +251,7 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-primary login-btn"
-            disabled={loading}
+            disabled={loading || !recaptchaToken}
           >
             {loading ? (
               <>

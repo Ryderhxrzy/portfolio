@@ -88,36 +88,22 @@ function escapeRegex(string) {
 }
 
 app.post("/api/admin/login", async (req, res) => {
-  console.log("🎯 Login route hit!");
-  console.log("📨 Request body:", req.body);
-  console.log("📨 Headers:", req.headers);
-
   try {
     const { email, password, recaptchaToken } = req.body;
-    console.log("🔐 Login attempt for:", email);
 
     if (!email || !password) {
-      console.log("❌ Missing credentials");
       return res.status(400).json({ ok: false, error: "Email and password required" });
     }
 
     // Verify reCAPTCHA - TEMPORARILY DISABLED
-    console.log("⚠️ reCAPTCHA verification temporarily disabled for testing");
     if (recaptchaToken) {
-      console.log("📝 reCAPTCHA token provided but not verified");
-    } else {
-      console.log("📝 No reCAPTCHA token provided");
+      // reCAPTCHA token provided but not verified for testing
     }
     /*
     if (!recaptchaToken) {
-      console.log("❌ Missing reCAPTCHA token");
       return res.status(400).json({ ok: false, error: "reCAPTCHA verification required" });
     }
 
-    // TEMPORARILY DISABLE reCAPTCHA FOR TESTING
-    console.log("⚠️ reCAPTCHA verification temporarily disabled for testing");
-    */
-    /*
     try {
       const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
         method: 'POST',
@@ -130,20 +116,15 @@ app.post("/api/admin/login", async (req, res) => {
       const recaptchaData = await recaptchaResponse.json();
 
       if (!recaptchaData.success) {
-        console.log("❌ reCAPTCHA verification failed");
         return res.status(400).json({ ok: false, error: "reCAPTCHA verification failed" });
       }
-
-      console.log("✅ reCAPTCHA verified successfully");
     } catch (recaptchaError) {
-      console.error("❌ reCAPTCHA verification error:", recaptchaError);
       return res.status(500).json({ ok: false, error: "Failed to verify reCAPTCHA" });
     }
     */
 
     // Trim and normalize email
     const normalizedEmail = email.trim().toLowerCase();
-    console.log("📧 Normalized email:", normalizedEmail);
 
     // Try both methods: direct match and case-insensitive regex
     let admin = await adminCollection.findOne({
@@ -152,55 +133,33 @@ app.post("/api/admin/login", async (req, res) => {
 
     // If not found, try case-insensitive search
     if (!admin) {
-      console.log("🔍 Trying case-insensitive search...");
       admin = await adminCollection.findOne({
         email: { $regex: `^${escapeRegex(email.trim())}$`, $options: "i" }
       });
     }
 
-    console.log("👤 Admin found:", admin ? "YES" : "NO");
-    
-    if (admin) {
-      console.log("📝 Admin email in DB:", admin.email);
-      console.log("🔑 Password hash exists:", !!admin.password);
-      console.log("🔑 Hash starts with:", admin.password ? admin.password.substring(0, 7) : "N/A");
-    }
-
     if (!admin) {
-      console.log("❌ No admin found with email:", email);
       return res.status(401).json({ ok: false, error: "Invalid email or password" });
     }
 
     // Check if password field exists and is a valid bcrypt hash
     if (!admin.password) {
-      console.log("❌ Admin account has no password field");
       return res.status(500).json({ ok: false, error: "Account configuration error" });
     }
 
     if (!admin.password.startsWith('$2a$') && !admin.password.startsWith('$2b$') && !admin.password.startsWith('$2y$')) {
-      console.log("❌ Password is not a valid bcrypt hash");
       return res.status(500).json({ ok: false, error: "Account configuration error" });
     }
 
-    console.log("🔑 Comparing passwords...");
-    console.log("Input password length:", password.length);
-    console.log("Stored hash:", admin.password);
-
     const isMatch = await bcrypt.compare(password, admin.password);
-    
-    console.log("🔓 Password match:", isMatch ? "YES ✅" : "NO ❌");
 
     if (!isMatch) {
-      console.log("❌ Password mismatch");
       return res.status(401).json({ ok: false, error: "Invalid email or password" });
     }
-
-    console.log("✅ Login successful for:", email);
 
     const { password: _, ...safeAdmin } = admin;
     return res.json({ ok: true, admin: safeAdmin });
   } catch (err) {
-    console.error("❌ Admin login error:", err);
     return res.status(500).json({ ok: false, error: "Internal server error" });
   }
 });
