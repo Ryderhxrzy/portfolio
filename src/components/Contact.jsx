@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import './styles/Contact.css';
 
 const Contact = ({ personalInfo }) => {
@@ -12,6 +13,8 @@ const Contact = ({ personalInfo }) => {
     message: ''
   });
   const [status, setStatus] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const recaptchaRef = useRef(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,23 +23,51 @@ const Contact = ({ personalInfo }) => {
     });
   };
 
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
+  };
+
+  const onRecaptchaExpired = () => {
+    setRecaptchaToken(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('sending');
 
-    // Simulate form submission
+    // Check if reCAPTCHA is configured
+    if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+      setStatus('error');
+      setTimeout(() => setStatus(''), 5000);
+      return;
+    }
+
+    // Validate reCAPTCHA
+    if (!recaptchaToken) {
+      setStatus('error');
+      setTimeout(() => setStatus(''), 5000);
+      return;
+    }
+
+    // Simulate form submission with reCAPTCHA token
     setTimeout(() => {
       setStatus('success');
-      setFormData({ 
-        name: '', 
-        email: '', 
-        company: '', 
-        budget: '', 
-        timeline: '', 
-        projectType: '', 
-        message: '' 
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        budget: '',
+        timeline: '',
+        projectType: '',
+        message: ''
       });
-      
+
+      // Reset reCAPTCHA
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setRecaptchaToken(null);
+
       setTimeout(() => setStatus(''), 5000);
     }, 2000);
   };
@@ -261,11 +292,35 @@ const Contact = ({ personalInfo }) => {
                 {formData.message.length}/500 characters
               </div>
             </div>
-            
+
+            {/* reCAPTCHA */}
+            <div className="form-group recaptcha-group">
+              {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  onChange={onRecaptchaChange}
+                  onExpired={onRecaptchaExpired}
+                  theme={document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light'}
+                />
+              ) : (
+                <div className="recaptcha-error">
+                  <i className="fas fa-exclamation-triangle"></i>
+                  reCAPTCHA configuration missing. Please check environment variables.
+                </div>
+              )}
+              {!recaptchaToken && status === 'error' && (
+                <div className="recaptcha-error">
+                  <i className="fas fa-exclamation-triangle"></i>
+                  Please complete the reCAPTCHA verification
+                </div>
+              )}
+            </div>
+
             <button 
               type="submit" 
               className={`btn btn-primary submit-btn ${status === 'sending' ? 'loading' : ''}`}
-              disabled={status === 'sending'}
+              disabled={status === 'sending' || !recaptchaToken || !import.meta.env.VITE_RECAPTCHA_SITE_KEY}
             >
               {status === 'sending' ? (
                 <>
@@ -294,16 +349,30 @@ const Contact = ({ personalInfo }) => {
               <div className="status-message error">
                 <i className="fas fa-exclamation-circle"></i>
                 <div>
-                  <h4>Oops! Something went wrong</h4>
-                  <p>Please try again or contact me directly at {personalInfo.email}</p>
+                  <h4>
+                    {!import.meta.env.VITE_RECAPTCHA_SITE_KEY
+                      ? 'Configuration Error'
+                      : !recaptchaToken
+                      ? 'Verification Required'
+                      : 'Something went wrong'
+                    }
+                  </h4>
+                  <p>
+                    {!import.meta.env.VITE_RECAPTCHA_SITE_KEY
+                      ? 'reCAPTCHA is not properly configured. Please contact the administrator.'
+                      : !recaptchaToken
+                      ? 'Please complete the reCAPTCHA verification before submitting.'
+                      : `Please try again or contact me directly at ${personalInfo.email}`
+                    }
+                  </p>
                 </div>
               </div>
             )}
 
             <div className="form-footer">
               <p>
-                <i className="fas fa-lock"></i>
-                Your info is secure and will only be used to contact you about your projects.
+                <i className="fas fa-shield-alt"></i>
+                Protected by reCAPTCHA. Your info is secure and will only be used to contact you about your projects.
               </p>
             </div>
           </form>
