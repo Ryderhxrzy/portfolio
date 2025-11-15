@@ -81,6 +81,7 @@ app.get("/", (req, res) => {
     endpoints: {
       health: "/api/health",
       reviews: "/api/reviews",
+      contact: "/api/contact",
       github_pinned: "/api/github/pinned?username=Ryderhxrzy",
       test_github: "/api/test-github"
     }

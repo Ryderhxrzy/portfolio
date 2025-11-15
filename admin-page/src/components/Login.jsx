@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
-import ReCAPTCHA from 'react-google-recaptcha';
+// import ReCAPTCHA from 'react-google-recaptcha'; // Commented out for local testing
 import './styles/Login.css';
 
 const Login = () => {
@@ -10,8 +10,8 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState(null);
-  const recaptchaRef = useRef(null);
+  // const [recaptchaToken, setRecaptchaToken] = useState(null); // Commented out for local testing
+  // const recaptchaRef = useRef(null); // Commented out for local testing
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,13 +26,13 @@ const Login = () => {
     return emailRegex.test(email);
   };
 
-  const onRecaptchaChange = (token) => {
-    setRecaptchaToken(token);
-  };
+  // const onRecaptchaChange = (token) => { // Commented out for local testing
+  //   setRecaptchaToken(token);
+  // };
 
-  const onRecaptchaExpired = () => {
-    setRecaptchaToken(null);
-  };
+  // const onRecaptchaExpired = () => { // Commented out for local testing
+  //   setRecaptchaToken(null);
+  // };
 
   const showAlert = (type, title, text) => {
     const themeColors = {
@@ -71,7 +71,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Check if reCAPTCHA is configured
+    /* Check if reCAPTCHA is configured
     if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
       setLoading(false);
       showAlert('error', 'Configuration Error', 'reCAPTCHA is not properly configured. Please contact the administrator.');
@@ -83,7 +83,7 @@ const Login = () => {
       setLoading(false);
       showAlert('warning', 'Verification Required', 'Please complete the reCAPTCHA verification before logging in.');
       return;
-    }
+    }*/
 
     // Email validation
     if (!credentials.email) {
@@ -112,23 +112,60 @@ const Login = () => {
     }
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Call admin login API
+      console.log('🔐 Attempting login with:', { email: credentials.email });
 
-      // For demo purposes - in real app, this would be an API call
-      if (credentials.email && credentials.password) {
-        showAlert('success', 'Login Successful!', `Welcome back, ${credentials.email.split('@')[0]}!`);
-        // Reset reCAPTCHA
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
-        setRecaptchaToken(null);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password
+          // recaptchaToken commented out for local testing
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+      console.log('📡 Response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Response not ok:', response.status, errorText);
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('📨 Response data:', data);
+
+      if (data.success) {
+        showAlert('success', 'Login Successful!', data.message);
+        // Reset reCAPTCHA - commented out for local testing
+        // if (recaptchaRef.current) {
+        //   recaptchaRef.current.reset();
+        // }
+        // setRecaptchaToken(null);
         // Handle successful login - redirect or update app state
       } else {
-        showAlert('error', 'Login Failed', 'Invalid email or password. Please try again.');
+        throw new Error(data.message || 'Login failed');
       }
     } catch (err) {
-      showAlert('error', 'Connection Error', 'Unable to connect to server. Please check your internet connection and try again.');
+      console.error('❌ Login error:', err);
+
+      if (err.name === 'AbortError') {
+        showAlert('error', 'Connection Timeout', 'Server took too long to respond. Please check if the server is running.');
+      } else if (err.message.includes('fetch')) {
+        showAlert('error', 'Connection Failed', 'Cannot connect to server. Please make sure the admin server is running on port 5000.');
+      } else {
+        showAlert('error', 'Login Failed', err.message || 'Invalid email or password. Please try again.');
+      }
+
+      // setTimeout(() => setStatus(''), 5000); // Removed - status not used
     } finally {
       setLoading(false);
     }
@@ -192,7 +229,8 @@ const Login = () => {
             </div>
           </div>
 
-          {/* reCAPTCHA */}
+          {/* reCAPTCHA - Commented out for local testing */}
+          {/*
           <div className="form-group">
             <div className="recaptcha-container">
               <div className="recaptcha">
@@ -211,20 +249,15 @@ const Login = () => {
                     reCAPTCHA configuration missing. Please check environment variables.
                   </div>
                 )}
-                {!recaptchaToken && !loading && (
-                  <div className="recaptcha-error">
-                    <i className="fas fa-exclamation-triangle"></i>
-                    Please complete the reCAPTCHA verification
-                  </div>
-                )}
               </div>
             </div>
           </div>
+          */}
 
           <button
             type="submit"
             className="btn btn-primary login-btn"
-            disabled={loading || !recaptchaToken || !import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+            disabled={loading}
           >
             {loading ? (
               <>
