@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
-// import ReCAPTCHA from 'react-google-recaptcha'; // Commented out for local testing
+import ReCAPTCHA from 'react-google-recaptcha';
 import './styles/Login.css';
 
 const Login = () => {
@@ -10,8 +10,8 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [recaptchaToken, setRecaptchaToken] = useState(null); // Commented out for local testing
-  // const recaptchaRef = useRef(null); // Commented out for local testing
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const recaptchaRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,18 +21,15 @@ const Login = () => {
     }));
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
   };
 
-  // const onRecaptchaChange = (token) => { // Commented out for local testing
-  //   setRecaptchaToken(token);
-  // };
-
-  // const onRecaptchaExpired = () => { // Commented out for local testing
-  //   setRecaptchaToken(null);
-  // };
+  const onRecaptchaExpired = () => {
+    setRecaptchaToken(null);
+  };
 
   const showAlert = (type, title, text) => {
     const themeColors = {
@@ -112,21 +109,29 @@ const Login = () => {
     }
 
     try {
-      // Call admin login API
-      console.log('🔐 Attempting login with:', { email: credentials.email });
+      // Check if reCAPTCHA is configured
+      if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+        setLoading(false);
+        showAlert('error', 'Configuration Error', 'reCAPTCHA is not properly configured. Please contact the administrator.');
+        return;
+      }
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      // reCAPTCHA validation
+      if (!recaptchaToken) {
+        setLoading(false);
+        showAlert('warning', 'Verification Required', 'Please complete the reCAPTCHA verification before logging in.');
+        return;
+      }
 
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: credentials.email,
-          password: credentials.password
-          // recaptchaToken commented out for local testing
+          password: credentials.password,
+          recaptchaToken: recaptchaToken
         }),
         signal: controller.signal
       });
@@ -134,25 +139,20 @@ const Login = () => {
       clearTimeout(timeoutId);
       console.log('📡 Response status:', response.status);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Response not ok:', response.status, errorText);
-        throw new Error(`Server error: ${response.status}`);
-      }
-
       const data = await response.json();
       console.log('📨 Response data:', data);
 
-      if (data.success) {
-        showAlert('success', 'Login Successful!', data.message);
-        // Reset reCAPTCHA - commented out for local testing
-        // if (recaptchaRef.current) {
-        //   recaptchaRef.current.reset();
-        // }
-        // setRecaptchaToken(null);
+      if (data.ok) {
+        showAlert('success', 'Login Successful!', `Welcome back, ${data.admin.email}!`);
+        // Reset reCAPTCHA
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setRecaptchaToken(null);
         // Handle successful login - redirect or update app state
+        // Example: window.location.href = '/admin-dashboard';
       } else {
-        throw new Error(data.message || 'Login failed');
+        showAlert('error', 'Login Failed', data.error || 'Invalid email or password.');
       }
     } catch (err) {
       console.error('❌ Login error:', err);
@@ -229,8 +229,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* reCAPTCHA - Commented out for local testing */}
-          {/*
           <div className="form-group">
             <div className="recaptcha-container">
               <div className="recaptcha">
@@ -252,7 +250,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-          */}
 
           <button
             type="submit"
