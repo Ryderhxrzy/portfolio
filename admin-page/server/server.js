@@ -9,6 +9,7 @@ require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware
 app.use(express.json());
@@ -70,6 +71,8 @@ app.get("/", (req, res) => {
 app.get("/api/health", (req, res) => {
   res.json({
     ok: true,
+    message: "Server healthy",
+    environment: NODE_ENV,
     database: adminCollection ? "connected" : "disconnected",
     timestamp: new Date().toISOString(),
   });
@@ -193,8 +196,9 @@ process.on("SIGINT", async () => {
 // Start server
 connectToMongo().then(() => {
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 http://localhost:${PORT}`);
+    console.log(`🚀 Admin Login API Server running on port ${PORT}`);
+    console.log(`🌍 Environment: ${NODE_ENV}`);
+    console.log(`📊 Database: Connected`);
   });
 }).catch((err) => {
   console.error("❌ Failed to start server:", err);
