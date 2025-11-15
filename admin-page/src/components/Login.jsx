@@ -141,6 +141,9 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-card">
+        <div className="login-logo">
+          <img src="/logo.png" alt="Logo" />
+        </div>
         <h1 className="login-title">Admin Login</h1>
 
         <form onSubmit={handleSubmit}>
@@ -190,28 +193,32 @@ const Login = () => {
           </div>
 
           {/* reCAPTCHA */}
-          <div className="form-group recaptcha-group">
-            {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                onChange={onRecaptchaChange}
-                onExpired={onRecaptchaExpired}
-                theme={document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light'}
-                size="compact"
-              />
-            ) : (
-              <div className="recaptcha-error">
-                <i className="fas fa-exclamation-triangle"></i>
-                reCAPTCHA configuration missing. Please check environment variables.
+          <div className="form-group">
+            <div className="recaptcha-container">
+              <div className="recaptcha">
+                {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                    onChange={onRecaptchaChange}
+                    onExpired={onRecaptchaExpired}
+                    theme={document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light'}
+                    size="normal"
+                  />
+                ) : (
+                  <div className="recaptcha-error">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    reCAPTCHA configuration missing. Please check environment variables.
+                  </div>
+                )}
+                {!recaptchaToken && !loading && (
+                  <div className="recaptcha-error">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    Please complete the reCAPTCHA verification
+                  </div>
+                )}
               </div>
-            )}
-            {!recaptchaToken && !loading && (
-              <div className="recaptcha-error">
-                <i className="fas fa-exclamation-triangle"></i>
-                Please complete the reCAPTCHA verification
-              </div>
-            )}
+            </div>
           </div>
 
           <button
