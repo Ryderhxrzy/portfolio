@@ -324,7 +324,6 @@ const Contact = ({ personalInfo }) => {
                   onChange={onRecaptchaChange}
                   onExpired={onRecaptchaExpired}
                   theme={document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light'}
-                  size="compact"
                 />
               ) : (
                 <div className="recaptcha-error">
