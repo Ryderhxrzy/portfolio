@@ -119,12 +119,15 @@ const Login = () => {
         return;
       }
 
-      // reCAPTCHA validation
+      // reCAPTCHA validation - TEMPORARILY DISABLED
+      console.log("⚠️ reCAPTCHA validation temporarily disabled for testing");
+      /*
       if (!recaptchaToken) {
         setLoading(false);
         showAlert('warning', 'Verification Required', 'Please complete the reCAPTCHA verification before logging in.');
         return;
       }
+      */
 
       const requestBody = {
         email: credentials.email,
@@ -258,7 +261,7 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-primary login-btn"
-            disabled={loading || !recaptchaToken}
+            disabled={loading}
           >
             {loading ? (
               <>

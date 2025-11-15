@@ -87,7 +87,6 @@ function escapeRegex(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// Admin login - SECURE VERSION
 app.post("/api/admin/login", async (req, res) => {
   console.log("🎯 Login route hit!");
   console.log("📨 Request body:", req.body);
@@ -102,12 +101,23 @@ app.post("/api/admin/login", async (req, res) => {
       return res.status(400).json({ ok: false, error: "Email and password required" });
     }
 
-    // Verify reCAPTCHA
+    // Verify reCAPTCHA - TEMPORARILY DISABLED
+    console.log("⚠️ reCAPTCHA verification temporarily disabled for testing");
+    if (recaptchaToken) {
+      console.log("📝 reCAPTCHA token provided but not verified");
+    } else {
+      console.log("📝 No reCAPTCHA token provided");
+    }
+    /*
     if (!recaptchaToken) {
       console.log("❌ Missing reCAPTCHA token");
       return res.status(400).json({ ok: false, error: "reCAPTCHA verification required" });
     }
 
+    // TEMPORARILY DISABLE reCAPTCHA FOR TESTING
+    console.log("⚠️ reCAPTCHA verification temporarily disabled for testing");
+    */
+    /*
     try {
       const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
         method: 'POST',
@@ -129,6 +139,7 @@ app.post("/api/admin/login", async (req, res) => {
       console.error("❌ reCAPTCHA verification error:", recaptchaError);
       return res.status(500).json({ ok: false, error: "Failed to verify reCAPTCHA" });
     }
+    */
 
     // Trim and normalize email
     const normalizedEmail = email.trim().toLowerCase();
@@ -203,6 +214,18 @@ process.on("SIGINT", async () => {
 
 // Start server
 connectToMongo().then(() => {
+  // Validate required environment variables
+  const requiredEnvVars = ['MONGO_URI', 'RECAPTCHA_SECRET_KEY'];
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+  if (missingVars.length > 0) {
+    console.error('❌ Missing required environment variables:', missingVars);
+    console.error('Please set these in your Render environment variables.');
+    process.exit(1);
+  }
+
+  console.log('✅ All required environment variables are set');
+
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Admin Login API Server running on port ${PORT}`);
     console.log(`🌍 Environment: ${NODE_ENV}`);
