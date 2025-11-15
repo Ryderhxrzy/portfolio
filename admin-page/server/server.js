@@ -12,17 +12,21 @@ const MONGO_URI = process.env.MONGO_URI;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // CORS middleware
 app.use((req, res, next) => {
+  console.log(`🌐 ${req.method} ${req.path} from ${req.headers.origin || 'unknown'}`);
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization"
   );
-  if (req.method === "OPTIONS") return res.sendStatus(200);
+  if (req.method === "OPTIONS") {
+    console.log("✅ OPTIONS preflight handled");
+    return res.sendStatus(200);
+  }
   next();
 });
 
@@ -85,6 +89,10 @@ function escapeRegex(string) {
 
 // Admin login - SECURE VERSION
 app.post("/api/admin/login", async (req, res) => {
+  console.log("🎯 Login route hit!");
+  console.log("📨 Request body:", req.body);
+  console.log("📨 Headers:", req.headers);
+
   try {
     const { email, password, recaptchaToken } = req.body;
     console.log("🔐 Login attempt for:", email);

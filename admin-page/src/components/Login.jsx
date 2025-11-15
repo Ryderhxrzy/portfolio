@@ -126,16 +126,21 @@ const Login = () => {
         return;
       }
 
+      const requestBody = {
+        email: credentials.email,
+        password: credentials.password,
+        recaptchaToken: recaptchaToken
+      };
+
+      console.log('📤 Sending request body:', requestBody);
+      console.log('🎯 API URL:', `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/admin/login`);
+
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-          recaptchaToken: recaptchaToken
-        })
+        body: JSON.stringify(requestBody)
       });
 
       console.log('📡 Response status:', response.status);
