@@ -316,29 +316,31 @@ const Contact = ({ personalInfo }) => {
             </div>
 
             {/* reCAPTCHA */}
-            <div className="form-group recaptcha-group">
-              {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                  onChange={onRecaptchaChange}
-                  onExpired={onRecaptchaExpired}
-                  theme={document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light'}
-                />
-              ) : (
-                <div className="recaptcha-error">
-                  <i className="fas fa-exclamation-triangle"></i>
-                  reCAPTCHA configuration missing. Please check environment variables.
-                </div>
-              )}
-              {!recaptchaToken && status === 'error' && (
-                <div className="recaptcha-error">
-                  <i className="fas fa-exclamation-triangle"></i>
-                  Please complete the reCAPTCHA verification
-                </div>
-              )}
+            <div className="recaptcha-container">
+              <div className="recaptcha">
+                {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                    onChange={onRecaptchaChange}
+                    onExpired={onRecaptchaExpired}
+                    theme={document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light'}
+                  />
+                ) : (
+                  <div className="recaptcha-error">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    reCAPTCHA configuration missing. Please check environment variables.
+                  </div>
+                )}
+                {!recaptchaToken && status === 'error' && (
+                  <div className="recaptcha-error">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    Please complete the reCAPTCHA verification
+                  </div>
+                )}
+              </div>
             </div>
-
+            
             <button 
               type="submit" 
               className={`btn btn-primary submit-btn ${status === 'sending' ? 'loading' : ''}`}

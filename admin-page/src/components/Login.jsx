@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
+import ReCAPTCHA from 'react-google-recaptcha';
+import './styles/Login.css';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -8,6 +10,8 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const recaptchaRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +24,14 @@ const Login = () => {
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
+  };
+
+  const onRecaptchaExpired = () => {
+    setRecaptchaToken(null);
   };
 
   const showAlert = (type, title, text) => {
@@ -59,6 +71,20 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
+    // Check if reCAPTCHA is configured
+    if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+      setLoading(false);
+      showAlert('error', 'Configuration Error', 'reCAPTCHA is not properly configured. Please contact the administrator.');
+      return;
+    }
+
+    // reCAPTCHA validation
+    if (!recaptchaToken) {
+      setLoading(false);
+      showAlert('warning', 'Verification Required', 'Please complete the reCAPTCHA verification before logging in.');
+      return;
+    }
+
     // Email validation
     if (!credentials.email) {
       setLoading(false);
@@ -92,6 +118,11 @@ const Login = () => {
       // For demo purposes - in real app, this would be an API call
       if (credentials.email && credentials.password) {
         showAlert('success', 'Login Successful!', `Welcome back, ${credentials.email.split('@')[0]}!`);
+        // Reset reCAPTCHA
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setRecaptchaToken(null);
         // Handle successful login - redirect or update app state
       } else {
         showAlert('error', 'Login Failed', 'Invalid email or password. Please try again.');
@@ -158,10 +189,35 @@ const Login = () => {
             </div>
           </div>
 
+          {/* reCAPTCHA */}
+          <div className="form-group recaptcha-group">
+            {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                onChange={onRecaptchaChange}
+                onExpired={onRecaptchaExpired}
+                theme={document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light'}
+                size="compact"
+              />
+            ) : (
+              <div className="recaptcha-error">
+                <i className="fas fa-exclamation-triangle"></i>
+                reCAPTCHA configuration missing. Please check environment variables.
+              </div>
+            )}
+            {!recaptchaToken && !loading && (
+              <div className="recaptcha-error">
+                <i className="fas fa-exclamation-triangle"></i>
+                Please complete the reCAPTCHA verification
+              </div>
+            )}
+          </div>
+
           <button
             type="submit"
             className="btn btn-primary login-btn"
-            disabled={loading}
+            disabled={loading || !recaptchaToken || !import.meta.env.VITE_RECAPTCHA_SITE_KEY}
           >
             {loading ? (
               <>
