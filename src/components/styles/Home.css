@@ -512,6 +512,7 @@
   padding: 60px 0;
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
 
 .about::before {
@@ -655,6 +656,7 @@
   padding: 60px 0;
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
 
 .projects-section .container,
@@ -1144,14 +1146,17 @@
 /* ===== OTHER SECTIONS ===== */
 .github-stats-section {
   background: var(--surface);
+  border-bottom: 1px solid var(--border) !important;
 }
 
 .reviews-section {
   background: var(--bg);
+  border-bottom: 1px solid var(--border) !important;
 }
 
 .contact-section {
   background: var(--surface);
+  border-bottom: 1px solid var(--border) !important;
 }
 
 /* ===== UTILITY CLASSES ===== */
