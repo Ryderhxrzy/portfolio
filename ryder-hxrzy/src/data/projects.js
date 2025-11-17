@@ -1,8 +1,8 @@
 export const personalInfo = {
-  name: "Jhay-R Cervantes",
-  title: "Aspiring Full Stack Developer",
-  aka: "Ryder Hxrzy",
-  email: "jhayrcervantes0981@gmail.com",
+  name: "Ryder Hxrzy",
+  title: "Full Stack Developer",
+  aka: "Jhayr Cervantes",
+  email: "ryderhxrzy@gmail.com",
   phone: "(+63) 969-597-2435",
   location: "Manila, Philippines",
   about: "I am an aspiring Full Stack Developer and vector artist with a strong background in both technology and design. Currently a 4th-year Information Technology student and freelance developer since 2023, I’m passionate about developing responsive web applications and creating visually engaging digital artworks that combine creativity and functionality.",
@@ -14,8 +14,8 @@ export const personalInfo = {
   ],
   socialLinks: {
     github: "https://github.com/Ryderhxrzy",
-    linkedin: "https://linkedin.com/in/jhayrcervantes",
-    facebook: "https://www.facebook.com/jhayr.cervantes.351"
+    linkedin: "https://linkedin.com/in/ryderharzy",
+    facebook: "https://www.facebook.com/ryderharzy"
   }
 };
 
