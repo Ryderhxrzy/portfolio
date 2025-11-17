@@ -1170,6 +1170,10 @@
   padding: 60px 0;
 }
 
+.sr-section .reveal-item {
+  will-change: transform, opacity;
+}
+
 .fade-in-up {
   animation: fadeInUp 0.6s ease-out;
 }

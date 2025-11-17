@@ -121,15 +121,15 @@ const Contact = ({ personalInfo }) => {
   return (
     <div className="contact-page">
       <div className="container">
-        <div className="page-header">
+        <div className="page-header reveal-item">
           <h2>Let's Work Together</h2>
           <p>Ready to bring your project to life? Get in touch for a free consultation</p>
         </div>
 
         <div className="contact-content">
           {/* Contact Info Section */}
-          <div className="contact-info">
-            <div className="info-card">
+          <div className="contact-info reveal-item">
+            <div className="info-card reveal-item">
               <h2>Start Your Project</h2>
               <p className="info-description">
                 I specialize in creating custom web solutions that drive results. 
@@ -139,19 +139,19 @@ const Contact = ({ personalInfo }) => {
               <div className="services-highlight">
                 <h4>Services I Offer:</h4>
                 <div className="services-list">
-                  <div className="service-item">
+                  <div className="service-item reveal-item">
                     <i className="fas fa-laptop-code"></i>
                     <span>Full-Stack Development</span>
                   </div>
-                  <div className="service-item">
+                  <div className="service-item reveal-item">
                     <i className="fas fa-mobile-alt"></i>
                     <span>Mobile Development</span>
                   </div>
-                  <div className="service-item">
+                  <div className="service-item reveal-item">
                     <i className="fas fa-computer"></i>
                     <span>Desktop Application</span>
                   </div>
-                  <div className="service-item">
+                  <div className="service-item reveal-item">
                     <i className="fas fa-palette"></i>
                     <span>Vector Art</span>
                   </div>
@@ -161,7 +161,7 @@ const Contact = ({ personalInfo }) => {
 
               <div className="contact-details">
                 <h4>Get In Touch</h4>
-                <div className="contact-item">
+                <div className="contact-item reveal-item">
                   <div className="contact-icon">
                     <i className="fas fa-envelope"></i>
                   </div>
@@ -171,7 +171,7 @@ const Contact = ({ personalInfo }) => {
                   </div>
                 </div>
                 
-                <div className="contact-item">
+                <div className="contact-item reveal-item">
                   <div className="contact-icon">
                     <i className="fas fa-map-marker-alt"></i>
                   </div>
@@ -181,7 +181,7 @@ const Contact = ({ personalInfo }) => {
                   </div>
                 </div>
                 
-                <div className="contact-item">
+                <div className="contact-item reveal-item">
                   <div className="contact-icon">
                     <i className="fas fa-phone"></i>
                   </div>
@@ -191,7 +191,7 @@ const Contact = ({ personalInfo }) => {
                   </div>
                 </div>
 
-                <div className="contact-item">
+                <div className="contact-item reveal-item">
                   <div className="contact-icon">
                     <i className="fas fa-clock"></i>
                   </div>
@@ -205,14 +205,14 @@ const Contact = ({ personalInfo }) => {
           </div>
 
           {/* Project Inquiry Form */}
-          <form className="contact-form" onSubmit={handleSubmit}>
-            <div className="form-header">
+          <form className="contact-form reveal-item" onSubmit={handleSubmit}>
+            <div className="form-header reveal-item">
               <h3>Project Inquiry Form</h3>
               <p>Fill out the form below and I'll get back to you soon</p>
             </div>
 
             <div className="form-row">
-              <div className="form-group">
+              <div className="form-group reveal-item">
                 <label htmlFor="name">Your Name *</label>
                 <input
                   type="text"
@@ -224,7 +224,7 @@ const Contact = ({ personalInfo }) => {
                   placeholder="John Doe"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group reveal-item">
                 <label htmlFor="email">Your Email *</label>
                 <input
                   type="email"
@@ -238,7 +238,7 @@ const Contact = ({ personalInfo }) => {
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="form-group reveal-item">
               <label htmlFor="company">Company / Organization</label>
               <input
                 type="text"
@@ -251,7 +251,7 @@ const Contact = ({ personalInfo }) => {
             </div>
 
             <div className="form-row">
-              <div className="form-group">
+              <div className="form-group reveal-item">
                 <label htmlFor="projectType">Project Type *</label>
                 <select
                   id="projectType"
@@ -266,7 +266,7 @@ const Contact = ({ personalInfo }) => {
                   ))}
                 </select>
               </div>
-              <div className="form-group">
+              <div className="form-group reveal-item">
                 <label htmlFor="budget">Estimated Budget *</label>
                 <select
                   id="budget"
@@ -283,7 +283,7 @@ const Contact = ({ personalInfo }) => {
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="form-group reveal-item">
               <label htmlFor="timeline">Project Timeline *</label>
               <select
                 id="timeline"
@@ -299,7 +299,7 @@ const Contact = ({ personalInfo }) => {
               </select>
             </div>
             
-            <div className="form-group">
+            <div className="form-group reveal-item">
               <label htmlFor="message">Project Details *</label>
               <textarea
                 id="message"
@@ -316,8 +316,8 @@ const Contact = ({ personalInfo }) => {
             </div>
 
             {/* reCAPTCHA */}
-            <div className="recaptcha-container">
-              <div className="recaptcha">
+            <div className="recaptcha-container reveal-item">
+              <div className="recaptcha reveal-item">
                 {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
                   <ReCAPTCHA
                     ref={recaptchaRef}
@@ -343,7 +343,7 @@ const Contact = ({ personalInfo }) => {
             
             <button 
               type="submit" 
-              className={`btn btn-primary submit-btn ${status === 'sending' ? 'loading' : ''}`}
+              className={`btn btn-primary submit-btn reveal-item ${status === 'sending' ? 'loading' : ''}`}
               disabled={status === 'sending' || !recaptchaToken || !import.meta.env.VITE_RECAPTCHA_SITE_KEY}
             >
               {status === 'sending' ? (
@@ -360,7 +360,7 @@ const Contact = ({ personalInfo }) => {
             </button>
             
             {status === 'success' && (
-              <div className="status-message success">
+              <div className="status-message success reveal-item">
                 <i className="fas fa-check-circle"></i>
                 <div>
                   <h4>Thank You!</h4>
@@ -370,7 +370,7 @@ const Contact = ({ personalInfo }) => {
             )}
             
             {status === 'error' && (
-              <div className="status-message error">
+              <div className="status-message error reveal-item">
                 <i className="fas fa-exclamation-circle"></i>
                 <div>
                   <h4>
@@ -393,7 +393,7 @@ const Contact = ({ personalInfo }) => {
               </div>
             )}
 
-            <div className="form-footer">
+            <div className="form-footer reveal-item">
               <p>
                 <i className="fas fa-shield-alt"></i>
                 Protected by reCAPTCHA. Your info is secure and will only be used to contact you about your projects.

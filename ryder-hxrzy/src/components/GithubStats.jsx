@@ -265,7 +265,7 @@ const GitHubStats = () => {
     return (
       <div className="github-stats-component">
         <div className="container">
-          <div className="loading-spinner">
+          <div className="loading-spinner reveal-item">
             <i className="fas fa-spinner fa-spin"></i>
             <p>Loading GitHub statistics...</p>
             <small>Fetching data from GitHub API</small>
@@ -277,13 +277,13 @@ const GitHubStats = () => {
 
   return (
     <div className="github-stats-component">
-      <div className="page-header">
+      <div className="page-header reveal-item">
         <h2>GitHub Statistics</h2>
         <p>My coding activity and open-source contributions</p>
       </div>
 
       {error && (
-        <div className="warning-message">
+        <div className="warning-message reveal-item">
           <i className="fas fa-exclamation-triangle"></i>
           <div>
             <strong>Note:</strong> {error}
@@ -294,8 +294,8 @@ const GitHubStats = () => {
       )}
 
       {/* Stats Grid */}
-      <div className="stats-grid">
-        <div className="stat-card">
+      <div className="stats-grid reveal-item">
+        <div className="stat-card reveal-item">
           <div className="stat-icon">
             <i className="fas fa-code-branch"></i>
           </div>
@@ -305,7 +305,7 @@ const GitHubStats = () => {
           </div>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card reveal-item">
           <div className="stat-icon">
             <i className="fas fa-star"></i>
           </div>
@@ -315,7 +315,7 @@ const GitHubStats = () => {
           </div>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card reveal-item">
           <div className="stat-icon">
             <i className="fas fa-users"></i>
           </div>
@@ -325,7 +325,7 @@ const GitHubStats = () => {
           </div>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card reveal-item">
           <div className="stat-icon">
             <i className="fas fa-network-wired"></i>
           </div>
@@ -337,7 +337,7 @@ const GitHubStats = () => {
       </div>
 
       {/* Contribution Graph */}
-      <div className="contribution-graph">
+      <div className="contribution-graph reveal-item">
         <h3>GitHub Contribution Activity</h3>
         <div className="graph-container">
           <img 
@@ -358,11 +358,11 @@ const GitHubStats = () => {
           </div>
         </div>
         <div className="graph-legend">
-          <div className="legend-item">
+          <div className="legend-item reveal-item">
             <span className="legend-color less"></span>
             <span>Less</span>
           </div>
-          <div className="legend-item">
+          <div className="legend-item reveal-item">
             <span className="legend-color more"></span>
             <span>High</span>
           </div>
@@ -370,11 +370,11 @@ const GitHubStats = () => {
       </div>
 
       {/* Languages Section */}
-      <div className="languages-section">
+      <div className="languages-section reveal-item">
         <h3>Top Programming Languages</h3>
         <div className="languages-list">
           {stats?.languages?.map((language, index) => (
-            <div key={index} className="language-tag">
+            <div key={index} className="language-tag reveal-item">
               <i className="fas fa-circle" style={{ color: getLanguageColor(language) }}></i>
               {language}
             </div>
@@ -383,32 +383,32 @@ const GitHubStats = () => {
       </div>
 
       {/* GitHub Achievements Section */}
-      <div className="achievements-section">
+      <div className="achievements-section reveal-item">
         <h3>GitHub Achievements</h3>
         <p className="section-subtitle">Milestones and accomplishments on GitHub</p>
         
         {/* Achievement Summary */}
-        <div className="achievement-summary">
-          <div className="summary-item">
+        <div className="achievement-summary reveal-item">
+          <div className="summary-item reveal-item">
             <span className="summary-number">{unlockedAchievements}</span>
             <span className="summary-label">Unlocked</span>
           </div>
-          <div className="summary-item">
+          <div className="summary-item reveal-item">
             <span className="summary-number">{totalAchievements}</span>
             <span className="summary-label">Total</span>
           </div>
-          <div className="summary-item">
+          <div className="summary-item reveal-item">
             <span className="summary-number">{Math.round(completionRate)}%</span>
             <span className="summary-label">Completion</span>
           </div>
         </div>
 
         {/* Category Filters - Fixed Design */}
-        <div className="achievement-categories">
+        <div className="achievement-categories reveal-item">
           {categories.map(category => (
             <button
               key={category}
-              className={`category-filter ${activeCategory === category ? 'active' : ''}`}
+              className={`category-filter reveal-item ${activeCategory === category ? 'active' : ''}`}
               onClick={() => setActiveCategory(category)}
             >
               {category === 'all' ? 'All Achievements' : category.charAt(0).toUpperCase() + category.slice(1)}
@@ -423,7 +423,7 @@ const GitHubStats = () => {
           {filteredAchievements.map(achievement => (
             <div 
               key={achievement.id} 
-              className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'} ${
+              className={`achievement-card reveal-item ${achievement.unlocked ? 'unlocked' : 'locked'} ${
                 achievement.githubOfficial ? 'github-official' : ''
               } ${achievement.name === 'Pull Shark' ? 'pull-shark' : ''}`}
               style={{
@@ -471,11 +471,11 @@ const GitHubStats = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="activity-section">
+      <div className="activity-section reveal-item">
         <h3>Recent Activity</h3>
         <div className="activity-list">
           {stats?.recentActivity?.map((activity, index) => (
-            <div key={index} className="activity-item">
+            <div key={index} className="activity-item reveal-item">
               <i className="fas fa-circle"></i>
               <span>{activity}</span>
             </div>
