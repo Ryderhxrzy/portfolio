@@ -1,0 +1,1102 @@
+.github-stats-page {
+  padding: 120px 0 80px;
+  min-height: 100vh;
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.github-stats-page .container,
+.github-stats-page .page-header,
+.github-stats-page .stats-grid,
+.github-stats-page .languages-section,
+.github-stats-page .achievements-section,
+.github-stats-page .activity-section,
+.github-stats-page .contribution-graph {
+  position: relative;
+  z-index: 2;
+}
+
+.github-stats-page > * {
+  position: relative;
+  z-index: 2;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-header h1 {
+  font-size: 3rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.page-header p {
+  font-size: 1.2rem;
+  color: var(--muted);
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.github-profile {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  border: 4px solid var(--accent);
+}
+
+.github-profile h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-contrast);
+  font-size: 1.5rem;
+}
+
+.stat-content h3 {
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.stat-content p {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.languages-section,
+.activity-section,
+.contribution-graph {
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+}
+
+.languages-section h2,
+.activity-section h2,
+.contribution-graph h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.languages-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.language-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--skill-tag-bg);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  color: var(--skill-tag-text);
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.activity-item i {
+  color: var(--accent);
+  font-size: 0.5rem;
+}
+
+.activity-item:hover i {
+  color: var(--accent-contrast);
+}
+
+.activity-time {
+  margin-left: auto;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.graph-placeholder {
+  background: var(--surface);
+  padding: 4rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.graph-placeholder i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.loading-spinner,
+.error-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--muted);
+}
+
+.loading-spinner i,
+.error-message i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-message i {
+  color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .github-stats-page {
+    padding: 100px 0 60px;
+  }
+  
+  .page-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-card {
+    padding: 1.5rem;
+  }
+  
+  .languages-list {
+    justify-content: center;
+  }
+}
+
+/* Add these to your existing GitHubStats.css */
+
+.warning-message {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid var(--secondary-accent);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--secondary-accent);
+}
+
+.warning-message i {
+  color: #f39c12;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.warning-message strong {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.graph-container {
+  position: relative;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.contribution-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: 100%;
+}
+
+.graph-fallback {
+  display: none;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--muted);
+  background: var(--surface);
+}
+
+.graph-fallback i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.repositories-section {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+}
+
+.repos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.repo-card {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--accent);
+}
+
+.repo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.repo-card i {
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.repo-card h3 {
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.repo-card p {
+  color: var(--muted);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.repo-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.repo-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.repo-stats i {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* Make sure the contribution graph is responsive */
+@media (max-width: 768px) {
+  .contribution-chart {
+    min-height: 150px;
+  }
+  
+  .repos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Achievements Section */
+.achievements-section {
+  background: none;
+  border: none;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+}
+
+.achievements-section h2,
+.achievements-section h3,
+.languages-section h3 {
+  margin-bottom: 0.5rem;
+  color: var(--text);
+  text-align: center;
+}
+
+.achievement-summary {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+
+.section-subtitle {
+  color: var(--muted);
+  text-align: center;
+}
+
+.summary-item {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+}
+
+.summary-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.achievement-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  transition: all 0.3s ease;
+  background: var(--card-bg);
+  position: relative;
+}
+
+.achievement-card.unlocked {
+  border-color: var(--accent);
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+}
+
+.achievement-card.locked {
+  opacity: 0.6;
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.achievement-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.achievement-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.achievement-card.unlocked .achievement-icon {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.achievement-card.locked .achievement-icon {
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.achievement-icon i {
+  font-size: 1.2rem;
+}
+
+.achievement-content {
+  flex: 1;
+}
+
+.achievement-content h4 {
+  margin-bottom: 0.5rem;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.achievement-content p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+  line-height: 1.4;
+}
+
+.achievement-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--surface);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.achievement-card.locked .progress-fill {
+  background: var(--muted);
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
+  min-width: 40px;
+}
+
+.achievement-status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.achievement-status .unlocked {
+  color: #10b981;
+  font-size: 1.2rem;
+}
+
+.achievement-status .locked {
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.achievement-badge {
+  background: #6e5494;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+/* GitHub Tips */
+.github-tips {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+}
+
+.github-tips h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.tip-card {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--accent);
+}
+
+.tip-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.tip-card i {
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.tip-card h4 {
+  margin-bottom: 0.5rem;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.tip-card p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Responsive Design for Achievements */
+@media (max-width: 768px) {
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .achievement-card {
+    padding: 1.2rem;
+  }
+  
+  .achievement-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .achievement-icon i {
+    font-size: 1rem;
+  }
+  
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* GitHub Stats as Component */
+.github-stats-component {
+  padding: 0;
+}
+
+.github-stats-component .page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.github-stats-component .page-header h2 {
+  font-size: 2.5rem;
+  color: var(--text);
+  margin-bottom: 2rem;
+}
+
+.github-stats-component .page-header p {
+  font-size: 1.2rem;
+  color: var(--muted);
+}
+
+/* Responsive Contribution Graph */
+.contribution-graph {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+}
+
+.contribution-graph h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  text-align: center;
+}
+
+.graph-container {
+  position: relative;
+  background: var(--surface);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.contribution-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: 100%;
+}
+
+.graph-fallback {
+  display: none;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--muted);
+  background: var(--surface);
+}
+
+.graph-fallback i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+/* Graph Legend */
+.graph-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.graph-container {
+  background: var(--surface); /* dapat dark value sa dark theme */
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.contribution-chart {
+  display: block;
+  background: transparent; /* siguraduhing transparent para lumabas ang parent bg */
+  max-width: 100%;
+}
+
+.legend-color.less {
+  background: var(--less) !important;
+}
+
+.legend-color.more {
+  background: var(--accent) !important;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .github-stats-component .page-header h2 {
+    font-size: 2rem;
+  }
+  
+  .github-stats-component .page-header p {
+    font-size: 1rem;
+  }
+  
+  .contribution-graph {
+    padding: 1.5rem;
+  }
+  
+  .graph-container {
+    border-radius: 8px;
+  }
+  
+  .contribution-chart {
+    min-height: 120px; /* Ensure visibility on mobile */
+  }
+  
+  .graph-legend {
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .legend-color {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .contribution-graph {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .contribution-graph h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .graph-container {
+    border-radius: 6px;
+  }
+  
+  .contribution-chart {
+    min-height: 100px;
+  }
+}
+
+/* Ensure the component works well in the home page layout */
+#github-stats .github-stats-component {
+  background: transparent;
+}
+
+#github-stats .contribution-graph,
+#github-stats .languages-section,
+#github-stats .achievements-section,
+#github-stats .activity-section {
+  background: var(--card-bg);
+  margin: 1.5rem 0;
+}
+
+/* Achievement Category Filters - Fixed Design */
+.achievement-categories {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.category-filter {
+  padding: 10px 20px;
+  border: 2px solid var(--border);
+  border-radius: 25px;
+  background: var(--card-bg);
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.category-filter:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.category-filter.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.filter-count {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* Correct Contribution Graph Colors */
+.graph-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legend-color.less {
+  background: #eee;
+}
+
+.legend-color.more {
+  background: #0366d6;
+}
+
+/* Alternative: Use gradient to match GitHub's actual colors */
+.legend-color.less {
+  background: #eee;
+}
+
+.legend-color.more {
+  background: #0366d6;
+}
+
+/* Loading State Improvements */
+.loading-spinner {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--muted);
+}
+
+.loading-spinner i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.loading-spinner p {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.loading-spinner small {
+  opacity: 0.7;
+}
+
+/* Error State Improvements - Already defined above */
+
+/* Mobile Responsiveness for Filters */
+@media (max-width: 768px) {
+  .achievement-categories {
+    gap: 0.5rem;
+  }
+  
+  .category-filter {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .filter-count {
+    font-size: 0.7rem;
+  }
+  
+  .legend-item {
+    font-size: 0.8rem;
+  }
+  
+  .legend-color {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .achievement-categories {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .category-filter {
+    width: 200px;
+    justify-content: center;
+  }
+  
+  .graph-legend {
+    gap: 1rem;
+  }
+}
+
+/* Extra small screens - 300px and below */
+@media (max-width: 400px) {
+  /* Achievement Section */
+  .achievements-section {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .achievements-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .section-subtitle {
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Achievement Summary */
+  .achievement-summary {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .summary-item {
+    padding: 0.6rem 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface);
+    border-radius: 8px;
+  }
+  
+  .summary-number {
+    font-size: 1.3rem;
+  }
+  
+  .summary-label {
+    font-size: 0.8rem;
+  }
+  
+  /* Achievement Categories/Filters */
+  .achievement-categories {
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .category-filter {
+    width: 100%;
+    max-width: 280px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    border-radius: 20px;
+  }
+  
+  .filter-count {
+    font-size: 0.65rem;
+  }
+  
+  /* Achievement Cards Grid */
+  .achievements-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .achievement-card {
+    padding: 1rem;
+    gap: 0.8rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .achievement-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+    left: 0.5rem;
+    top: 0.5rem;
+  }
+  
+  /* Achievement Icon */
+  .achievement-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .achievement-icon i {
+    font-size: 0.9rem;
+  }
+  
+  /* Achievement Content */
+  .achievement-content {
+    width: 100%;
+  }
+  
+  .achievement-content h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .achievement-content p {
+    font-size: 0.75rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.3;
+  }
+  
+  /* Achievement Progress */
+  .achievement-progress {
+    gap: 0.6rem;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 5px;
+  }
+  
+  .progress-text {
+    font-size: 0.7rem;
+    align-self: flex-end;
+  }
+  
+  /* Achievement Status */
+  .achievement-status {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+  }
+  
+  .achievement-status .unlocked,
+  .achievement-status .locked {
+    font-size: 1rem;
+  }
+}

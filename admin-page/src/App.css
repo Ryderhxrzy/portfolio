@@ -2,3 +2,126 @@
   min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
+
+/* Admin Layout */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+  width: 100%;
+}
+
+.admin-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--surface);
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  overflow: visible;
+}
+
+.admin-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Logout Button */
+.logout-btn {
+  position: fixed;
+  top: 1rem;
+  right: 5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius);
+  background: var(--secondary-accent);
+  color: var(--secondary-accent-contrast);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  transition: var(--transition);
+  outline: none;
+}
+
+.logout-btn:hover {
+  background: var(--secondary-accent);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.logout-btn:active {
+  transform: scale(0.95);
+}
+
+/* Responsive adjustments for logout button */
+@media (max-width: 768px) {
+  .logout-btn {
+    right: 5rem;
+    top: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logout-btn {
+    right: 4rem;
+    top: 0.8rem;
+    width: 2.3rem;
+    height: 2.3rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Responsive adjustments for admin layout */
+@media (max-width: 1199px) {
+  .admin-container {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-container {
+    height: 100vh;
+  }
+}
+
+/* Adjust for theme toggle button */
+.theme-toggle {
+  right: 1.5rem !important;
+}

@@ -1,0 +1,146 @@
+/* ============================================
+   CONTENT HEADER COMPONENT STYLES
+   ============================================ */
+
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.content-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-toggle-btn {
+  display: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.menu-toggle-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+.menu-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.content-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Desktop */
+@media (min-width: 1200px) {
+  .content-header {
+    padding: 1.5rem 2rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .menu-toggle-btn {
+    display: none;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1199px) and (min-width: 769px) {
+  .content-header {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .menu-toggle-btn {
+    display: flex;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .content-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .menu-toggle-btn {
+    display: flex;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 360px) {
+  .content-header {
+    padding: 0.875rem 1rem;
+  }
+
+  .content-header-left {
+    gap: 0.75rem;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .menu-toggle-btn {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .content-header,
+  .menu-toggle-btn {
+    transition: none;
+  }
+
+  .menu-toggle-btn:hover,
+  .menu-toggle-btn:active {
+    transform: none;
+  }
+}

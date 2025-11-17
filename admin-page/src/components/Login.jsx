@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import ReCAPTCHA from 'react-google-recaptcha';
 import './styles/Login.css';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
@@ -149,7 +149,7 @@ const Login = () => {
         }
         setRecaptchaToken(null);
         // Handle successful login - redirect or update app state
-        // Example: window.location.href = '/admin-dashboard';
+        onLogin();
       } else {
         showAlert('error', 'Login Failed', data.error || 'Invalid email or password.');
       }
