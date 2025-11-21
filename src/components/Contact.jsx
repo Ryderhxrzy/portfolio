@@ -1,15 +1,12 @@
 import React, { useState, useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+import Swal from 'sweetalert2';
 import './styles/Contact.css';
 
 const Contact = ({ personalInfo }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    full_name: '',
     email: '',
-    company: '',
-    budget: '',
-    timeline: '',
-    projectType: '',
     message: ''
   });
   const [status, setStatus] = useState('');
@@ -37,15 +34,25 @@ const Contact = ({ personalInfo }) => {
 
     // Check if reCAPTCHA is configured
     if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
-      setStatus('error');
-      setTimeout(() => setStatus(''), 5000);
+      Swal.fire({
+        icon: 'error',
+        title: 'Configuration Error',
+        text: 'reCAPTCHA is not properly configured. Please contact the administrator.',
+        confirmButtonColor: '#654ea3'
+      });
+      setStatus('');
       return;
     }
 
     // Validate reCAPTCHA
     if (!recaptchaToken) {
-      setStatus('error');
-      setTimeout(() => setStatus(''), 5000);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Verification Required',
+        text: 'Please complete the reCAPTCHA verification before submitting.',
+        confirmButtonColor: '#654ea3'
+      });
+      setStatus('');
       return;
     }
 
@@ -57,7 +64,9 @@ const Contact = ({ personalInfo }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
+          full_name: formData.full_name,
+          email: formData.email,
+          message: formData.message,
           recaptchaToken
         })
       });
@@ -65,15 +74,18 @@ const Contact = ({ personalInfo }) => {
       const data = await response.json();
 
       if (data.ok) {
-        setStatus('success');
+        // Show success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Message Sent Successfully!',
+          text: 'Thank you for considering me for an OJT position. I will review your message and get back to you soon.',
+          confirmButtonColor: '#654ea3'
+        });
+
         // Reset form
         setFormData({
-          name: '',
+          full_name: '',
           email: '',
-          company: '',
-          budget: '',
-          timeline: '',
-          projectType: '',
           message: ''
         });
 
@@ -82,85 +94,42 @@ const Contact = ({ personalInfo }) => {
           recaptchaRef.current.reset();
         }
         setRecaptchaToken(null);
+        setStatus('');
       } else {
         throw new Error(data.error || 'Failed to submit form');
       }
-
-      setTimeout(() => setStatus(''), 5000);
     } catch (err) {
       console.error('Form submission error:', err);
-      setStatus('error');
-      setTimeout(() => setStatus(''), 5000);
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Failed',
+        text: err.message || 'Something went wrong. Please try again later or contact us directly.',
+        confirmButtonColor: '#654ea3'
+      });
+      setStatus('');
     }
   };
-
-  const projectTypes = [
-    'Web Development',
-    'Mobile Development',
-    'Desktop Application',
-    'Vector Art',
-    'Other'
-  ];
-
-  const budgetRanges = [
-    '₱500 - ₱1,000',
-    '₱1,000 - ₱2,500',
-    '₱2,500 - ₱5,000',
-    '₱5,000 - ₱10,000',
-    '₱10,000+',
-    'To be discussed'
-  ];
-
-  const timelines = [
-    'Urgent (1-2 weeks)',
-    'Standard (3-4 weeks)',
-    'Flexible (1-2 months)',
-    'Long-term (3+ months)'
-  ];
 
   return (
     <div className="contact-page">
       <div className="container">
         <div className="page-header reveal-item">
-          <h2>Let's Work Together</h2>
-          <p>Ready to bring your project to life? Get in touch for a free consultation</p>
+          <h2>Hire Me for OJT</h2>
+          <p>Looking for a motivated OJT intern? Let's discuss how I can contribute to your team.</p>
         </div>
 
         <div className="contact-content">
           {/* Contact Info Section */}
           <div className="contact-info reveal-item">
             <div className="info-card reveal-item">
-              <h2>Start Your Project</h2>
+              <h2>Why Hire Me?</h2>
               <p className="info-description">
-                I specialize in creating custom web solutions that drive results. 
-                Let's discuss how we can turn your ideas into reality.
+                As a dedicated IT student, I'm eager to apply my skills in a professional 
+                environment and contribute to your team's success during my OJT period.
               </p>
-              
-              <div className="services-highlight">
-                <h4>Services I Offer:</h4>
-                <div className="services-list">
-                  <div className="service-item reveal-item">
-                    <i className="fas fa-laptop-code"></i>
-                    <span>Full-Stack Development</span>
-                  </div>
-                  <div className="service-item reveal-item">
-                    <i className="fas fa-mobile-alt"></i>
-                    <span>Mobile Development</span>
-                  </div>
-                  <div className="service-item reveal-item">
-                    <i className="fas fa-computer"></i>
-                    <span>Desktop Application</span>
-                  </div>
-                  <div className="service-item reveal-item">
-                    <i className="fas fa-palette"></i>
-                    <span>Vector Art</span>
-                  </div>
-
-                </div>
-              </div>
 
               <div className="contact-details">
-                <h4>Get In Touch</h4>
+                <h4>Contact Information</h4>
                 <div className="contact-item reveal-item">
                   <div className="contact-icon">
                     <i className="fas fa-envelope"></i>
@@ -204,28 +173,28 @@ const Contact = ({ personalInfo }) => {
             </div>
           </div>
 
-          {/* Project Inquiry Form */}
+          {/* Employer Contact Form */}
           <form className="contact-form reveal-item" onSubmit={handleSubmit}>
             <div className="form-header reveal-item">
-              <h3>Project Inquiry Form</h3>
-              <p>Fill out the form below and I'll get back to you soon</p>
+              <h3>Hiring Inquiry</h3>
+              <p>Interested in having me as an OJT intern? Please fill out this form</p>
             </div>
 
             <div className="form-row">
               <div className="form-group reveal-item">
-                <label htmlFor="name">Your Name *</label>
+                <label htmlFor="full_name">Full Name *</label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="full_name"
+                  name="full_name"
+                  value={formData.full_name}
                   onChange={handleChange}
                   required
-                  placeholder="John Doe"
+                  placeholder="Your Name"
                 />
               </div>
               <div className="form-group reveal-item">
-                <label htmlFor="email">Your Email *</label>
+                <label htmlFor="email">Company Email *</label>
                 <input
                   type="email"
                   id="email"
@@ -233,74 +202,13 @@ const Contact = ({ personalInfo }) => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  placeholder="john@example.com"
+                  placeholder="you@company.com"
                 />
               </div>
             </div>
-
-            <div className="form-group reveal-item">
-              <label htmlFor="company">Company / Organization</label>
-              <input
-                type="text"
-                id="company"
-                name="company"
-                value={formData.company}
-                onChange={handleChange}
-                placeholder="Your company name (optional)"
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group reveal-item">
-                <label htmlFor="projectType">Project Type *</label>
-                <select
-                  id="projectType"
-                  name="projectType"
-                  value={formData.projectType}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select project type</option>
-                  {projectTypes.map((type, index) => (
-                    <option key={index} value={type}>{type}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group reveal-item">
-                <label htmlFor="budget">Estimated Budget *</label>
-                <select
-                  id="budget"
-                  name="budget"
-                  value={formData.budget}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select budget range</option>
-                  {budgetRanges.map((range, index) => (
-                    <option key={index} value={range}>{range}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group reveal-item">
-              <label htmlFor="timeline">Project Timeline *</label>
-              <select
-                id="timeline"
-                name="timeline"
-                value={formData.timeline}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select timeline</option>
-                {timelines.map((timeline, index) => (
-                  <option key={index} value={timeline}>{timeline}</option>
-                ))}
-              </select>
-            </div>
             
             <div className="form-group reveal-item">
-              <label htmlFor="message">Project Details *</label>
+              <label htmlFor="message">Tell me about the OJT opportunity *</label>
               <textarea
                 id="message"
                 name="message"
@@ -308,7 +216,7 @@ const Contact = ({ personalInfo }) => {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                placeholder="Tell me about your company and the OJT position..."
               ></textarea>
               <div className="char-count">
                 {formData.message.length}/500 characters
@@ -349,54 +257,20 @@ const Contact = ({ personalInfo }) => {
               {status === 'sending' ? (
                 <>
                   <i className="fas fa-spinner fa-spin"></i>
-                  Sending Inquiry...
+                  Sending Message...
                 </>
               ) : (
                 <>
                   <i className="fas fa-paper-plane"></i>
-                  Send Project Inquiry
+                  Send Message
                 </>
               )}
             </button>
-            
-            {status === 'success' && (
-              <div className="status-message success reveal-item">
-                <i className="fas fa-check-circle"></i>
-                <div>
-                  <h4>Thank You!</h4>
-                  <p>Your project inquiry has been sent successfully. I'll get back to you within 24 hours.</p>
-                </div>
-              </div>
-            )}
-            
-            {status === 'error' && (
-              <div className="status-message error reveal-item">
-                <i className="fas fa-exclamation-circle"></i>
-                <div>
-                  <h4>
-                    {!import.meta.env.VITE_RECAPTCHA_SITE_KEY
-                      ? 'Configuration Error'
-                      : !recaptchaToken
-                      ? 'Verification Required'
-                      : 'Something went wrong'
-                    }
-                  </h4>
-                  <p>
-                    {!import.meta.env.VITE_RECAPTCHA_SITE_KEY
-                      ? 'reCAPTCHA is not properly configured. Please contact the administrator.'
-                      : !recaptchaToken
-                      ? 'Please complete the reCAPTCHA verification before submitting.'
-                      : `Please try again or contact me directly at ${personalInfo.email}`
-                    }
-                  </p>
-                </div>
-              </div>
-            )}
 
             <div className="form-footer reveal-item">
               <p>
                 <i className="fas fa-shield-alt"></i>
-                Protected by reCAPTCHA. Your info is secure and will only be used to contact you about your projects.
+                Protected by reCAPTCHA. Your information is secure and will only be used to contact you about OJT opportunities.
               </p>
             </div>
           </form>

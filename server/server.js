@@ -47,6 +47,7 @@ app.use(express.json());
 // MongoDB connection
 let db;
 let reviewsCollection;
+let contactCollection;
 let mongoClient;
 
 async function connectToMongo() {
@@ -62,6 +63,7 @@ async function connectToMongo() {
     mongoClient = client;
     db = client.db("portfolio");
     reviewsCollection = db.collection("reviews");
+    contactCollection = db.collection("contact");
     await db.command({ ping: 1 });
     console.log("✅ MongoDB connected");
   } catch (err) {
@@ -94,7 +96,10 @@ app.get("/api/health", (req, res) => {
     ok: true,
     message: "Server healthy",
     cors: "enabled (*)",
-    database: reviewsCollection ? "connected" : "disconnected",
+    database: {
+      reviews: reviewsCollection ? "connected" : "disconnected",
+      contact: contactCollection ? "connected" : "disconnected"
+    },
     timestamp: new Date().toISOString()
   });
 });
@@ -201,15 +206,15 @@ app.get("/api/github/pinned", async (req, res) => {
 // Contact form submission with reCAPTCHA verification
 app.post("/api/contact", async (req, res) => {
   try {
-    console.log("📧 Processing contact form submission");
+    console.log("📧 Processing OJT application form submission");
 
-    const { name, email, company, budget, timeline, projectType, message, recaptchaToken } = req.body;
+    const { full_name, email, message, recaptchaToken } = req.body;
 
     // Validate required fields
-    if (!name || !email || !projectType || !message) {
+    if (!full_name || !email || !message) {
       return res.status(400).json({
         ok: false,
-        error: "Missing required fields"
+        error: "Missing required fields: full_name, email, and message are required"
       });
     }
 
@@ -248,27 +253,44 @@ app.post("/api/contact", async (req, res) => {
       });
     }
 
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send email notification
-    // 3. Process the inquiry
+    // Check if database is connected
+    if (!contactCollection) {
+      return res.status(500).json({
+        ok: false,
+        error: "Database not connected"
+      });
+    }
 
-    // For now, just log the submission
-    console.log("📝 Contact form received:", {
-      name,
-      email,
-      company: company || 'Not provided',
-      projectType,
-      budget: budget || 'Not specified',
-      timeline: timeline || 'Not specified',
-      message: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
-      timestamp: new Date().toISOString()
-    });
+    // Save to MongoDB
+    try {
+      const result = await contactCollection.insertOne({
+        full_name: full_name.trim(),
+        email: email.trim(),
+        message: message.trim(),
+        createdAt: new Date(),
+        timestamp: new Date().toISOString()
+      });
 
-    res.json({
-      ok: true,
-      message: "Contact form submitted successfully. We'll get back to you soon!"
-    });
+      console.log("📝 OJT application saved to database:", {
+        id: result.insertedId,
+        full_name: full_name.trim(),
+        email: email.trim(),
+        messageLength: message.trim().length,
+        timestamp: new Date().toISOString()
+      });
+
+      res.json({
+        ok: true,
+        message: "Application submitted successfully. We'll get back to you soon!",
+        id: result.insertedId
+      });
+    } catch (dbError) {
+      console.error("❌ Database error:", dbError);
+      return res.status(500).json({
+        ok: false,
+        error: "Failed to save application to database"
+      });
+    }
 
   } catch (err) {
     console.error("❌ Contact form error:", err);

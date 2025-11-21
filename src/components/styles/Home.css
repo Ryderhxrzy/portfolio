@@ -651,13 +651,6 @@
 }
 
 /* ===== PROJECTS SECTION ===== */
-.projects-section {
-  background: var(--bg);
-  padding: 60px 0;
-  position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border);
-}
 
 .projects-section .container,
 .projects-grid {
