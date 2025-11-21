@@ -58,7 +58,8 @@ const Contact = ({ personalInfo }) => {
 
     try {
       // Send form data to server
-      const response = await fetch('http://localhost:4000/api/contact', {
+      const apiUrl = import.meta.env.VITE_APP_API_BASE || '/api';
+      const response = await fetch(`${apiUrl}/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +195,7 @@ const Contact = ({ personalInfo }) => {
                 />
               </div>
               <div className="form-group reveal-item">
-                <label htmlFor="email">Company Email *</label>
+                <label htmlFor="email">Company/Personal Email *</label>
                 <input
                   type="email"
                   id="email"
@@ -261,8 +262,8 @@ const Contact = ({ personalInfo }) => {
                 </>
               ) : (
                 <>
-                  <i className="fas fa-paper-plane"></i>
-                  Send Message
+                  <i className={`fas ${recaptchaToken ? 'fa-check-circle' : 'fa-paper-plane'}`}></i>
+                  {recaptchaToken ? 'Ready to Send' : 'Complete reCAPTCHA to Send'}
                 </>
               )}
             </button>
