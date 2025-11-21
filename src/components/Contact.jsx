@@ -21,10 +21,12 @@ const Contact = ({ personalInfo }) => {
   };
 
   const onRecaptchaChange = (token) => {
+    console.log('reCAPTCHA token received:', token ? '✅ Token received' : '❌ No token');
     setRecaptchaToken(token);
   };
 
   const onRecaptchaExpired = () => {
+    console.log('reCAPTCHA expired');
     setRecaptchaToken(null);
   };
 
@@ -58,8 +60,10 @@ const Contact = ({ personalInfo }) => {
 
     try {
       // Send form data to server
-      const apiUrl = import.meta.env.VITE_APP_API_BASE || '/api';
-      const response = await fetch(`${apiUrl}/contact`, {
+      const apiUrl = import.meta.env.VITE_APP_API_BASE || 'http://localhost:4000';
+      console.log('Submitting to:', `${apiUrl}/api/contact`);
+      
+      const response = await fetch(`${apiUrl}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +76,17 @@ const Contact = ({ personalInfo }) => {
         })
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers.get('content-type'));
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Error response:', text);
+        throw new Error(`HTTP ${response.status}: ${text}`);
+      }
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (data.ok) {
         // Show success message
@@ -254,6 +268,14 @@ const Contact = ({ personalInfo }) => {
               type="submit" 
               className={`btn btn-primary submit-btn reveal-item ${status === 'sending' ? 'loading' : ''}`}
               disabled={status === 'sending' || !recaptchaToken || !import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              onClick={() => {
+                console.log('Button clicked:', {
+                  status,
+                  recaptchaToken: recaptchaToken ? '✅ Has token' : '❌ No token',
+                  recaptchaKey: import.meta.env.VITE_RECAPTCHA_SITE_KEY ? '✅ Key exists' : '❌ No key',
+                  disabled: status === 'sending' || !recaptchaToken || !import.meta.env.VITE_RECAPTCHA_SITE_KEY
+                });
+              }}
             >
               {status === 'sending' ? (
                 <>
@@ -267,6 +289,13 @@ const Contact = ({ personalInfo }) => {
                 </>
               )}
             </button>
+            
+            {/* Debug info */}
+            {import.meta.env.DEV && (
+              <div style={{ fontSize: '12px', color: '#666', marginTop: '10px' }}>
+                Debug: Token = {recaptchaToken ? '✅' : '❌'} | Key = {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? '✅' : '❌'}
+              </div>
+            )}
 
             <div className="form-footer reveal-item">
               <p>
