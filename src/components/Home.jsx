@@ -245,6 +245,10 @@ const Home = () => {
                   <i className="fas fa-graduation-cap"></i>
                   IT Student
                 </span>
+                <span className="badge">
+                  <i className="fas fa-rocket"></i>
+                  Since 2023
+                </span>
               </div>
             </div>
 
@@ -279,7 +283,7 @@ const Home = () => {
                 <img 
                   src={profileImage} 
                   alt="Profile" 
-                  className="profile-img"
+                  className="profile-photo"
                 />
               </div>
             </div>
