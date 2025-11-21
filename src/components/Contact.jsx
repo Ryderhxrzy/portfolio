@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './styles/Contact.css';
 import { showAlerts } from '../utils/sweetAlertConfig';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const Contact = ({ personalInfo }) => {
   const [formData, setFormData] = useState({
