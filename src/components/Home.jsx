@@ -494,7 +494,7 @@ const Home = () => {
                               />
                               <div className="project-overlay">
                                 <div className="project-links">
-                                  <a href={item.certificateUrl} target="_blank" rel="noopener noreferrer" title="View Certificate">
+                                  <a href={item.image} target="_blank" rel="noopener noreferrer" title="View Certificate">
                                     <i className="fas fa-certificate"></i>
                                   </a>
                                 </div>
@@ -520,7 +520,7 @@ const Home = () => {
                               
                               <div className="certificate-action">
                                 <a 
-                                  href={item.certificateUrl} 
+                                  href={item.image} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
                                   className="btn-view-certificate"
@@ -811,7 +811,7 @@ const Home = () => {
                               />
                               <div className="project-overlay">
                                 <div className="project-links">
-                                  <a href={item.certificateUrl} target="_blank" rel="noopener noreferrer" title="View Certificate">
+                                  <a href={item.image} target="_blank" rel="noopener noreferrer" title="View Certificate">
                                     <i className="fas fa-certificate"></i>
                                   </a>
                                 </div>
@@ -830,7 +830,7 @@ const Home = () => {
                               <div className="certificate-action">
                                 <div className="project-buttons-row">
                                   <a 
-                                    href={item.certificateUrl} 
+                                    href={item.image} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="btn-view-certificate"
