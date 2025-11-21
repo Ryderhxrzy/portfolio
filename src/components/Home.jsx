@@ -765,14 +765,6 @@ const Home = () => {
                                 {truncateDescription(item.description, item.id)}
                               </p>
                               
-                              <div className="project-topics">
-                                {item.topics && item.topics.slice(0, 8).map((topic, index) => (
-                                  <span key={index} className="topic-tag">
-                                    {topic}
-                                  </span>
-                                ))}
-                              </div>
-                              
                               <div className="project-actions">
                                 <div className="project-buttons-row">
                                   <a
@@ -785,6 +777,14 @@ const Home = () => {
                                     View Artwork
                                   </a>
                                 </div>
+                              </div>
+                              
+                              <div className="project-topics">
+                                {item.topics && item.topics.slice(0, 8).map((topic, index) => (
+                                  <span key={index} className="topic-tag">
+                                    {topic}
+                                  </span>
+                                ))}
                               </div>
                               
                               <div className="project-footer">
