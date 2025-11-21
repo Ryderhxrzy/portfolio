@@ -222,7 +222,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <section id="home" className="hero sr-section sr-hero" ref={heroRef}>
+      <section id="home" className="hero" ref={heroRef}>
         <Particles />
         <div className="container">
           <div className="hero-content">
@@ -294,7 +294,7 @@ const Home = () => {
                   className="btn btn-primary"
                   onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
                 >
-                  <i className="fas fa-sparkles"></i>
+                  <i className="fas fa-arrow-down"></i>
                   View My Work
                 </button>
                 <button 
@@ -326,6 +326,13 @@ const Home = () => {
             </div>
           </div>
         </div>
+        {isHeroVisible && (
+            <div className="mouse-indicator" onClick={scrollToAbout}>
+              <div className="mouse">
+                <div className="wheel"></div>
+              </div>
+            </div>
+          )}
       </section>
 
       <section id="about" className="about section sr-section sr-about">
@@ -384,13 +391,13 @@ const Home = () => {
       <section id="projects" className="projects-section sr-section sr-projects" ref={projectsRef}>
         <div className="container">
           {loading ? (
-            <div className="loading-projects">
+            <div className="loading-projects reveal-item">
               <i className="fas fa-spinner fa-spin"></i>
               <p>Loading projects and certificates...</p>
             </div>
           ) : (
             <React.Fragment>
-              <div className="page-header">
+              <div className="page-header reveal-item">
                 <h2>My Projects & Certificates</h2>
                 <p>
                   {filter === 'all' 
@@ -400,7 +407,7 @@ const Home = () => {
                 </p>
               </div>
 
-              <div className="filters">
+              <div className="filters reveal-item">
                 <button 
                   className={`filter-btn ${filter === 'all' ? 'active' : ''}`} 
                   onClick={() => setFilter('all')}
@@ -408,16 +415,28 @@ const Home = () => {
                   All <span className="project-count">({filterCounts.all})</span>
                 </button>
                 <button 
-                  className={`filter-btn ${filter === 'mixed' ? 'active' : ''}`} 
-                  onClick={() => setFilter('mixed')}
+                  className={`filter-btn ${filter === 'web' ? 'active' : ''}`} 
+                  onClick={() => setFilter('web')}
                 >
-                  Mixed <span className="project-count">({filterCounts.mixed})</span>
+                  Web Development <span className="project-count">({filterCounts.web})</span>
                 </button>
                 <button 
-                  className={`filter-btn ${filter === 'project' ? 'active' : ''}`} 
-                  onClick={() => setFilter('project')}
+                  className={`filter-btn ${filter === 'app' ? 'active' : ''}`} 
+                  onClick={() => setFilter('app')}
                 >
-                  Projects <span className="project-count">({filterCounts.project})</span>
+                  App Development <span className="project-count">({filterCounts.app})</span>
+                </button>
+                <button 
+                  className={`filter-btn ${filter === 'desktop' ? 'active' : ''}`} 
+                  onClick={() => setFilter('desktop')}
+                >
+                  Desktop Application <span className="project-count">({filterCounts.desktop})</span>
+                </button>
+                <button 
+                  className={`filter-btn ${filter === 'vector' ? 'active' : ''}`} 
+                  onClick={() => setFilter('vector')}
+                >
+                  Vector Art <span className="project-count">({filterCounts.vector})</span>
                 </button>
                 <button 
                   className={`filter-btn ${filter === 'certificate' ? 'active' : ''}`} 
@@ -428,7 +447,7 @@ const Home = () => {
               </div>
 
               {filteredData.length === 0 ? (
-                <div className="no-results">
+                <div className="no-results reveal-item">
                   <i className="fas fa-folder-open"></i>
                   <h3>No {type === 'certificate' ? 'certificates' : 'projects'} found</h3>
                   <p>Try selecting a different filter</p>
@@ -439,7 +458,7 @@ const Home = () => {
                     {filteredData.slice(0, showAll ? filteredData.length : (isMobile ? 1 : 3)).map(item => (
                       type === 'mixed' ? (
                         item.itemType === 'certificate' ? (
-                          <div key={item.id} className="project-card">
+                          <div key={item.id} className="project-card reveal-item">
                             <div className="project-image">
                               <img 
                                 src={item.image}
@@ -497,7 +516,7 @@ const Home = () => {
                             </div>
                           </div>
                         ) : (
-                          <div key={item.id} className="project-card">
+                          <div key={item.id} className="project-card reveal-item">
                             <div className="project-image">
                               <img 
                                 src={item.image}
@@ -636,7 +655,7 @@ const Home = () => {
                         )
                       ) : (
                         type === 'certificate' ? (
-                          <div key={item.id} className="project-card certificate-card">
+                          <div key={item.id} className="project-card certificate-card reveal-item">
                             <div className="project-image certificate-image">
                               <img 
                                 src={item.image}
@@ -696,7 +715,7 @@ const Home = () => {
                             </div>
                           </div>
                         ) : (
-                          <div key={item.id} className="project-card">
+                          <div key={item.id} className="project-card reveal-item">
                             <div className="project-image">
                               <img 
                                 src={item.image}
@@ -837,7 +856,7 @@ const Home = () => {
                     ))}
                   </div>
                   {filteredData.length > (isMobile ? 1 : 3) && (
-                    <div className="show-more-container">
+                    <div className="show-more-container reveal-item">
                       <button 
                         className="btn btn-show-more"
                         onClick={handleToggle}
@@ -850,7 +869,7 @@ const Home = () => {
                   )}
                 </React.Fragment>
               )}
-              <div className="view-all">
+              <div className="view-all reveal-item">
                 <a 
                   href={personalInfo.socialLinks.github}
                   target="_blank"

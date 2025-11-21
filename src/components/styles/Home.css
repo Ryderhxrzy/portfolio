@@ -396,7 +396,7 @@
 .hero .mouse-indicator {
   position: absolute;
   left: 50%;
-  bottom: -70px;
+  bottom: 30px;
   transform: translateX(-50%);
   z-index: 9999;
   cursor: pointer;
@@ -651,6 +651,13 @@
 }
 
 /* ===== PROJECTS SECTION ===== */
+.projects-section {
+  background: var(--bg);
+  padding: 60px 0;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
 
 .projects-section .container,
 .projects-grid {
