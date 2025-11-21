@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ScrollReveal from 'scrollreveal';
 import './styles/Home.css';
 import GithubStats from './GithubStats.jsx';
 import Reviews from './Reviews.jsx';
@@ -19,7 +18,6 @@ const Home = () => {
   const [isHeroVisible, setIsHeroVisible] = useState(true);
   const projectsRef = useRef(null);
   const heroRef = useRef(null);
-  const scrollRevealRef = useRef(null);
   
   const { width } = useWindowSize();
   const isMobile = width <= 480;
@@ -38,39 +36,9 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (prefersReducedMotion.matches) {
-      scrollRevealRef.current = null;
-      return;
-    }
-
-    const srInstance = ScrollReveal({
-      distance: '40px',
-      duration: 700,
-      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-      reset: false,
-      viewFactor: 0.2,
-      mobile: true
-    });
-
-    scrollRevealRef.current = srInstance;
-
-    return () => {
-      if (scrollRevealRef.current) {
-        scrollRevealRef.current.destroy();
-        scrollRevealRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
-        
-        console.log('Fetching GitHub repositories and certificates...');
         
         const [projects, certs] = await Promise.all([
           fetchGitHubRepositories(),
@@ -83,12 +51,7 @@ const Home = () => {
         
         setFeaturedProjects(projects);
         setCertificates(certs);
-        
-        console.log('Loaded projects:', projects);
-        console.log('Loaded certificates:', certs);
       } catch (err) {
-        console.error('Error loading data:', err);
-        
         const fallbackProjects = await fetchGitHubRepositories();
         const fallbackCerts = await fetchCertificates();
         setFeaturedProjects(fallbackProjects);
@@ -199,39 +162,6 @@ const Home = () => {
 
   const { type, data: filteredData } = getFilteredData();
 
-  useEffect(() => {
-    if (!scrollRevealRef.current || loading) return;
-
-    const sr = scrollRevealRef.current;
-    const revealConfigs = [
-      { selector: '.sr-hero .reveal-item', options: { origin: 'bottom', interval: 120 } },
-      { selector: '.sr-about .reveal-item', options: { origin: 'bottom', interval: 90 } },
-      { selector: '.sr-projects .reveal-item:not(.project-card)', options: { origin: 'bottom', interval: 90 } },
-      { selector: '.sr-projects .project-card', options: { origin: 'bottom', interval: 0, viewFactor: 0.45 } },
-      { selector: '.sr-github .reveal-item', options: { origin: 'bottom', interval: 120 } },
-      { selector: '.sr-reviews .reveal-item', options: { origin: 'bottom', interval: 120 } },
-      { selector: '.sr-contact .reveal-item', options: { origin: 'bottom', interval: 120 } },
-    ];
-
-    const animationFrame = requestAnimationFrame(() => {
-      revealConfigs.forEach(({ selector, options }) => {
-        sr.clean(selector);
-        sr.reveal(selector, {
-          distance: '40px',
-          duration: 700,
-          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          opacity: 0,
-          viewFactor: 0.2,
-          mobile: true,
-          cleanup: true,
-          ...options,
-        });
-      });
-    });
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, [loading, filter, showAll, type, featuredProjects.length, certificates.length, isMobile]);
-
   const handleToggle = () => {
     const wasShowingAll = showAll;
     setShowAll(!showAll);
@@ -296,7 +226,7 @@ const Home = () => {
         <Particles />
         <div className="container">
           <div className="hero-content">
-            <div className="hero-intro reveal-item">
+            <div className="hero-intro">
               <p className="hero-greeting">Hello, I'm</p>
               <h1>
                 <span className="highlight">{personalInfo.name}</span>
@@ -304,16 +234,12 @@ const Home = () => {
               <p className="hero-aka">Also known as <span className="aka-name">{personalInfo.aka}</span></p>
             </div>
 
-            <div className="hero-professional reveal-item">
+            <div className="hero-professional">
               <p className="hero-subtitle">{personalInfo.title}</p>
               <div className="hero-badges">
                 <span className="badge">
                   <i className="fas fa-laptop-code"></i>
                   Freelance Developer
-                </span>
-                <span className="badge">
-                  <i className="fas fa-rocket"></i>
-                  Since 2023
                 </span>
                 <span className="badge">
                   <i className="fas fa-graduation-cap"></i>
@@ -322,7 +248,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="hero-description reveal-item">
+            <div className="hero-description">
              <p>
                 I’m an <strong>Information Technology student</strong> passionate about creating 
                 <strong> modern, responsive, and user-friendly web applications</strong>. 
@@ -332,7 +258,7 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="hero-stats reveal-item">
+            <div className="hero-stats">
               <div className="stats">
                 <div className="stat-number">2+</div>
                 <div className="stat-label">Years Experience</div>
@@ -347,39 +273,36 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="hero-image reveal-item">
+          <div className="hero-image">
             <div className="profile-container">
               <div className="profile-image">
                 <img 
                   src={profileImage} 
                   alt="Profile" 
-                  className="profile-photo"
-                  loading="lazy"
+                  className="profile-img"
                 />
               </div>
             </div>
             
             <div className="hero-actions">
-              <div className="hero-buttons reveal-item">
+              <div className="hero-buttons">
                 <button 
                   className="btn btn-primary"
                   onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
                 >
                   <i className="fas fa-sparkles"></i>
                   View My Work
-                  <i className="fas fa-arrow-down"></i>
                 </button>
-                
                 <button 
                   className="btn btn-outline"
-                  onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => window.open(personalInfo.resumeLink, '_blank')}
                 >
                   <i className="fas fa-download"></i>
                   Download Resume
                 </button>
               </div>
 
-              <div className="hero-social reveal-item">
+              <div className="hero-social">
                 <p className="social-label">Follow my journey</p>
                 <div className="social-links">
                   <a href={personalInfo.socialLinks.github} target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
@@ -398,32 +321,25 @@ const Home = () => {
               </div>
             </div>
           </div>
-          {isHeroVisible && (
-            <div className="mouse-indicator" onClick={scrollToAbout}>
-              <div className="mouse">
-                <div className="wheel"></div>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
       <section id="about" className="about section sr-section sr-about">
         
         <div className="container">
-          <h2 className="section-title reveal-item">About Me</h2>
+          <h2 className="section-title">About Me</h2>
           <div className="about-content">
-            <div className="about-text reveal-item">
+            <div className="about-text">
               <p>{personalInfo.about}</p>
               <div className="education-info">
-                <div className="education-item reveal-item">
+                <div className="education-item">
                   <i className="fas fa-graduation-cap"></i>
                   <div>
                     <h4>4th Year Information Technology Student</h4>
                     <p>Currently pursuing Bachelor's degree in Information Technology</p>
                   </div>
                 </div>
-                <div className="education-item reveal-item">
+                <div className="education-item">
                   <i className="fas fa-briefcase"></i>
                   <div>
                     <h4>Freelance Developer</h4>
@@ -446,7 +362,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div className="skills reveal-item">
+            <div className="skills">
               <h3>Technologies & Skills</h3>
               <div className="skills-list">
                 {personalInfo.skills.map((skill, index) => (
@@ -464,13 +380,13 @@ const Home = () => {
       <section id="projects" className="projects-section sr-section sr-projects" ref={projectsRef}>
         <div className="container">
           {loading ? (
-            <div className="loading-projects reveal-item">
+            <div className="loading-projects">
               <i className="fas fa-spinner fa-spin"></i>
               <p>Loading projects and certificates...</p>
             </div>
           ) : (
             <React.Fragment>
-              <div className="page-header reveal-item">
+              <div className="page-header">
                 <h2>My Projects & Certificates</h2>
                 <p>
                   {filter === 'all' 
@@ -480,7 +396,7 @@ const Home = () => {
                 </p>
               </div>
 
-              <div className="filters reveal-item">
+              <div className="filters">
                 <button 
                   className={`filter-btn ${filter === 'all' ? 'active' : ''}`} 
                   onClick={() => setFilter('all')}
@@ -488,28 +404,16 @@ const Home = () => {
                   All <span className="project-count">({filterCounts.all})</span>
                 </button>
                 <button 
-                  className={`filter-btn ${filter === 'web' ? 'active' : ''}`} 
-                  onClick={() => setFilter('web')}
+                  className={`filter-btn ${filter === 'mixed' ? 'active' : ''}`} 
+                  onClick={() => setFilter('mixed')}
                 >
-                  Web Development <span className="project-count">({filterCounts.web})</span>
+                  Mixed <span className="project-count">({filterCounts.mixed})</span>
                 </button>
                 <button 
-                  className={`filter-btn ${filter === 'app' ? 'active' : ''}`} 
-                  onClick={() => setFilter('app')}
+                  className={`filter-btn ${filter === 'project' ? 'active' : ''}`} 
+                  onClick={() => setFilter('project')}
                 >
-                  App Development <span className="project-count">({filterCounts.app})</span>
-                </button>
-                <button 
-                  className={`filter-btn ${filter === 'desktop' ? 'active' : ''}`} 
-                  onClick={() => setFilter('desktop')}
-                >
-                  Desktop Application <span className="project-count">({filterCounts.desktop})</span>
-                </button>
-                <button 
-                  className={`filter-btn ${filter === 'vector' ? 'active' : ''}`} 
-                  onClick={() => setFilter('vector')}
-                >
-                  Vector Art <span className="project-count">({filterCounts.vector})</span>
+                  Projects <span className="project-count">({filterCounts.project})</span>
                 </button>
                 <button 
                   className={`filter-btn ${filter === 'certificate' ? 'active' : ''}`} 
@@ -520,7 +424,7 @@ const Home = () => {
               </div>
 
               {filteredData.length === 0 ? (
-                <div className="no-results reveal-item">
+                <div className="no-results">
                   <i className="fas fa-folder-open"></i>
                   <h3>No {type === 'certificate' ? 'certificates' : 'projects'} found</h3>
                   <p>Try selecting a different filter</p>
@@ -531,7 +435,7 @@ const Home = () => {
                     {filteredData.slice(0, showAll ? filteredData.length : (isMobile ? 1 : 3)).map(item => (
                       type === 'mixed' ? (
                         item.itemType === 'certificate' ? (
-                          <div key={item.id} className="project-card reveal-item">
+                          <div key={item.id} className="project-card">
                             <div className="project-image">
                               <img 
                                 src={item.image}
@@ -589,7 +493,7 @@ const Home = () => {
                             </div>
                           </div>
                         ) : (
-                          <div key={item.id} className="project-card reveal-item">
+                          <div key={item.id} className="project-card">
                             <div className="project-image">
                               <img 
                                 src={item.image}
@@ -728,7 +632,7 @@ const Home = () => {
                         )
                       ) : (
                         type === 'certificate' ? (
-                          <div key={item.id} className="project-card certificate-card reveal-item">
+                          <div key={item.id} className="project-card certificate-card">
                             <div className="project-image certificate-image">
                               <img 
                                 src={item.image}
@@ -788,7 +692,7 @@ const Home = () => {
                             </div>
                           </div>
                         ) : (
-                          <div key={item.id} className="project-card reveal-item">
+                          <div key={item.id} className="project-card">
                             <div className="project-image">
                               <img 
                                 src={item.image}
@@ -929,7 +833,7 @@ const Home = () => {
                     ))}
                   </div>
                   {filteredData.length > (isMobile ? 1 : 3) && (
-                    <div className="show-more-container reveal-item">
+                    <div className="show-more-container">
                       <button 
                         className="btn btn-show-more"
                         onClick={handleToggle}
@@ -942,7 +846,7 @@ const Home = () => {
                   )}
                 </React.Fragment>
               )}
-              <div className="view-all reveal-item">
+              <div className="view-all">
                 <a 
                   href={personalInfo.socialLinks.github}
                   target="_blank"
@@ -960,7 +864,7 @@ const Home = () => {
 
       <section id="github-stats" className="github-stats-section section sr-section sr-github">
         <div className="container">
-          <div className="github-stats-wrapper reveal-item">
+          <div className="github-stats-wrapper">
             <GithubStats />
           </div>
         </div>
@@ -968,7 +872,7 @@ const Home = () => {
 
       <section id="reviews" className="reviews-section section sr-section sr-reviews">
         <div className="container">
-          <div className="reviews-wrapper reveal-item">
+          <div className="reviews-wrapper">
             <Reviews />
           </div>
         </div>
@@ -976,7 +880,7 @@ const Home = () => {
 
       <section id="contact" className="contact-section section sr-section sr-contact">
         <div className="container">
-          <div className="contact-wrapper reveal-item">
+          <div className="contact-wrapper">
             <Contact personalInfo={personalInfo} />
           </div>
         </div>

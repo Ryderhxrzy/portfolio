@@ -30,12 +30,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   
-  // Log request
-  console.log(`${req.method} ${req.path} from ${req.headers.origin || 'direct'}`);
-  
   // Handle preflight immediately
   if (req.method === 'OPTIONS') {
-    console.log('✅ OPTIONS preflight - returning 200');
     return res.status(200).end();
   }
   
@@ -52,7 +48,6 @@ let mongoClient;
 
 async function connectToMongo() {
   try {
-    console.log("🔗 Connecting to MongoDB...");
     const client = new MongoClient(MONGO_URI, {
       serverSelectionTimeoutMS: 30000,
       connectTimeoutMS: 30000,
@@ -65,9 +60,8 @@ async function connectToMongo() {
     reviewsCollection = db.collection("reviews");
     contactCollection = db.collection("contact");
     await db.command({ ping: 1 });
-    console.log("✅ MongoDB connected");
   } catch (err) {
-    console.error("❌ MongoDB failed:", err.message);
+    console.error("Database connection failed");
     process.exit(1);
   }
 }
@@ -206,8 +200,6 @@ app.get("/api/github/pinned", async (req, res) => {
 // Contact form submission with reCAPTCHA verification
 app.post("/api/contact", async (req, res) => {
   try {
-    console.log("📧 Processing OJT application form submission");
-
     const { full_name, email, message, recaptchaToken } = req.body;
 
     // Validate required fields
@@ -237,10 +229,7 @@ app.post("/api/contact", async (req, res) => {
             error: "reCAPTCHA verification failed"
           });
         }
-
-        console.log("✅ reCAPTCHA verified successfully");
       } catch (recaptchaError) {
-        console.error("❌ reCAPTCHA verification error:", recaptchaError);
         return res.status(500).json({
           ok: false,
           error: "Failed to verify reCAPTCHA"
@@ -271,21 +260,12 @@ app.post("/api/contact", async (req, res) => {
         timestamp: new Date().toISOString()
       });
 
-      console.log("📝 OJT application saved to database:", {
-        id: result.insertedId,
-        full_name: full_name.trim(),
-        email: email.trim(),
-        messageLength: message.trim().length,
-        timestamp: new Date().toISOString()
-      });
-
       res.json({
         ok: true,
         message: "Application submitted successfully. We'll get back to you soon!",
         id: result.insertedId
       });
     } catch (dbError) {
-      console.error("❌ Database error:", dbError);
       return res.status(500).json({
         ok: false,
         error: "Failed to save application to database"
@@ -293,7 +273,6 @@ app.post("/api/contact", async (req, res) => {
     }
 
   } catch (err) {
-    console.error("❌ Contact form error:", err);
     res.status(500).json({
       ok: false,
       error: "Internal server error"
@@ -324,7 +303,6 @@ app.get("/api/test-github", async (req, res) => {
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-  console.log('🛑 Shutting down...');
   if (mongoClient) await mongoClient.close();
   process.exit(0);
 });
@@ -334,27 +312,16 @@ if (NODE_ENV === 'production') {
   setInterval(async () => {
     try {
       await fetch('https://portfolio-oftk.onrender.com/api/health');
-      console.log('✅ Keep-alive');
     } catch (err) {
-      console.log('⚠️ Keep-alive failed');
+      // Silently handle keep-alive failures
     }
   }, 14 * 60 * 1000);
 }
 
 // Start server
 connectToMongo().then(() => {
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`
-╔═══════════════════════════════════════╗
-║  ✅ SERVER RUNNING                   ║
-║  Port: ${PORT}                       ║
-║  Environment: ${NODE_ENV}            ║
-║  CORS: ENABLED (*)                   ║
-╚═══════════════════════════════════════╝
-    `);
-  });
+  app.listen(PORT, '0.0.0.0');
 }).catch(err => {
-  console.error("❌ Failed to start:", err);
   process.exit(1);
 });
 

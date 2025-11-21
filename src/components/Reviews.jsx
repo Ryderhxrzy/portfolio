@@ -118,7 +118,7 @@ const Reviews = () => {
     return (
       <div className="reviews-page">
         <div className="container">
-          <div className="loading-state reveal-item">
+          <div className="loading-state">
             <i className="fas fa-spinner fa-spin"></i>
             <p>Loading testimonials...</p>
             <p className="api-url">From: {API_BASE_URL}</p>
@@ -134,7 +134,7 @@ const Reviews = () => {
     return (
       <div className="reviews-page">
         <div className="container">
-          <div className="error-state reveal-item">
+          <div className="error-state">
             <i className="fas fa-exclamation-triangle"></i>
             <p>Error loading testimonials: {error}</p>
             <p className="api-url">Tried to fetch from: {API_BASE_URL}</p>
@@ -156,7 +156,7 @@ const Reviews = () => {
     return (
       <div className="reviews-page">
         <div className="container">
-          <div className="empty-state reveal-item">
+          <div className="empty-state">
             <i className="fas fa-comment-slash"></i>
             <p>No testimonials available yet.</p>
             <p className="api-url">API URL: {API_BASE_URL}</p>
@@ -169,22 +169,22 @@ const Reviews = () => {
   return (
     <div className="reviews-page">
       <div className="container">
-        <div className="page-header reveal-item">
+        <div className="page-header">
           <h2>Client Testimonials</h2>
           <p>See what my clients say about working with me</p>
         </div>
 
         {/* Stats Overview */}
-        <div className="stats-overview reveal-item">
-          <div className="stat-item reveal-item">
+        <div className="stats-overview">
+          <div className="stat-item">
             <div className="stat-number">{transformedTestimonials.length}+</div>
             <div className="stat-label">Happy Clients</div>
           </div>
-          <div className="stat-item reveal-item">
+          <div className="stat-item">
             <div className="stat-number">100%</div>
             <div className="stat-label">Satisfaction Rate</div>
           </div>
-          <div className="stat-item reveal-item">
+          <div className="stat-item">
             <div className="stat-number">
               {transformedTestimonials.length > 0 
                 ? (transformedTestimonials.reduce((sum, t) => sum + t.rating, 0) / transformedTestimonials.length).toFixed(1)
@@ -192,24 +192,24 @@ const Reviews = () => {
             </div>
             <div className="stat-label">Average Rating</div>
           </div>
-          <div className="stat-item reveal-item">
+          <div className="stat-item">
             <div className="stat-number">24/7</div>
             <div className="stat-label">Support</div>
           </div>
         </div>
 
         {/* Confidential Notice */}
-        <div className="confidential-notice reveal-item">
+        <div className="confidential-notice">
           <i className="fas fa-shield-alt"></i>
           <span>Client identities are kept confidential to protect privacy</span>
         </div>
 
         {/* Filter Buttons */}
-        <div className="filter-buttons reveal-item">
+        <div className="filter-buttons">
           {categories.map(category => (
             <button
               key={category.key}
-              className={`filter-btn reveal-item ${activeFilter === category.key ? 'active' : ''}`}
+              className={`filter-btn ${activeFilter === category.key ? 'active' : ''}`}
               onClick={() => handleFilterChange(category.key)}
             >
               {category.label}
@@ -220,7 +220,7 @@ const Reviews = () => {
 
         {/* Carousel Section */}
         {filteredTestimonials.length > 0 && (
-          <div className="carousel-container reveal-item">
+          <div className="carousel-container">
             <div className="carousel-wrapper">
               {/* Previous Button */}
               <button 
@@ -248,7 +248,7 @@ const Reviews = () => {
                     return (
                       <div key={slideIndex} className="carousel-slide">
                         {slideTestimonials.map((testimonial) => (
-                          <div key={testimonial.id} className="testimonial-card reveal-item">
+                          <div key={testimonial.id} className="testimonial-card">
                             <div className="testimonial-header">
                               <div className="client-avatar">
                                 {testimonial.initials}
@@ -297,7 +297,7 @@ const Reviews = () => {
             </div>
 
             {/* Carousel Indicators */}
-            <div className="carousel-indicators reveal-item">
+            <div className="carousel-indicators">
               {Array.from({ length: totalSlides }).map((_, index) => (
                 <button
                   key={index}
@@ -309,7 +309,7 @@ const Reviews = () => {
             </div>
 
             {/* Slide Counter */}
-            <div className="slide-counter reveal-item">
+            <div className="slide-counter">
               <span className="current-slide">{currentSlide + 1}</span>
               <span className="divider">/</span>
               <span className="total-slides">{totalSlides}</span>
@@ -318,8 +318,8 @@ const Reviews = () => {
         )}
 
         {/* CTA Section */}
-        <div className="reviews-cta reveal-item">
-          <div className="cta-content reveal-item">
+        <div className="reviews-cta">
+          <div className="cta-content">
             <h2>Ready to Start Your Project?</h2>
             <p>Join my satisfied clients and let's create something amazing together</p>
             <a href="#contact" className="btn btn-primary">
