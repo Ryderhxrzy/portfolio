@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
-import ReCAPTCHA from 'react-google-recaptcha';
-import Swal from 'sweetalert2';
+import React, { useState, useRef, useEffect } from 'react';
 import './styles/Contact.css';
+import { showAlerts } from '../utils/sweetAlertConfig';
 
 const Contact = ({ personalInfo }) => {
   const [formData, setFormData] = useState({
@@ -59,12 +58,10 @@ const Contact = ({ personalInfo }) => {
         const data = await response.json();
 
         if (data.ok) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Message Sent Successfully!',
-            text: 'Thank you for considering me for an OJT position. I will review your message and get back to you soon.',
-            confirmButtonColor: '#654ea3'
-          });
+          showAlerts.success(
+            'Message Sent Successfully!',
+            'Thank you for considering me for an OJT position. I will review your message and get back to you soon.'
+          );
 
           setFormData({
             full_name: '',
@@ -74,12 +71,10 @@ const Contact = ({ personalInfo }) => {
           setStatus('');
         }
       } catch (err) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Submission Failed',
-          text: err.message || 'Something went wrong. Please try again later.',
-          confirmButtonColor: '#654ea3'
-        });
+        showAlerts.error(
+          'Submission Failed',
+          err.message || 'Something went wrong. Please try again later.'
+        );
         setStatus('');
       }
       return;
@@ -87,12 +82,10 @@ const Contact = ({ personalInfo }) => {
 
     // Validate reCAPTCHA
     if (!recaptchaToken) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Verification Required',
-        text: 'Please complete the reCAPTCHA verification before submitting.',
-        confirmButtonColor: '#654ea3'
-      });
+      showAlerts.warning(
+        'Verification Required',
+        'Please complete the reCAPTCHA verification before submitting.'
+      );
       setStatus('');
       return;
     }
@@ -123,12 +116,10 @@ const Contact = ({ personalInfo }) => {
 
       if (data.ok) {
         // Show success message
-        Swal.fire({
-          icon: 'success',
-          title: 'Message Sent Successfully!',
-          text: 'Thank you for considering me for an OJT position. I will review your message and get back to you soon.',
-          confirmButtonColor: '#654ea3'
-        });
+        showAlerts.success(
+          'Message Sent Successfully!',
+          'Thank you for considering me for an OJT position. I will review your message and get back to you soon.'
+        );
 
         // Reset form
         setFormData({
@@ -148,12 +139,10 @@ const Contact = ({ personalInfo }) => {
       }
     } catch (err) {
       console.error('Form submission error:', err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Submission Failed',
-        text: err.message || 'Something went wrong. Please try again later or contact us directly.',
-        confirmButtonColor: '#654ea3'
-      });
+      showAlerts.error(
+        'Submission Failed',
+        err.message || 'Something went wrong. Please try again later or contact us directly.'
+      );
       setStatus('');
     }
   };

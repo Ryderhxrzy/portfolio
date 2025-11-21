@@ -1,3 +1,6 @@
+/* Import SweetAlert custom styles */
+@import './components/styles/SweetAlert.css';
+
 * {
   margin: 0;
   padding: 0;
