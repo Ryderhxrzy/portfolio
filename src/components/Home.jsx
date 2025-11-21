@@ -3,7 +3,7 @@ import './styles/Home.css';
 import GithubStats from './GithubStats.jsx';
 import Reviews from './Reviews.jsx';
 import Contact from './Contact.jsx';
-import { personalInfo, fetchGitHubRepositories, fetchCertificates } from '../data/projects.js';
+import { personalInfo, fetchGitHubRepositories, fetchCertificates, fetchVectorArt } from '../data/projects.js';
 import profileImage from '/profile_v2.png';
 import useWindowSize from '../hooks/useWindowSize.js';
 import Particles from './Particles.jsx';
@@ -11,6 +11,7 @@ import Particles from './Particles.jsx';
 const Home = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [certificates, setCertificates] = useState([]);
+  const [vectorArt, setVectorArt] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [showAll, setShowAll] = useState(false);
@@ -37,30 +38,52 @@ const Home = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
+
       try {
-        setLoading(true);
-        
-        const [projects, certs] = await Promise.all([
+        const [projects, certs, art] = await Promise.all([
           fetchGitHubRepositories(),
-          fetchCertificates()
+          fetchCertificates(),
+          fetchVectorArt()
         ]);
-        
-        if (projects.length === 0) {
-          throw new Error('No repositories found');
-        }
-        
-        setFeaturedProjects(projects);
-        setCertificates(certs);
+
+        setFeaturedProjects(projects || []);
+        setCertificates(certs || []);
+
+        const mappedVectorArt = (art || []).map((item) => {
+          const baseTags = Array.isArray(item.tags) ? item.tags : [];
+          const toolTags = Array.isArray(item.tools) ? item.tools : [];
+          const styleTags = item.style ? [item.style] : [];
+
+          // Build a unique list of topics/tags and always include 'vector-art'
+          const allTopics = [...baseTags, ...toolTags, ...styleTags, 'vector-art'];
+          const uniqueTopics = Array.from(new Set(allTopics));
+
+          console.log('Vector art item:', item.title, 'Image URL:', item.image);
+
+          return {
+            ...item,
+            image: item.image, // Already full URL in JSON
+            githubUrl: null, // Vector art doesn't have github repo
+            liveUrl: item.image, // Use image URL as the "view artwork" link
+            stars: item.stars ?? 0,
+            forks: item.forks ?? 0,
+            language: item.language || 'SVG',
+            topics: uniqueTopics,
+            // keep technologies empty for vector art so labels only show in tags row
+            technologies: [],
+            updated_at: item.updated_at || item.createdDate || new Date().toISOString(),
+          };
+        });
+
+        setVectorArt(mappedVectorArt);
       } catch (err) {
-        const fallbackProjects = await fetchGitHubRepositories();
-        const fallbackCerts = await fetchCertificates();
-        setFeaturedProjects(fallbackProjects);
-        setCertificates(fallbackCerts);
+        console.error('Error loading data in Home:', err);
       } finally {
         setLoading(false);
       }
     };
-    
+
     loadData();
   }, []);
 
@@ -128,11 +151,11 @@ const Home = () => {
   };
 
   const filterCounts = {
-    all: featuredProjects.length + certificates.length,
+    all: featuredProjects.length + certificates.length + vectorArt.length,
     web: featuredProjects.filter(project => project.topics.includes('web-development')).length,
     app: featuredProjects.filter(project => project.topics.includes('app-development')).length,
     desktop: featuredProjects.filter(project => project.topics.includes('desktop-application')).length,
-    vector: featuredProjects.filter(project => project.topics.includes('vector-art')).length,
+    vector: vectorArt.length,
     certificate: certificates.length,
   };
 
@@ -140,23 +163,27 @@ const Home = () => {
     if (filter === 'certificate') {
       return { type: 'certificate', data: certificates };
     }
-    
+
     if (filter === 'all') {
       const combined = [
         ...featuredProjects.map(project => ({ ...project, itemType: 'project' })),
+        ...vectorArt.map(item => ({ ...item, itemType: 'project' })),
         ...certificates.map(cert => ({ ...cert, itemType: 'certificate' }))
       ];
       return { type: 'mixed', data: combined };
     }
-    
+
+    if (filter === 'vector') {
+      return { type: 'vector-art', data: vectorArt };
+    }
+
     const filtered = featuredProjects.filter(project => {
       if (filter === 'web') return project.topics.includes('web-development');
       if (filter === 'app') return project.topics.includes('app-development');
       if (filter === 'desktop') return project.topics.includes('desktop-application');
-      if (filter === 'vector') return project.topics.includes('vector-art');
       return false;
     });
-    
+
     return { type: 'project', data: filtered };
   };
 
@@ -525,32 +552,53 @@ const Home = () => {
                               />
                               <div className="project-overlay">
                                 <div className="project-links">
-                                  <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
-                                    <i className="fab fa-github"></i>
-                                  </a>
-                                  {isValidDeployment(item.liveUrl) && (
-                                    <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
-                                      <i className="fas fa-external-link-alt"></i>
+                                  {item.topics && item.topics.includes('vector-art') ? (
+                                    <a
+                                      href={item.liveUrl || item.githubUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      title="View Artwork"
+                                    >
+                                      <i className="fas fa-image"></i>
                                     </a>
+                                  ) : (
+                                    <>
+                                      <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
+                                        <i className="fab fa-github"></i>
+                                      </a>
+                                      {isValidDeployment(item.liveUrl) && (
+                                        <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
+                                          <i className="fas fa-external-link-alt"></i>
+                                        </a>
+                                      )}
+                                    </>
                                   )}
                                 </div>
                               </div>
-                              <div className="project-stats">
-                                <span className="stat">
-                                  <i className="fas fa-star"></i>
-                                  {item.stars || 0}
-                                </span>
-                                <span className="stat">
-                                  <i className="fas fa-code-branch"></i>
-                                  {item.forks || 0}
-                                </span>
-                                {item.language && (
-                                  <span className="stat language">
-                                    <i className="fas fa-circle" style={{ color: getLanguageColor(item.language) }}></i>
-                                    {item.language}
+                              {item.topics && item.topics.includes('vector-art') && (
+                                <div className="certificate-badge">
+                                  <i className="fas fa-paint-brush"></i>
+                                  Vector Art
+                                </div>
+                              )}
+                              {!item.topics || !item.topics.includes('vector-art') ? (
+                                <div className="project-stats">
+                                  <span className="stat">
+                                    <i className="fas fa-star"></i>
+                                    {item.stars || 0}
                                   </span>
-                                )}
-                              </div>
+                                  <span className="stat">
+                                    <i className="fas fa-code-branch"></i>
+                                    {item.forks || 0}
+                                  </span>
+                                  {item.language && (
+                                    <span className="stat language">
+                                      <i className="fas fa-circle" style={{ color: getLanguageColor(item.language) }}></i>
+                                      {item.language}
+                                    </span>
+                                  )}
+                                </div>
+                              ) : null}
                               {item.isPinned && (
                                 <div className="project-pinned-badge">
                                   <i className="fas fa-thumbtack"></i>
@@ -589,34 +637,50 @@ const Home = () => {
                                 </div>
                               )}
                               
-                              {(isValidDeployment(item.liveUrl) || item.githubUrl) && (
+                              {item.topics && item.topics.includes('vector-art') ? (
                                 <div className="project-actions">
                                   <div className="project-buttons-row">
-                                    {isValidDeployment(item.liveUrl) && (
-                                      <a 
-                                        href={item.liveUrl} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="deployment-link"
-                                      >
-                                        <i className="fas fa-rocket"></i>
-                                        Live Project
-                                      </a>
-                                    )}
-                                    
-                                    {item.githubUrl && (
-                                      <a 
-                                        href={`${item.githubUrl}/blob/main/Sample_Output.pdf`}
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="sample-output-link"
-                                      >
-                                        <i className="fas fa-file-pdf"></i>
-                                        Sample Output
-                                      </a>
-                                    )}
+                                    <a
+                                      href={item.liveUrl || item.githubUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="deployment-link"
+                                    >
+                                      <i className="fas fa-image"></i>
+                                      View Artwork
+                                    </a>
                                   </div>
                                 </div>
+                              ) : (
+                                (isValidDeployment(item.liveUrl) || item.githubUrl) && (
+                                  <div className="project-actions">
+                                    <div className="project-buttons-row">
+                                      {isValidDeployment(item.liveUrl) && (
+                                        <a 
+                                          href={item.liveUrl} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="deployment-link"
+                                        >
+                                          <i className="fas fa-rocket"></i>
+                                          Live Project
+                                        </a>
+                                      )}
+                                      
+                                      {item.githubUrl && (
+                                        <a 
+                                          href={`${item.githubUrl}/blob/main/Sample_Output.pdf`}
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="sample-output-link"
+                                        >
+                                          <i className="fas fa-file-pdf"></i>
+                                          Sample Output
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                )
                               )}
                               
                               <div className="project-topics">
@@ -626,25 +690,42 @@ const Home = () => {
                                   </span>
                                 ))}
                               </div>
-                              <div className="project-technologies">
-                                {item.technologies && item.technologies.slice(0, 5).map((tech, index) => (
-                                  <span key={index} className="tech-tag">
-                                    {tech}
-                                  </span>
-                                ))}
-                              </div>
+                              {(!item.topics || !item.topics.includes('vector-art')) && (
+                                <div className="project-technologies">
+                                  {item.technologies && item.technologies.slice(0, 5).map((tech, index) => (
+                                    <span key={index} className="tech-tag">
+                                      {tech}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
                               <div className="project-footer">
-                                <div className="project-updated">
-                                  <i className="fas fa-clock"></i>
-                                  Updated {formatDate(item.updated_at)}
-                                </div>
-                                <div className="project-stars">
-                                  <i className="fas fa-star"></i>
-                                  {item.stars || 0} stars
-                                </div>
+                                {item.topics && item.topics.includes('vector-art') ? (
+                                  <>
+                                    <div className="project-updated">
+                                      <i className="fas fa-clock"></i>
+                                      Created {formatDate(item.createdDate || item.updated_at)}
+                                    </div>
+                                    <div className="project-stars">
+                                      <i className="fas fa-paint-brush"></i>
+                                      Vector Art
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="project-updated">
+                                      <i className="fas fa-clock"></i>
+                                      Updated {formatDate(item.updated_at)}
+                                    </div>
+                                    <div className="project-stars">
+                                      <i className="fas fa-star"></i>
+                                      {item.stars || 0} stars
+                                    </div>
+                                  </>
+                                )}
                               </div>
                               
-                              {item.githubUrl && (
+                              {item.githubUrl && (!item.topics || !item.topics.includes('vector-art')) && (
                                 <p className="project-note">
                                   <i className="fas fa-info-circle"></i>
                                   If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
@@ -654,7 +735,73 @@ const Home = () => {
                           </div>
                         )
                       ) : (
-                        type === 'certificate' ? (
+                        type === 'vector-art' ? (
+                          <div key={item.id} className="project-card reveal-item">
+                            <div className="project-image">
+                              <img 
+                                src={item.image}
+                                alt={item.title}
+                                loading="eager"
+                              />
+                              <div className="project-overlay">
+                                <div className="project-links">
+                                  <a
+                                    href={item.liveUrl || item.githubUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title="View Artwork"
+                                  >
+                                    <i className="fas fa-image"></i>
+                                  </a>
+                                </div>
+                              </div>
+                              <div className="certificate-badge">
+                                <i className="fas fa-paint-brush"></i>
+                                Vector Art
+                              </div>
+                            </div>
+                            <div className="project-content">
+                              <h3>{item.title}</h3>
+                              <p className="project-description">
+                                {truncateDescription(item.description, item.id)}
+                              </p>
+                              
+                              <div className="project-topics">
+                                {item.topics && item.topics.slice(0, 8).map((topic, index) => (
+                                  <span key={index} className="topic-tag">
+                                    {topic}
+                                  </span>
+                                ))}
+                              </div>
+                              
+                              <div className="project-actions">
+                                <div className="project-buttons-row">
+                                  <a
+                                    href={item.liveUrl || item.githubUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="deployment-link"
+                                  >
+                                    <i className="fas fa-image"></i>
+                                    View Artwork
+                                  </a>
+                                </div>
+                              </div>
+                              
+                              <div className="project-footer">
+                                <div className="project-updated">
+                                  <i className="fas fa-clock"></i>
+                                  Created {formatDate(item.createdDate || item.updated_at)}
+                                </div>
+                                <div className="project-stars">
+                                  <i className="fas fa-paint-brush"></i>
+                                  Vector Art
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          type === 'certificate' ? (
                           <div key={item.id} className="project-card certificate-card reveal-item">
                             <div className="project-image certificate-image">
                               <img 
@@ -724,32 +871,49 @@ const Home = () => {
                               />
                               <div className="project-overlay">
                                 <div className="project-links">
-                                  <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
-                                    <i className="fab fa-github"></i>
-                                  </a>
-                                  {isValidDeployment(item.liveUrl) && (
-                                    <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
-                                      <i className="fas fa-external-link-alt"></i>
-                                    </a>
+                                  {item.topics && item.topics.includes('vector-art') ? (
+                                    (item.liveUrl || item.githubUrl) && (
+                                      <a
+                                        href={item.liveUrl || item.githubUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="View Artwork"
+                                      >
+                                        <i className="fas fa-image"></i>
+                                      </a>
+                                    )
+                                  ) : (
+                                    <>
+                                      <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" title="View Code">
+                                        <i className="fab fa-github"></i>
+                                      </a>
+                                      {isValidDeployment(item.liveUrl) && (
+                                        <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" title="Live Demo">
+                                          <i className="fas fa-external-link-alt"></i>
+                                        </a>
+                                      )}
+                                    </>
                                   )}
                                 </div>
                               </div>
-                              <div className="project-stats">
-                                <span className="stat">
-                                  <i className="fas fa-star"></i>
-                                  {item.stars || 0}
-                                </span>
-                                <span className="stat">
-                                  <i className="fas fa-code-branch"></i>
-                                  {item.forks || 0}
-                                </span>
-                                {item.language && (
-                                  <span className="stat language">
-                                    <i className="fas fa-circle" style={{ color: getLanguageColor(item.language) }}></i>
-                                    {item.language}
+                              {(!item.topics || !item.topics.includes('vector-art')) && (
+                                <div className="project-stats">
+                                  <span className="stat">
+                                    <i className="fas fa-star"></i>
+                                    {item.stars || 0}
                                   </span>
-                                )}
-                              </div>
+                                  <span className="stat">
+                                    <i className="fas fa-code-branch"></i>
+                                    {item.forks || 0}
+                                  </span>
+                                  {item.language && (
+                                    <span className="stat language">
+                                      <i className="fas fa-circle" style={{ color: getLanguageColor(item.language) }}></i>
+                                      {item.language}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
                               {item.isPinned && (
                                 <div className="project-pinned-badge">
                                   <i className="fas fa-thumbtack"></i>
@@ -788,34 +952,52 @@ const Home = () => {
                                 </div>
                               )}
                               
-                              {(isValidDeployment(item.liveUrl) || item.githubUrl) && (
-                                <div className="project-actions">
-                                  <div className="project-buttons-row">
-                                    {isValidDeployment(item.liveUrl) && (
-                                      <a 
-                                        href={item.liveUrl} 
-                                        target="_blank" 
+                              {item.topics && item.topics.includes('vector-art') ? (
+                                (item.liveUrl || item.githubUrl) && (
+                                  <div className="project-actions">
+                                    <div className="project-buttons-row">
+                                      <a
+                                        href={item.liveUrl || item.githubUrl}
+                                        target="_blank"
                                         rel="noopener noreferrer"
                                         className="deployment-link"
                                       >
-                                        <i className="fas fa-rocket"></i>
-                                        Live Project
+                                        <i className="fas fa-image"></i>
+                                        View Artwork
                                       </a>
-                                    )}
-                                    
-                                    {item.githubUrl && (
-                                      <a 
-                                        href={`${item.githubUrl}/blob/main/Sample_Output.pdf`}
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="sample-output-link"
-                                      >
-                                        <i className="fas fa-file-pdf"></i>
-                                        Sample Output
-                                      </a>
-                                    )}
+                                    </div>
                                   </div>
-                                </div>
+                                )
+                              ) : (
+                                (isValidDeployment(item.liveUrl) || item.githubUrl) && (
+                                  <div className="project-actions">
+                                    <div className="project-buttons-row">
+                                      {isValidDeployment(item.liveUrl) && (
+                                        <a 
+                                          href={item.liveUrl} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="deployment-link"
+                                        >
+                                          <i className="fas fa-rocket"></i>
+                                          Live Project
+                                        </a>
+                                      )}
+                                      
+                                      {item.githubUrl && (
+                                        <a 
+                                          href={`${item.githubUrl}/blob/main/Sample_Output.pdf`}
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="sample-output-link"
+                                        >
+                                          <i className="fas fa-file-pdf"></i>
+                                          Sample Output
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                )
                               )}
                               
                               <div className="project-topics">
@@ -825,25 +1007,42 @@ const Home = () => {
                                   </span>
                                 ))}
                               </div>
-                              <div className="project-technologies">
-                                {item.technologies && item.technologies.slice(0, 5).map((tech, index) => (
-                                  <span key={index} className="tech-tag">
-                                    {tech}
-                                  </span>
-                                ))}
-                              </div>
+                              {(!item.topics || !item.topics.includes('vector-art')) && (
+                                <div className="project-technologies">
+                                  {item.technologies && item.technologies.slice(0, 5).map((tech, index) => (
+                                    <span key={index} className="tech-tag">
+                                      {tech}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
                               <div className="project-footer">
-                                <div className="project-updated">
-                                  <i className="fas fa-clock"></i>
-                                  Updated {formatDate(item.updated_at)}
-                                </div>
-                                <div className="project-stars">
-                                  <i className="fas fa-star"></i>
-                                  {item.stars || 0} stars
-                                </div>
+                                {item.topics && item.topics.includes('vector-art') ? (
+                                  <>
+                                    <div className="project-updated">
+                                      <i className="fas fa-clock"></i>
+                                      Created {formatDate(item.createdDate || item.updated_at)}
+                                    </div>
+                                    <div className="project-stars">
+                                      <i className="fas fa-paint-brush"></i>
+                                      Vector Art
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="project-updated">
+                                      <i className="fas fa-clock"></i>
+                                      Updated {formatDate(item.updated_at)}
+                                    </div>
+                                    <div className="project-stars">
+                                      <i className="fas fa-star"></i>
+                                      {item.stars || 0} stars
+                                    </div>
+                                  </>
+                                )}
                               </div>
                               
-                              {item.githubUrl && (
+                              {item.githubUrl && (!item.topics || !item.topics.includes('vector-art')) && (
                                 <p className="project-note">
                                   <i className="fas fa-info-circle"></i>
                                   If the live site is unavailable or slow to load, view the Sample Output for project screenshots.
@@ -851,6 +1050,7 @@ const Home = () => {
                               )}
                             </div>
                           </div>
+                        )
                         )
                       )
                     ))}

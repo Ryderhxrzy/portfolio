@@ -78,6 +78,29 @@ export const fetchCertificates = async (username = 'Ryderhxrzy') => {
 };
 
 /**
+ * fetchVectorArt - Fetches vector art from GitHub repository
+ */
+export const fetchVectorArt = async (username = 'Ryderhxrzy') => {
+  try {
+    const response = await fetch(
+      `https://raw.githubusercontent.com/${username}/vector-art/main/data/vector_art.json`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch vector art: ${response.status} ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    console.log(`Successfully fetched ${data['vector-art']?.length || 0} vector art pieces`);
+    return data['vector-art'] || [];
+  } catch (error) {
+    console.error('Error fetching vector art:', error);
+    // Return fallback vector art
+    return getFallbackVectorArt(username);
+  }
+};
+
+/**
  * Fallback projects in case the API fails
  */
 const getFallbackProjects = (username) => {
@@ -170,6 +193,64 @@ const getFallbackCertificates = (username) => {
       certificateUrl: 'https://www.freecodecamp.org/certification/sample',
       tags: ['HTML', 'CSS', 'Responsive Design', 'Web Design'],
       credentialId: 'FCCAMP-RWD456'
+    }
+  ];
+};
+
+/**
+ * Fallback vector art in case the fetch fails
+ */
+const getFallbackVectorArt = (username) => {
+  return [
+    {
+      id: 'vector-fallback-1',
+      title: 'Cyberpunk Character',
+      description: 'Futuristic cyberpunk character design with neon colors and tech-inspired elements',
+      image: `https://raw.githubusercontent.com/${username}/vector-art/main/images/cyberpunk-character.jpg`,
+      artUrl: `https://www.behance.net/gallery/${username}/Cyberpunk-Character`,
+      tags: ['Character Design', 'Cyberpunk', 'Digital Art', 'Illustration'],
+      createdDate: '2024-01-10',
+      style: 'Digital Illustration'
+    },
+    {
+      id: 'vector-fallback-2',
+      title: 'Minimalist Logo Set',
+      description: 'Collection of minimalist logo designs for various brands and businesses',
+      image: `https://raw.githubusercontent.com/${username}/vector-art/main/images/minimalist-logos.jpg`,
+      artUrl: `https://www.behance.net/gallery/${username}/Minimalist-Logo-Set`,
+      tags: ['Logo Design', 'Branding', 'Minimalist', 'Vector'],
+      createdDate: '2023-12-15',
+      style: 'Logo Design'
+    },
+    {
+      id: 'vector-fallback-3',
+      title: 'Nature Illustration',
+      description: 'Detailed vector illustration of natural landscapes and wildlife',
+      image: `https://raw.githubusercontent.com/${username}/vector-art/main/images/nature-illustration.jpg`,
+      artUrl: `https://www.behance.net/gallery/${username}/Nature-Illustration`,
+      tags: ['Nature', 'Illustration', 'Vector Art', 'Environmental'],
+      createdDate: '2023-11-20',
+      style: 'Vector Illustration'
+    },
+    {
+      id: 'vector-fallback-4',
+      title: 'Abstract Geometric Art',
+      description: 'Modern abstract geometric compositions with vibrant colors',
+      image: `https://raw.githubusercontent.com/${username}/vector-art/main/images/geometric-art.jpg`,
+      artUrl: `https://www.behance.net/gallery/${username}/Abstract-Geometric-Art`,
+      tags: ['Abstract', 'Geometric', 'Modern Art', 'Contemporary'],
+      createdDate: '2023-10-25',
+      style: 'Abstract Art'
+    },
+    {
+      id: 'vector-fallback-5',
+      title: 'Comic Book Style Portrait',
+      description: 'Stylized portrait in comic book art style with bold lines and colors',
+      image: `https://raw.githubusercontent.com/${username}/vector-art/main/images/comic-portrait.jpg`,
+      artUrl: `https://www.behance.net/gallery/${username}/Comic-Portrait`,
+      tags: ['Portrait', 'Comic Art', 'Character Design', 'Pop Art'],
+      createdDate: '2023-09-30',
+      style: 'Comic Art'
     }
   ];
 };
