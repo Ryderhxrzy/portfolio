@@ -53,10 +53,9 @@ const Home = () => {
         const mappedVectorArt = (art || []).map((item) => {
           const baseTags = Array.isArray(item.tags) ? item.tags : [];
           const toolTags = Array.isArray(item.tools) ? item.tools : [];
-          const styleTags = item.style ? [item.style] : [];
 
-          // Build a unique list of topics/tags and always include 'vector-art'
-          const allTopics = [...baseTags, ...toolTags, ...styleTags, 'vector-art'];
+          // Build a unique list of topics/tags (exclude style here) and always include 'vector-art'
+          const allTopics = [...baseTags, ...toolTags, 'vector-art'];
           const uniqueTopics = Array.from(new Set(allTopics));
 
           console.log('Vector art item:', item.title, 'Image URL:', item.image);
@@ -708,7 +707,7 @@ const Home = () => {
                                     </div>
                                     <div className="project-stars">
                                       <i className="fas fa-paint-brush"></i>
-                                      Vector Art
+                                      {item.style || 'Vector Art'}
                                     </div>
                                   </>
                                 ) : (
@@ -795,7 +794,7 @@ const Home = () => {
                                 </div>
                                 <div className="project-stars">
                                   <i className="fas fa-paint-brush"></i>
-                                  Vector Art
+                                  {item.style || 'Vector Art'}
                                 </div>
                               </div>
                             </div>
