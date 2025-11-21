@@ -35,6 +35,8 @@
   --secondary-accent-contrast: #ffffff;
   
   --border: #cccccc;
+
+  --pattern-bg: #f4f5fa;
   
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -87,6 +89,8 @@
   
   /* Border & Divider */
   --border: #4a5568;
+
+  --pattern-bg: #3b475f60;
   
   /* Shadow */
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);

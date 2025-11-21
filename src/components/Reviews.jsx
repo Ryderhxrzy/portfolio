@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './styles/Reviews.css';
+import Particles from './Particles.jsx';
 
 const Reviews = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -168,6 +169,7 @@ const Reviews = () => {
 
   return (
     <div className="reviews-page">
+      
       <div className="container">
         <div className="page-header">
           <h2>Client Testimonials</h2>

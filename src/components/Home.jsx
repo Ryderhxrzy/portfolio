@@ -362,7 +362,6 @@ const Home = () => {
       </section>
 
       <section id="about" className="about section sr-section sr-about">
-        
         <div className="container">
           <h2 className="section-title">About Me</h2>
           <div className="about-content">
@@ -1085,11 +1084,17 @@ const Home = () => {
       </section>
 
       <section id="github-stats" className="github-stats-section section sr-section sr-github">
+         <svg class="wave-top" viewBox="0 0 1440 150" preserveAspectRatio="none">
+    <path d="M0,50 C360,150 1080,-50 1440,50 L1440,0 L0,0 Z" fill="var(--pattern-bg)"/>
+  </svg>
         <div className="container">
           <div className="github-stats-wrapper">
             <GithubStats />
           </div>
         </div>
+        <svg class="wave-bottom" viewBox="0 0 1440 150" preserveAspectRatio="none">
+    <path d="M0,100 C360,0 1080,200 1440,100 L1440,150 L0,150 Z" fill="var(--pattern-bg)"/>
+  </svg>
       </section>
 
       <section id="reviews" className="reviews-section section sr-section sr-reviews">
