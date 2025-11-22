@@ -5,6 +5,7 @@ import Reviews from './Reviews.jsx';
 import Contact from './Contact.jsx';
 import { personalInfo, fetchGitHubRepositories, fetchCertificates, fetchVectorArt } from '../data/projects.js';
 import profileImage from '/profile_v2.png';
+import resumeFile from '../resume/Jhayr Cervantes.pdf';
 import useWindowSize from '../hooks/useWindowSize.js';
 import Particles from './Particles.jsx';
 
@@ -246,6 +247,15 @@ const Home = () => {
     document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
   };
 
+  const downloadResume = () => {
+    const link = document.createElement('a');
+    link.href = resumeFile;
+    link.download = 'Jhayr Cervantes.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="home">
       <section id="home" className="hero" ref={heroRef}>
@@ -325,7 +335,7 @@ const Home = () => {
                 </button>
                 <button 
                   className="btn btn-outline"
-                  onClick={() => window.open(personalInfo.resumeLink, '_blank')}
+                  onClick={downloadResume}
                 >
                   <i className="fas fa-download"></i>
                   Download Resume
